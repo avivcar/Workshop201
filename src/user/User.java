@@ -12,7 +12,7 @@ public class User {
 	private ConnectionHandler handler;
 	
 	// user mail
-	private String mail;
+	private String mail = null;
 	
 	// user name
 	private String name;

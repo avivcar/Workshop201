@@ -72,6 +72,7 @@ public class Query {
 	}
 
 	public static void save(User user) throws ClassNotFoundException, SQLException {
+		if (user.getMail() == null) return;
 		Executor.run("DELETE FROM `Users` WHERE `username` = '" + user.getUsername() + "'");
 		Executor.run("INSERT INTO `Users`(" + 
 				"`rel`, " + 
