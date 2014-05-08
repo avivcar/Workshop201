@@ -1,9 +1,10 @@
 package server.protocol;
 
-
 import java.util.Vector;
 
 import forumSystemCore.*;
+
+
 
 /**
  * a simple implementation of the server protocol interface
@@ -25,27 +26,27 @@ public class EchoProtocol implements AsyncServerProtocol {
         String tmp = null;
     	String response = null;
     	//breaking msg into array splitting by space
-        String[] msgArr = msg.split(" ");
+        String[] msgArr = msg.split("$");
         
         if(msgArr[0]!=null){
         	switch(msgArr[0]){
         	
-        	case "CREATE_FORUM":
-        		if(!this.checkNull(msgArr, 2)){
+        	case Constants.CREATE_FORUM:
+        		if(!this.isNull(msgArr, 2)){
         			response=forumSystem.createForum(msgArr[1],this.user);
         			if (response!=null) response="SUCC_"+response;
-        			else response="ERR_cant_create_forum";
+        			else response=Constants.ERR_+"CANNOT_CREATE";
         		}
         		
-        		else {response = "ERR_not_enputh_parameters";
+        		else {response = "ERR_NOT_ENOUGH_PARAMETERS";
         				print(431, "ERR_PARAMETERS");
         			}
 				break;
 				
 				
-			case "ISADMIN":
-				if(this.checkNull(msgArr,2)) {
-				response = "ERR_not_enputh_parameters";
+			case Constants.ISADMIN:
+				if(this.isNull(msgArr,2)) {
+				response = "ERR_NOT_ENOUGH_PARAMETERS";
     			print(431, "ERR_PARAMETERS");
 				}
 				else response= "SUCC_"+Boolean.valueOf(forumSystem.isAdmin(msgArr[1], user));
@@ -53,41 +54,72 @@ public class EchoProtocol implements AsyncServerProtocol {
 
 
 
-			case "SIGNUP":
-				if(this.checkNull(msgArr, 5)) {
+			case Constants.SIGNUP:
+				if(this.isNull(msgArr, 5)) {
 				print(461, "ERR_PARAMETERS");
-				response = "ERR_not_enputh_parameters";
+				response = "ERR_NOT_ENOUGH_PARAMETERS";
 				}
 				else response= this.signup(msgArr);
 				break;
 				
 				
-			case "ISMEMBER":
-				if(this.checkNull(msgArr,2)){
+			case Constants.ISMEMBER:
+				if(this.isNull(msgArr,2)){
 					print(461, "ERR_PARAMETERS");
-					response = "ERR_not_enputh_parameters";
+					response = "ERR_NOT_ENOUGH_PARAMETERS";
 			}
 			else if(forumSystem.isMember(msgArr[1], user)) response="SUCC_TRUE";
 					else response = "SUCC_FALSE"; 
 				break;
 				
-			case "LOGIN":
-				if(this.checkNull(msgArr,3)){
+			case Constants.LOGIN:
+				if(this.isNull(msgArr,3)){
 					print(461, "ERR_PARAMETERS");
-					response = "ERR_not_enputh_parameters";
+					response = "ERR_NOT_ENOUGH_PARAMETERS";
 					
 				}
 				else response =this.login(msgArr);
 				
 				break;
 				
-			case "":
-
+			case Constants.EXISTSUBFORUM:
+				if(this.isNull(msgArr, 3)){
+					print(461, "ERR_PARAMETERS");
+					response = "ERR_NOT_ENOUGH_PARAMETERS";	
+				}
+				else 
+					response = Constants.SUCC_+Boolean.valueOf(forumSystem.existSubForum(msgArr[1], msgArr[2]));
 				
-			default: if (true){
-				response=null;
-		        	
-			}
+				break;
+		/**	case Constants.GET_FORUM:
+				if(this.checkNull(msgArr, 3)){
+					print(461, "ERR_PARAMETERS");
+					response = "ERR_NOT_ENOUGH_PARAMETERS";	
+				}
+				else {
+					response=forumSystem.getForum(msgArr[1]);
+					if (response!=null) response=Constants.SUCC_+response;
+					else response = Constants.ERR_+"NO_SUCH_FORUM";
+				
+				}
+			**/
+			case Constants.CREATE_MESSAGE:
+				if(this.isNull(msgArr,5)){
+					print(461, "ERR_PARAMETERS");
+					response = "ERR_NOT_ENOUGH_PARAMETERS";	
+				}
+				else{ response = forumSystem.createMessage(msgArr[1], msgArr[2],this.user,msgArr[3], msgArr[4]);
+						if (response!=null) response=Constants.SUCC_+response;
+						else response=Constants.ERR_+"CANNOT";
+					
+				}
+				
+			    break;
+				
+			    
+				
+				
+			default: response="DEFAULT";
 				
         	}
         	              	
@@ -106,7 +138,7 @@ public class EchoProtocol implements AsyncServerProtocol {
     }
     
  
-    private boolean checkNull(String[] msg, int input){
+    private boolean isNull(String[] msg, int input){
     	return msg.length<input;
     }
      
