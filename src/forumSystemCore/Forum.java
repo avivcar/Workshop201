@@ -28,6 +28,15 @@ public class Forum {
 		save();
 	}
 	
+	public void recover(String name, ArrayList<User> administrators, ArrayList<User> members, ArrayList<SubForum> subForums, ArrayList<Rank> ranks, String id) {
+		this.name = name;
+		this.administrators = administrators;
+		this.members = members;
+		this.subForums = subForums;
+		this.ranks = ranks;
+		setId(id);
+	}
+	
 	public void setId(String id) {
 		this.id = id;
 		nextId = Math.max(nextId, Integer.valueOf(id) + 1);

@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class Executor {
 	
-	static boolean DISABLE_SQL = false;
+	static boolean DISABLE_SQL = true;
 	
 	public static void run(String query) throws ClassNotFoundException, SQLException {
 		if (DISABLE_SQL) return;

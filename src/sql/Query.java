@@ -3,6 +3,7 @@ package sql;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import forumSystemCore.*;
@@ -12,10 +13,73 @@ import user.*;
 public class Query {
 	
 	public static boolean load(ForumSystem fs) throws ClassNotFoundException, SQLException {
+		ResultSet users = Executor.query("SELECT * FROM `Super`");
+		if (!users.next()) return false;
+		User superuser = new User(users.getString("mail"), users.getString("name"), users.getString("username"), users.getString("password"), Rank.superUser);
 		ResultSet forums = Executor.query("SELECT * FROM `Forums`");
-		writeResultSet(forums);
+		while (forums.next()) {
+			Forum forum = new Forum(forums.getString("name"), superuser);
+	    }
 		return true;
 	
+	}
+	
+	public static void saveSuper(User user) throws ClassNotFoundException, SQLException {
+		Executor.run("DELETE FROM `Super` WHERE `username` = '" + user.getUsername() + "'");
+		Executor.run("INSERT INTO `Super`(" + 
+				"`rel`, " + 
+				"`mail`, " + 
+				"`name`, " + 
+				"`username`, " + 
+				"`password`, " + 
+				"`rank`" + 
+			") VALUES (" + 
+				"'0', " + 
+				"'" + user.getMail() + "', " + 
+				"'" + user.getName() + "', " + 
+				"'" + user.getUsername() + "', " + 
+				"'" + user.getPassword() + "', " + 
+				"''" + 
+			")");
+		Executor.run("DELETE FROM `_friends` WHERE `user1` = '" + user.getUsername() + "'");
+		for (int i=0; i<user.getFriends().size(); i++) {
+			User user2 = user.getFriends().get(i);
+			Executor.run("INSERT INTO `_friends`(" + 
+					"`rel`, " + 
+					"`user1`, " + 
+					"`user2`" + 
+				") VALUES (" + 
+					"'0', " + 
+					"'" + user.getUsername() + "', " + 
+					"'" + user2.getUsername() + "'" + 
+				")");
+		}
+		Executor.run("DELETE FROM `_friendRequests` WHERE `user1` = '" + user.getUsername() + "'");
+		for (int i=0; i<user.getFriendRequests().size(); i++) {
+			User user2 = user.getFriendRequests().get(i);
+			Executor.run("INSERT INTO `_friendRequests`(" + 
+					"`rel`, " + 
+					"`user1`, " + 
+					"`user2`" + 
+				") VALUES (" + 
+					"'0', " + 
+					"'" + user.getUsername() + "', " + 
+					"'" + user2.getUsername() + "'" + 
+				")");
+		}
+		Executor.run("DELETE FROM `_pendingFriendRequests` WHERE `user1` = '" + user.getUsername() + "'");
+		for (int i=0; i<user.getPendingFriendRequests().size(); i++) {
+			User user2 = user.getPendingFriendRequests().get(i);
+			Executor.run("INSERT INTO `_pendingFriendRequests`(" + 
+					"`rel`, " + 
+					"`user1`, " + 
+					"`user2`" + 
+				") VALUES (" + 
+					"'0', " + 
+					"'" + user.getUsername() + "', " + 
+					"'" + user2.getUsername() + "'" + 
+				")");
+		}
 	}
 	
 	public static void writeResultSet(ResultSet resultSet) throws SQLException {

@@ -20,6 +20,13 @@ public class Complaint {
 		this.complaintMessage=msg;
 		this.date=date;
 	}
+	public void recover(String id, User complainer, User complainee, String complaintMessage, String date) {
+		this.complainee = complainee;
+		this.complainer = complainer;
+		this.complaintMessage = complaintMessage;
+		this.date = new Date(Integer.valueOf(date) * 1000);
+		setId(id);
+	}
 	public void setId(String id) {
 		this.id = Integer.valueOf(id);
 		next_cpmlnt_id = Math.max(next_cpmlnt_id, Integer.valueOf(id) + 1);

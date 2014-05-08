@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import utility.LogFile;
 import user.User;
 import utility.*;
+
 import java.util.List;
 
 
@@ -15,6 +16,11 @@ public class ForumSystem {
 	LogFile errorLog;
 	ArrayList<Forum> forums;
 	User superuser;
+	
+	public void recover(ArrayList<Forum> forums, User superuser) {
+		this.forums = forums;
+		this.superuser = superuser;
+	}
 
 	// Constructors:
 	public User startSystem(String email, String name, String username,
@@ -37,6 +43,13 @@ public class ForumSystem {
 		operationLog = new LogFile("Operation.txt");
 		errorLog = new LogFile("Error.txt");
 		forums = new ArrayList<Forum>();
+		try {
+			sql.Query.saveSuper(superuser);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return superuser;
 	}
 

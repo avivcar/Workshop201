@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS `Super` (
+  `mail` varchar(300) NOT NULL,
+  `name` varchar(300) NOT NULL,
+  `username` varchar(300) NOT NULL,
+  `password` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--NEXT--
+
 CREATE TABLE IF NOT EXISTS `Complaints` (
   `rel` int(11) NOT NULL,
   `id` int(11) NOT NULL,
