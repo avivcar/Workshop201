@@ -145,6 +145,28 @@ public class Forum {
 		return false;
 	}
 	
+	//recieves a subforum id, and returns the total number of messages in it
+	public int totalSubForumMsgNum(int subForumId, User invoker){
+		if (!this.isAdmin(invoker)) return 0;
+		for (int i=0; i < subForums.size(); i++) {
+			if (subForums.get(i).getId() == id) return subForums.get(i).getMessages().size();
+		}
+		return 0;
+	}
+	
+	public ArrayList<Message> getMemberMessages(String userName, User invoker) {
+		if (!this.isAdmin(invoker)) return null;
+		ArrayList<Message> ans = new ArrayList<Message>();
+		for (int i=0; i < subForums.size(); i++) { //go over all sub forums
+			int numOfmsgs = subForums.get(i).getMessages().size();
+			for (int j=0; j < numOfmsgs; i++) { //go over this subforum's msgs
+				if (subForums.get(i).getMessages().get(j).getUser().getUsername().equals(userName)) 
+					ans.add(subForums.get(i).getMessages().get(j));
+			}
+		}
+		return ans;
+	}
+	
 	public void save() {
 		try {
 			sql.Query.save(this);
