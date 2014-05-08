@@ -10,6 +10,7 @@ public class Executor {
 	
 	public static void run(String query) throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
+		if (true) return;
 		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/Forum?user=root&password=1234");
 		Statement statement = connection.createStatement();
 		try {
