@@ -6,7 +6,7 @@ import utility.*;
 import server.reactor.*;
 public class User {
 	
-	public User Guest = new User();
+	public static User Guest = new User();
 	
 	//user connectionHandler
 	private ConnectionHandler handler;

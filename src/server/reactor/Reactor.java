@@ -208,7 +208,7 @@ public class Reactor implements Runnable {
 	public static void main(String args[]) {
 	
 		try {
-			int port =4321 ;
+			int port =1234 ;
 			int poolSize =10; 
 //init forum sys 
 			ForumSystem forumSystem = new ForumSystem();

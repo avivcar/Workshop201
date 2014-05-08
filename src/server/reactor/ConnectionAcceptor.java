@@ -58,7 +58,7 @@ public class ConnectionAcceptor {
 			SelectionKey key = sChannel.register(_data.getSelector(), 0);
 			//register new user default empty constructor
 			
-			user.User user = new User("guest", null, null, null, null);
+		   user.User user = User.Guest;
 			ConnectionHandler handler = ConnectionHandler.create(sChannel, _data, key, user);
 			user.addHandler(handler);
 			handler.sayToMe("hello guest user! welcome to the best forum system ever");
