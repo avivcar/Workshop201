@@ -23,8 +23,7 @@ public class overloadTest extends TestCase {
 	
 	@Before
 	public void init(){
-
-		
+	
 	}
 	
 	@Test
@@ -37,7 +36,6 @@ public class overloadTest extends TestCase {
 		sfId2 = sys.createSubForum(admin, admin, "eggs", fId);
 		
 		User u, u2;
-		
 		for(int i=0;i<=X;i++){
 			String mail = "lala@aliza.com";	
 			String username = "katriel"+(char)(65+i)+""; 
