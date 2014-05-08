@@ -12,10 +12,11 @@ public class overloadTest extends TestCase {
 	private static ForumSystem sys = new ForumSystem();
 	private static User admin;
 	private static User u1;
-	private static String fId;
+	private static String fId, fId2;
 	private static String sfId;
 	private static String sfId2;
-	private static Forum forum;
+	
+	private static int X = 20; 
 	
 	public overloadTest(){
 		super();
@@ -23,19 +24,31 @@ public class overloadTest extends TestCase {
 	
 	@Before
 	public void init(){
-		admin = sys.startSystem("katrina@walla.com", "Katrina Tros", "Katkat", "ass1234");
-		fId = sys.createForum("testers4life", admin);
-		forum = sys.getForum(fId);
-		u1 = sys.signup("halevav@post.aliza.com","halevav","katriel","halev av", fId);
-		sfId = sys.createSubForum(admin, u1, "loozers", fId);
-		sfId2 = sys.createSubForum(admin, admin, "eggs", fId);
+
 		
 	}
 	
 	@Test
-	public void testOverload(){
-		//TODO
+	public void testMessages(){
+		admin = sys.startSystem("katrina@walla.com", "Katrina Tros", "Katkat", "ass1234");
+		fId = sys.createForum("testers4life", admin);
+		fId2 = sys.createForum("testresRloozers", admin);
+		u1 = sys.signup("halevav@post.aliza.com","halevav","katriel","halev av", fId);
+		sfId = sys.createSubForum(admin, u1, "loozers", fId);
+		sfId2 = sys.createSubForum(admin, admin, "eggs", fId);
+		
+		User u, u2;
+		
+		for(int i=0;i<=X;i++){
+			String mail = "lala@aliza.com";	
+			String username = "katriel"+(char)(65+i)+""; 
+			System.out.println(mail + "    "+ i);
+			assertNotNull(u = sys.signup(mail ,"Kat", username,"12345", fId));
+			assertNotNull(u2 = sys.signup(mail ,"Kat", username,"12345", fId2));
+			String title = "hi"+(char)(65+i)+"";
+			assertNotNull(sys.createMessage(fId, sfId, u, title, "wasup?"));
+			assertNotNull(sys.createMessage(fId, sfId2, u2, title, "wasup?"));
+		}
 	}
-
 
 }
