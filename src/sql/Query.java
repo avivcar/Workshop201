@@ -13,6 +13,13 @@ public class Query {
 	
 	public static boolean load(ForumSystem fs) throws ClassNotFoundException, SQLException {
 		ResultSet forums = Executor.query("SELECT * FROM `Forums`");
+		while (resultSet.next()) {
+			fs.
+			
+			resultSet.getString("name");
+			resultSet.getString("id");
+			System.out.println("Forum: " + resultSet.getString("name"));
+	    }
 		writeResultSet(forums);
 		return true;
 	
