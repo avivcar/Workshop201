@@ -27,7 +27,6 @@ public class SubForum {
 		
 		this.id = String.valueOf(NEXT_ID);
 		NEXT_ID++;
-		save();
 	}
 	public String getId() {return this.id;}
 	public String getSubject() {return subject;}

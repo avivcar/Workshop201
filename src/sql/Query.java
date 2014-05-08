@@ -140,20 +140,21 @@ public class Query {
 				"`title`, " + 
 				"`writer`" +
 			") VALUES (" + 
-				"'0', " + 
+				"'-1', " + 
 				"'0', " + 
 				"'" + msg.getId() + "', " + 
 				"'" + msg.getDate() + "', " + 
 				"'" + msg.getContent() + "', " + 
 				"'" + msg.getTitle() + "', " + 
-				"'" + msg.getUser() + "'" + 
+				"'" + msg.getUser().getUsername() + "'" + 
 			")");
 		Executor.run("DELETE FROM `Messages` WHERE `msgRel` = '" + msg.getId() + "'");
 		for (int i=0; i<msg.getReplies().size(); i++) {
 			Message reply = msg.getReplies().get(i);
 			reply.save();
-			Executor.run("UPDATE `Messages` SET `msgRel` = '" + msg.getId() + "' WHERE `msgRel` = '0'");
+			Executor.run("UPDATE `Messages` SET `msgRel` = '" + msg.getId() + "' WHERE `msgRel` = '0' AND `subforumRel` = '0'");
 		}
+		Executor.run("UPDATE `Messages` SET `msgRel` = '0' WHERE `msgRel` = '-1'");
 	}
 
 	public static void save(SubForum sf) throws ClassNotFoundException, SQLException {

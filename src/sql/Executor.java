@@ -8,9 +8,11 @@ import java.sql.Statement;
 
 public class Executor {
 	
+	static boolean DISABLE_SQL = true;
+	
 	public static void run(String query) throws ClassNotFoundException, SQLException {
+		if (DISABLE_SQL) return;
 		Class.forName("com.mysql.jdbc.Driver");
-		if (true) return;
 		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/Forum?user=root&password=1234");
 		Statement statement = connection.createStatement();
 		try {

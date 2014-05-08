@@ -46,7 +46,6 @@ public class User {
 	public User(String mail, String name, String username, String password, Rank rank) {
 		this.rank = rank;
 		changeDetails(mail, name, username, password);
-		save();
 	}
 	
 	/**

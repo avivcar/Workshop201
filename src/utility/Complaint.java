@@ -19,7 +19,6 @@ public class Complaint {
 		this.complainee=complainee;
 		this.complaintMessage=msg;
 		this.date=date;
-		save();
 	}
 
 	public int getId() {
