@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class Executor {
 	
-	static boolean DISABLE_SQL = true;
+	static boolean DISABLE_SQL = false;
 	
 	public static void run(String query) throws ClassNotFoundException, SQLException {
 		if (DISABLE_SQL) return;
@@ -20,6 +20,20 @@ public class Executor {
 		} catch (SQLException e) {
 			System.out.println("SQL Error: the query \"" + query + "\" failed. SQL Error msg: " + e.getMessage());
 		}
+	}
+	
+	public static ResultSet query(String query) throws ClassNotFoundException, SQLException {
+		if (DISABLE_SQL) return null;
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/Forum?user=root&password=1234");
+		Statement statement = connection.createStatement();
+		ResultSet result = null;
+		try {
+			result = statement.executeQuery(query);
+		} catch (SQLException e) {
+			System.out.println("SQL Error: the query \"" + query + "\" failed. SQL Error msg: " + e.getMessage());
+		}
+		return result;
 	}
 	
 }

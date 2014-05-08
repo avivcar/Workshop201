@@ -3,12 +3,26 @@ package sql;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import forumSystemCore.*;
 import utility.*;
 import user.*;
 
 public class Query {
+	
+	public static boolean load(ForumSystem fs) throws ClassNotFoundException, SQLException {
+		ResultSet forums = Executor.query("SELECT * FROM `Forums`");
+		writeResultSet(forums);
+		return true;
+	
+	}
+	
+	public static void writeResultSet(ResultSet resultSet) throws SQLException {
+	    while (resultSet.next()) {
+	      System.out.println("Forum: " + resultSet.getString("name"));
+	    }
+	  }
 	
 	public static void initDB() throws ClassNotFoundException, SQLException, IOException {
 		String initDbCode = utility.IO.read("init.sql");

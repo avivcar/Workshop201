@@ -17,7 +17,7 @@ public class Forum {
 	
 	//constructor
 	public Forum(String name, User admin){
-		setId();
+		putId();
 		this.name = name; 
 		this.policy = new Policy();
 		this.administrators = new ArrayList<User>();
@@ -26,6 +26,11 @@ public class Forum {
 		this.ranks = new ArrayList<Rank>();
 		administrators.add(admin);
 		save();
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+		nextId = Math.max(nextId, Integer.valueOf(id) + 1);
 	}
 	//Getters:
 	public String getName(){
@@ -128,7 +133,7 @@ public class Forum {
 	}
 	
 	private static int nextId = 1;
-	private void setId() {
+	private void putId() {
 		this.id = nextId++ + "";
 	}
 	public boolean isMember(User user) {

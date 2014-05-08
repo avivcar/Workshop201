@@ -28,6 +28,10 @@ public class SubForum {
 		this.id = String.valueOf(NEXT_ID);
 		NEXT_ID++;
 	}
+	public void setId(String id) {
+		this.id = id;
+		NEXT_ID = Math.max(NEXT_ID, Integer.valueOf(id) + 1);
+	}
 	public String getId() {return this.id;}
 	public String getSubject() {return subject;}
 	public List<User> getModerators() {return moderators;}

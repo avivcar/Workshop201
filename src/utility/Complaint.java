@@ -20,6 +20,10 @@ public class Complaint {
 		this.complaintMessage=msg;
 		this.date=date;
 	}
+	public void setId(String id) {
+		this.id = Integer.valueOf(id);
+		next_cpmlnt_id = Math.max(next_cpmlnt_id, Integer.valueOf(id) + 1);
+	}
 
 	public int getId() {
 		return id;
