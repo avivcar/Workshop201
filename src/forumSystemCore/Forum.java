@@ -10,7 +10,7 @@ public class Forum {
 	private String name;
 	private Policy policy;
 	private ArrayList<User> administrators;
-	private ArrayList<User> members;
+	protected ArrayList<User> members;
 	private ArrayList<SubForum> subForums;
 	private ArrayList<Rank> ranks;
 	private String id;

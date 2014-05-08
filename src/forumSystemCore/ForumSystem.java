@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import utility.LogFile;
 import user.User;
 import utility.*;
+import java.util.List;
 
 
 public class ForumSystem {
@@ -170,6 +171,43 @@ public class ForumSystem {
 		}
 		return null;
 
+	}
+	
+	/**
+	 * returns a list of users that are members in several forums (meaning - duplications of userNames among different forums)
+	 * @return List<User>
+	 */
+	
+	public List<User> getMultiForumMembers(){
+		List<User> ans = new ArrayList<User>();
+		List<User> userList = new ArrayList<User>();
+		for (int i=0; i < forums.size(); i++) { //go over all forums
+			//add all members
+			userList.addAll(forums.get(i).members);
+		}
+		//now we have a big, mashed up list of all members, with DUPLICATIONS
+		User currentUser;
+		int forumMembershipNumber;
+		for (int i=0; i < userList.size(); i++) {
+			forumMembershipNumber = 0;  //reset counter
+			currentUser = userList.get(i); //set current User that is being inspected
+			for (int j=0; j < userList.size(); j++) { //go over the user list, search for duplications
+				if (currentUser.getUsername().equals(userList.get(i).getUsername())) 
+					forumMembershipNumber++;
+			}
+			if (forumMembershipNumber > 1) { //check is user is in more than 1 forum, if so, add to answer
+				ans.add(currentUser);
+			}
+		}
+		return ans;
+	}
+	
+	public int getNumOfForums(){
+		return forums.size();
+	}
+	
+	public int getNumberOfForums(){
+		return forums.size();
 	}
 
 }
