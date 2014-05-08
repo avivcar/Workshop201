@@ -98,6 +98,8 @@ public class ConnectionHandler {
 	public void read() {
 		// do not read if protocol has terminated. only write of pending data is
 		// allowed
+		
+		
 		if (_protocol.shouldClose()) {
 			return;
 		}
@@ -121,7 +123,7 @@ public class ConnectionHandler {
 			_protocol.connectionTerminated();
 			return;
 		}
-
+		
 		//add the buffer to the protocol task
 		buf.flip();
 		_task.addBytes(buf);

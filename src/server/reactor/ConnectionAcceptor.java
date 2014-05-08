@@ -56,6 +56,7 @@ public class ConnectionAcceptor {
 			System.out.println("Accepting connection from " + address);
 			sChannel.configureBlocking(false);
 			SelectionKey key = sChannel.register(_data.getSelector(), 0);
+			
 			//register new user default empty constructor
 			
 		   user.User user = User.Guest;

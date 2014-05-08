@@ -30,6 +30,7 @@ public class ProtocolTask implements Runnable {
       // go over all complete messages and process them.
       while (_tokenizer.hasMessage()) {
          String msg = _tokenizer.nextMessage();
+       //  System.out.println("PT run: "+msg);
          String response = this._protocol.processMessage(msg);
          if (response != null) {
             try {

@@ -4,6 +4,7 @@ public class Constants {
 	
 	public static final String SUCC_ = "SUCC_";
 	public static final String ERR_ = "ERR_";
+	public static final String ERR_PARAM = "ERR_PARAM";
 	public static final String CREATE_FORUM = "CREATE_FORUM";
 	public static final String ISADMIN = "ISADMIN";
 	public static final String SIGNUP = "SIGNUP";

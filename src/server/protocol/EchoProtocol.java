@@ -22,12 +22,13 @@ public class EchoProtocol implements AsyncServerProtocol {
 		
 	}
 	@Override
-	public String processMessage(String msg) {        
-        String tmp = null;
+	public String processMessage(String msg) { 
+	//	System.out.println("proc message "+msg);
     	String response = null;
+    	
     	//breaking msg into array splitting by space
-        String[] msgArr = msg.split("$");
-        
+        String[] msgArr = msg.split(" ");
+        System.out.println("splitter: "+msgArr[0]+" "+msgArr[1] );
         if(msgArr[0]!=null){
         	switch(msgArr[0]){
         	
@@ -38,7 +39,7 @@ public class EchoProtocol implements AsyncServerProtocol {
         			else response=Constants.ERR_+"CANNOT_CREATE";
         		}
         		
-        		else {response = "ERR_NOT_ENOUGH_PARAMETERS";
+        		else {response =Constants.ERR_PARAM;
         				print(431, "ERR_PARAMETERS");
         			}
 				break;
@@ -46,7 +47,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 				
 			case Constants.ISADMIN:
 				if(this.isNull(msgArr,2)) {
-				response = "ERR_NOT_ENOUGH_PARAMETERS";
+				response = Constants.ERR_PARAM;
     			print(431, "ERR_PARAMETERS");
 				}
 				else response= "SUCC_"+Boolean.valueOf(forumSystem.isAdmin(msgArr[1], user));
@@ -57,7 +58,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 			case Constants.SIGNUP:
 				if(this.isNull(msgArr, 5)) {
 				print(461, "ERR_PARAMETERS");
-				response = "ERR_NOT_ENOUGH_PARAMETERS";
+				response = Constants.ERR_PARAM;
 				}
 				else response= this.signup(msgArr);
 				break;
@@ -66,7 +67,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 			case Constants.ISMEMBER:
 				if(this.isNull(msgArr,2)){
 					print(461, "ERR_PARAMETERS");
-					response = "ERR_NOT_ENOUGH_PARAMETERS";
+					response = Constants.ERR_PARAM;
 			}
 			else if(forumSystem.isMember(msgArr[1], user)) response="SUCC_TRUE";
 					else response = "SUCC_FALSE"; 
@@ -75,7 +76,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 			case Constants.LOGIN:
 				if(this.isNull(msgArr,3)){
 					print(461, "ERR_PARAMETERS");
-					response = "ERR_NOT_ENOUGH_PARAMETERS";
+					response = Constants.ERR_PARAM;
 					
 				}
 				else response =this.login(msgArr);
@@ -85,7 +86,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 			case Constants.EXISTSUBFORUM:
 				if(this.isNull(msgArr, 3)){
 					print(461, "ERR_PARAMETERS");
-					response = "ERR_NOT_ENOUGH_PARAMETERS";	
+					response = Constants.ERR_PARAM;	
 				}
 				else 
 					response = Constants.SUCC_+Boolean.valueOf(forumSystem.existSubForum(msgArr[1], msgArr[2]));
@@ -94,7 +95,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 		/**	case Constants.GET_FORUM:
 				if(this.checkNull(msgArr, 3)){
 					print(461, "ERR_PARAMETERS");
-					response = "ERR_NOT_ENOUGH_PARAMETERS";	
+					response = Constants.ERR_PARAM;	
 				}
 				else {
 					response=forumSystem.getForum(msgArr[1]);
@@ -106,7 +107,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 			case Constants.CREATE_MESSAGE:
 				if(this.isNull(msgArr,5)){
 					print(461, "ERR_PARAMETERS");
-					response = "ERR_NOT_ENOUGH_PARAMETERS";	
+					response = Constants.ERR_PARAM;	
 				}
 				else{ response = forumSystem.createMessage(msgArr[1], msgArr[2],this.user,msgArr[3], msgArr[4]);
 						if (response!=null) response=Constants.SUCC_+response;
