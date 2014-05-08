@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import user.User;
-import forumSystemCore.Forum;
 import forumSystemCore.ForumSystem;
 import junit.framework.TestCase;
 
@@ -24,8 +23,7 @@ public class overloadTest extends TestCase {
 	
 	@Before
 	public void init(){
-
-		
+	
 	}
 	
 	@Test
@@ -38,11 +36,9 @@ public class overloadTest extends TestCase {
 		sfId2 = sys.createSubForum(admin, admin, "eggs", fId);
 		
 		User u, u2;
-		
 		for(int i=0;i<=X;i++){
 			String mail = "lala@aliza.com";	
 			String username = "katriel"+(char)(65+i)+""; 
-			System.out.println(mail + "    "+ i);
 			assertNotNull(u = sys.signup(mail ,"Kat", username,"12345", fId));
 			assertNotNull(u2 = sys.signup(mail ,"Kat", username,"12345", fId2));
 			String title = "hi"+(char)(65+i)+"";
