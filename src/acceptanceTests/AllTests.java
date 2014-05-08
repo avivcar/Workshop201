@@ -11,6 +11,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	SubForumTest.class, 
 	writeMessageTest.class,
 	DataBaseTest.class,
+	//notificationTest.class,
+	overloadTest.class,
 	
 })
 public class AllTests {
