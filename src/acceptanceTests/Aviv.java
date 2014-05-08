@@ -1,5 +1,8 @@
 package acceptanceTests;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -17,9 +20,7 @@ public class Aviv extends TestCase {
 	//cheching forum creation
 	@Test
 	public void testForumCreation(){
-		
 		User admin=this.sys.startSystem("halevm@post.aliza.com","halevm","katriel","hi el");
-		
 		String forum=this.sys.createForum("newforum",admin);
 		
 		User newuser = this.sys.signup("miko@m.com","yaquir","york","agudayev",forum);//user reg

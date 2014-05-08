@@ -11,7 +11,6 @@ import user.*;
 public class Query {
 	
 	public static void initDB() throws ClassNotFoundException, SQLException, IOException {
-		Executor.run("CREATE DATABASE Forum");
 		String initDbCode = utility.IO.read("init.sql");
 		String[] commands = initDbCode.split("--NEXT--");
 		for (int i=0; i<commands.length; i++) Executor.run(commands[i]);
@@ -132,7 +131,7 @@ public class Query {
 
 	public static void save(Message msg) throws ClassNotFoundException, SQLException {
 		Executor.run("DELETE FROM `Messages` WHERE `id` = '" + msg.getId() + "'");
-		Executor.run("INSERT INTO `SubForums`(" + 
+		Executor.run("INSERT INTO `Messages`(" + 
 				"`msgRel`, " + 
 				"`subforumRel`, " + 
 				"`id`, " + 

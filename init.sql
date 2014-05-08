@@ -5,14 +5,14 @@ CREATE TABLE IF NOT EXISTS `Complaints` (
   `complainee` varchar(300) NOT NULL,
   `complaintMessage` text NOT NULL,
   `date` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
 CREATE TABLE IF NOT EXISTS `Forums` (
   `id` int(11) NOT NULL,
   `name` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `Messages` (
   `content` text NOT NULL,
   `title` text NOT NULL,
   `writer` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `Ranks` (
   `REMOVE_ADMIN` tinyint(1) NOT NULL,
   `ADD_MODERATOR` tinyint(1) NOT NULL,
   `REMOVE_MODERATOR` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `SubForums` (
   `rel` int(11) NOT NULL,
   `id` int(11) NOT NULL,
   `subject` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
@@ -62,14 +62,14 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `username` varchar(300) NOT NULL,
   `password` varchar(300) NOT NULL,
   `rank` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
 CREATE TABLE IF NOT EXISTS `_administrators` (
   `ForumId` int(11) NOT NULL,
   `Username` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `_friendRequests` (
   `rel` int(11) NOT NULL,
   `user1` varchar(300) NOT NULL,
   `user2` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
@@ -85,14 +85,14 @@ CREATE TABLE IF NOT EXISTS `_friends` (
   `rel` int(11) NOT NULL,
   `user1` varchar(300) NOT NULL,
   `user2` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
 CREATE TABLE IF NOT EXISTS `_moderators` (
   `subforumId` int(11) NOT NULL,
   `username` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `_pendingFriendRequests` (
   `rel` int(11) NOT NULL,
   `user1` varchar(300) NOT NULL,
   `user2` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --NEXT--
 
@@ -108,4 +108,4 @@ CREATE TABLE IF NOT EXISTS `_suspended` (
   `subforumId` int(11) NOT NULL,
   `username` varchar(300) NOT NULL,
   `date` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
