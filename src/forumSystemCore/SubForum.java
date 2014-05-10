@@ -24,11 +24,11 @@ public class SubForum {
 		complaints = new ArrayList<Complaint>();
 		messages = new ArrayList<Message>();
 		suspendedUsers = new ArrayList<Suspended>();
-		
+		moderators.add(admin);
 		this.id = String.valueOf(NEXT_ID);
 		NEXT_ID++;
 	}
-	public void recover(String subject, List<User> moderators, List<Complaint> complaints, List<Message> messages, List<Suspended> suspendedUsers, String id) {
+	public void recover(List<User> moderators, List<Complaint> complaints, List<Message> messages, List<Suspended> suspendedUsers, String id) {
 		this.subject = subject;
 		this.moderators = moderators;
 		this.complaints = complaints;
