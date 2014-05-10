@@ -14,6 +14,9 @@ public class Constants {
 	public static final String EXISTSUBFORUM = "EXISTSUBFORUM";
 //	public static final String GET_FORUM = "GET_FORUM"; 
 	public static final String CREATE_MESSAGE = "CREATE_MESSAGE";
+	public static final String AMIADMIN = "AMIADMIN";
+	public static final String GETFORUMS = "GETFORUMS";
+
 
 
 

@@ -62,7 +62,7 @@ public class Reactor implements Runnable {
 		_poolSize = poolSize;
 		_protocolFactory = protocol;
 		_tokenizerFactory = tokenizer;
-		this.forumSystem= forumsystem; //
+		this.forumSystem= forumsystem; 
 	}
 
 	/**
@@ -208,12 +208,15 @@ public class Reactor implements Runnable {
 	public static void main(String args[]) {
 	
 		try {
-			int port =1002 ;
+			int port =1000 ;
 			int poolSize =10; 
 //init forum sys 
 			ForumSystem forumSystem = new ForumSystem();
 			User admin= forumSystem.startSystem("halevm@em.walla.com", "firstname", "admin", "1234");
-			
+			String s = forumSystem.createForum("yaquierrrr", admin);
+			s = forumSystem.createForum("lahan-el", admin);
+			s = forumSystem.createForum("shem-nahash!", admin);
+
 	
 //init reactor			
 			Reactor reactor = startEchoServer(port, poolSize,forumSystem);

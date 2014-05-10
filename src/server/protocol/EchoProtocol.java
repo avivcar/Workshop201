@@ -27,8 +27,8 @@ public class EchoProtocol implements AsyncServerProtocol {
     	String response = null;
     	
     	//breaking msg into array splitting by space
-        String[] msgArr = msg.split(" ");
-        System.out.println("splitter: "+msgArr[0]+" "+msgArr[1] );
+        String[] msgArr = msg.split("\\^");
+        //System.out.println("splitter: "+msgArr[0]+" "+msgArr[1] );
         if(msgArr[0]!=null){
         	switch(msgArr[0]){
         	
@@ -58,19 +58,25 @@ public class EchoProtocol implements AsyncServerProtocol {
 			case Constants.SIGNUP:
 				if(this.isNull(msgArr, 5)) {
 				print(461, "ERR_PARAMETERS");
-				response = Constants.ERR_PARAM;
+				response = Constants.SIGNUP+"^"+ Constants.ERR_PARAM;
 				}
 				else response= this.signup(msgArr);
 				break;
 				
+			case Constants.GETFORUMS:
+			response=Constants.GETFORUMS+"^"+Constants.SUCC_;
+				for(int i=0;i<this.forumSystem.forums.size();i++)
+					response=response+"^"+this.forumSystem.forums.get(i).getName()+"^"+this.forumSystem.forums.get(i).getId();	
+	
+				break;
+								
 				
 			case Constants.ISMEMBER:
 				if(this.isNull(msgArr,2)){
 					print(461, "ERR_PARAMETERS");
 					response = Constants.ERR_PARAM;
 			}
-			else if(forumSystem.isMember(msgArr[1], user)) response="SUCC_TRUE";
-					else response = "SUCC_FALSE"; 
+			else response =Constants.SUCC_+forumSystem.isMember(msgArr[1], user);
 				break;
 				
 			case Constants.LOGIN:
@@ -114,7 +120,13 @@ public class EchoProtocol implements AsyncServerProtocol {
 						else response=Constants.ERR_+"CANNOT";
 					
 				}
-				
+			case Constants.AMIADMIN:
+				if(this.isNull(msgArr,1)){
+					print(461, "ERR_PARAMETERS");
+					response = Constants.ERR_PARAM;	
+				}
+				else 
+				response= Constants.SUCC_ + Boolean.toString(forumSystem.isAdmin(msgArr[1],this.user));
 			    break;
 				
 			    
@@ -159,12 +171,13 @@ public class EchoProtocol implements AsyncServerProtocol {
 	//new methods!!
 	private String signup(String[] msg) {
     	String ans =null;
-        user.User user = forumSystem.signup(msg[1], msg[2], msg[3],msg[4], msg[5]);
+    	System.out.println("now in signup:"+ msg.toString());
+        user.User user = forumSystem.signup(msg[1],msg[2], msg[3],msg[4], msg[5]);
         if (user!=null) {
         	this.user=user;
-        	ans="SUCC_SIGNUP";
+        	ans=Constants.SIGNUP+"^"+Constants.SUCC_+"^"+Boolean.toString(true);
         }
-        else ans="ERR_SIGNUP";
+        else ans=Constants.SIGNUP+"^"+Constants.SUCC_+"^"+Boolean.toString(false);
     	return ans;
     	
 	}
