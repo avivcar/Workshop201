@@ -40,6 +40,13 @@ public class ForumSystem {
 				|| name.equals(""))
 			return null;
 		superuser = new User(email, name, username, password, Rank.rankSuperUser());
+		try {
+			sql.Query.saveSuper(superuser);
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		operationLog = new LogFile("Operation.txt");
 		errorLog = new LogFile("Error.txt");
 		forums = new ArrayList<Forum>();
@@ -63,6 +70,7 @@ public class ForumSystem {
 		}
 		Forum newForum = new Forum(name, admin);
 		forums.add(newForum);
+		newForum.save();
 		return newForum.getId();
 	}
 	

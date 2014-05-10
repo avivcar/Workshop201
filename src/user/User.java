@@ -53,6 +53,12 @@ public class User {
 	 */
 	public User() {}
 	
+	public void recover(ArrayList<User> friends, ArrayList<User> pendingFriendRequests, ArrayList<User> friendRequests) {
+		this.friends = friends;
+		this.pendingFriendRequests = pendingFriendRequests;
+		this.friendRequests = friendRequests;
+	}
+	
 	/**
 	 * Changes user details
 	 * @param mail

@@ -27,6 +27,13 @@ public class Message {
 		this.id = String.valueOf(NEXT_ID);
 		NEXT_ID++;
 	}
+	
+	public void recover(List<Message> replies, Date date, String id) {
+		this.replies = replies;
+		this.date = date;
+		setId(id);
+	}
+	
 	public void setId(String id) {
 		this.id = id;
 		NEXT_ID = Math.max(NEXT_ID, Integer.valueOf(id) + 1);

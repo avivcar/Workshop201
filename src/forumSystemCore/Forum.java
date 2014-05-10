@@ -25,11 +25,10 @@ public class Forum {
 		this.subForums = new ArrayList<SubForum>();
 		this.ranks = new ArrayList<Rank>();
 		administrators.add(admin);
-		save();
+		members.add(admin);
 	}
 	
-	public void recover(String name, ArrayList<User> administrators, ArrayList<User> members, ArrayList<SubForum> subForums, ArrayList<Rank> ranks, String id) {
-		this.name = name;
+	public void recover(ArrayList<User> administrators, ArrayList<User> members, ArrayList<SubForum> subForums, ArrayList<Rank> ranks, String id) {
 		this.administrators = administrators;
 		this.members = members;
 		this.subForums = subForums;

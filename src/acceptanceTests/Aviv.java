@@ -20,6 +20,13 @@ public class Aviv extends TestCase {
 	//cheching forum creation
 	@Test
 	public void testForumCreation(){
+		try {
+			sql.Query.load(sys);
+			int i = 0;
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
 		
 		/*
 		try {
@@ -34,7 +41,7 @@ public class Aviv extends TestCase {
 		*/
 		
 		
-		
+		/*
 		User admin=this.sys.startSystem("halevm@post.aliza.com","halevm","katriel","hi el");
 		String forum=this.sys.createForum("newforum",admin);
 		
@@ -47,7 +54,7 @@ public class Aviv extends TestCase {
 		sf.createMessage(newuser, "message from member", "hihihi member");
 		Message adminMsgObject = sf.getMessageById(adminMsg);
 		adminMsgObject.addReply(newuser, "comment!", "comment content");
-		
+		*/
 	
 	}
 	

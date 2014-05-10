@@ -20,11 +20,7 @@ public class Complaint {
 		this.complaintMessage=msg;
 		this.date=date;
 	}
-	public void recover(String id, User complainer, User complainee, String complaintMessage, String date) {
-		this.complainee = complainee;
-		this.complainer = complainer;
-		this.complaintMessage = complaintMessage;
-		this.date = new Date(Integer.valueOf(date) * 1000);
+	public void recover(String id) {
 		setId(id);
 	}
 	public void setId(String id) {
