@@ -10,7 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	RegLoginLogoutTest.class,
 	SubForumTest.class, 
 	writeMessageTest.class,
-	DataBaseTest.class,
+	//DataBaseTest.class,
 	//notificationTest.class,
 	overloadTest.class,
 	
