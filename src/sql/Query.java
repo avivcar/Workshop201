@@ -14,6 +14,7 @@ import user.*;
 public class Query {
 	
 	public static boolean load(ForumSystem fs) throws ClassNotFoundException, SQLException {
+		if (Executor.DISABLE_SQL) return false;
 		ResultSet users = Executor.query("SELECT * FROM `Super`");
 		if (!users.next()) return false;
 		User superuser = new User(users.getString("mail"), users.getString("name"), users.getString("username"), users.getString("password"), Rank.superUser);
@@ -215,6 +216,7 @@ public class Query {
 	}
 
 	public static void save(Rank rank) throws ClassNotFoundException, SQLException {
+		if (Executor.DISABLE_SQL) return;
 		ResultSet currentRecord = Executor.query("SELECT * FROM `Ranks` WHERE `name` = '" + rank.getName() + "'");
 		String rel = currentRecord.next() ? currentRecord.getString("rel") : "0";
 		Executor.run("DELETE FROM `Ranks` WHERE `name` = '" + rank.getName() + "'");
@@ -252,6 +254,7 @@ public class Query {
 	}
 
 	public static void save(Complaint comp) throws ClassNotFoundException, SQLException {
+		if (Executor.DISABLE_SQL) return;
 		ResultSet currentRecord = Executor.query("SELECT * FROM `Complaints` WHERE `id` = '" + comp.getId() + "'");
 		String rel = currentRecord.next() ? currentRecord.getString("rel") : "0";
 		Executor.run("DELETE FROM `Complaints` WHERE `id` = '" + comp.getId() + "'");
@@ -273,6 +276,7 @@ public class Query {
 	}
 
 	public static void save(User user) throws ClassNotFoundException, SQLException {
+		if (Executor.DISABLE_SQL) return;
 		if (user.getMail() == null) return;
 		ResultSet currentRecord = Executor.query("SELECT * FROM `Users` WHERE `username` = '" + user.getUsername() + "'");
 		String rel = currentRecord.next() ? currentRecord.getString("rel") : "0";
@@ -334,6 +338,7 @@ public class Query {
 	}
 
 	public static void save(Message msg) throws ClassNotFoundException, SQLException {
+		if (Executor.DISABLE_SQL) return;
 		ResultSet currentRecord = Executor.query("SELECT * FROM `Messages` WHERE `id` = '" + msg.getId() + "'");
 		String msgRel = "-1";
 		String sfRel = "0";
@@ -369,6 +374,7 @@ public class Query {
 	}
 
 	public static void save(SubForum sf) throws ClassNotFoundException, SQLException {
+		if (Executor.DISABLE_SQL) return;
 		ResultSet currentRecord = Executor.query("SELECT * FROM `SubForums` WHERE `id` = '" + sf.getId() + "'");
 		String rel = currentRecord.next() ? currentRecord.getString("rel") : "0";
 		Executor.run("DELETE FROM `SubForums` WHERE `id` = '" + sf.getId() + "'");
@@ -404,6 +410,7 @@ public class Query {
 	}
 
 	public static void save(Forum forum) throws ClassNotFoundException, SQLException {
+		if (Executor.DISABLE_SQL) return;
 		Executor.run("DELETE FROM `Forums` WHERE `id` = '" + forum.getId() + "'");
 		Executor.run("INSERT INTO `Forums`(" + 
 				"`id`, " + 

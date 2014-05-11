@@ -57,7 +57,10 @@ public class Forum {
 	public User login(String username, String password) {
 		for (int i=0; i<members.size(); i++) 
 			if (members.get(i).getUsername().equals(username) && 
-					members.get(i).getPassword().equals(password)) return members.get(i);
+					members.get(i).getPassword().equals(password)){
+				System.out.println("found a match! logging in, username: "+ members.get(i).getUsername()+" pass: "+members.get(i).getPassword());
+				return members.get(i);
+			}
 		return null;
 	}
 	

@@ -8,6 +8,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -211,12 +212,24 @@ public class Reactor implements Runnable {
 			int port =1000 ;
 			int poolSize =10; 
 //init forum sys 
+			try {
+				sql.Query.initDB();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			ForumSystem forumSystem = new ForumSystem();
-			User admin= forumSystem.startSystem("halevm@em.walla.com", "firstname", "admin", "1234");
-			String s = forumSystem.createForum("yaquierrrr", admin);
-			s = forumSystem.createForum("lahan-el", admin);
-			s = forumSystem.createForum("shem-nahash!", admin);
-
+			if (!sql.Query.load(forumSystem)) {
+				System.out.println("Starting system...");
+				User admin= forumSystem.startSystem("halevm@em.walla.com", "firstname", "admin", "1234");
+				String s = forumSystem.createForum("yaquierrrr", admin);
+				s = forumSystem.createForum("lahan-el", admin);
+				s = forumSystem.createForum("shem-nahash!", admin);
+			}
+			else System.out.println("Loading system, please stand by captain.");
 	
 //init reactor			
 			Reactor reactor = startEchoServer(port, poolSize,forumSystem);

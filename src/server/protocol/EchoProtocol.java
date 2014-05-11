@@ -28,7 +28,8 @@ public class EchoProtocol implements AsyncServerProtocol {
     	
     	//breaking msg into array splitting by space
         String[] msgArr = msg.split("\\^");
-        //System.out.println("splitter: "+msgArr[0]+" "+msgArr[1] );
+        for (int i=0;i<msgArr.length;i++)
+        	System.out.println("msg "+i+" :"+msgArr[i]);
         if(msgArr[0]!=null){
         	switch(msgArr[0]){
         	
@@ -132,7 +133,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 			    
 				
 				
-			default: response="DEFAULT";
+			default: response="YAKIR TWAT";
 				
         	}
         	              	
@@ -185,12 +186,11 @@ public class EchoProtocol implements AsyncServerProtocol {
 		String ans=null;
 		user.User user = forumSystem.login(msgArr[1], msgArr[2], msgArr[3]);
 		if(user!=null){
-			ans="SUCC_"+user.getUsername();
+			ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(true);
 			this.user=user;
 		}
-		else ans="ERR_LOGIN";
-						
-					
+		else ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(false);
+				
 	return ans;
 	}
 	

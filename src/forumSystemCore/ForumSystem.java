@@ -14,7 +14,7 @@ import java.util.List;
 public class ForumSystem {
 	LogFile operationLog;
 	LogFile errorLog;
-	ArrayList<Forum> forums;
+	public	ArrayList<Forum> forums;
 	User superuser;
 	
 	public void recover(ArrayList<Forum> forums, User superuser) {
@@ -25,15 +25,6 @@ public class ForumSystem {
 	// Constructors:
 	public User startSystem(String email, String name, String username,
 			String password) {
-		try {
-			sql.Query.initDB();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		if (!TextVerifier.verifyName(username, new Policy())
 				|| !TextVerifier.verifyEmail(email)
 				|| !TextVerifier.verifyPassword(password, new Policy())
