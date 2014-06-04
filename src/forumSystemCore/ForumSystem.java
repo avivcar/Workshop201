@@ -30,7 +30,16 @@ public class ForumSystem {
 				|| !TextVerifier.verifyPassword(password, new Policy())
 				|| name.equals(""))
 			return null;
-		superuser = new User(email, name, username, password, Rank.rankSuperUser());
+		try {
+			sql.Query.initDB();
+		} catch (ClassNotFoundException e2) {
+			e2.printStackTrace();
+		} catch (SQLException e2) {
+			System.out.println(e2.getMessage());
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		superuser = new User(email, name, username, password, Rank.rankSuperUser(), null);
 		try {
 			sql.Query.saveSuper(superuser);
 		} catch (ClassNotFoundException e1) {

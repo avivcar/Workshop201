@@ -14,7 +14,7 @@ public class testUser {
 
 	@Test
 	public void testChangeDetails() {
-		User user = new User("halevm@mi.com","name","username","pass",new Rank(""));
+		User user = new User("halevm@mi.com","name","username","pass",new Rank("", null), null);
         user.changeDetails("new@new.com","hi","new","newnew");
         assertTrue(user.getMail().equals("new@new.com"));
         assertTrue(user.getName().equals("hi"));
@@ -23,8 +23,8 @@ public class testUser {
 	}
 	@Test
 	public void testFriends(){
-		User user = new User("he77m@mi.com","name","username","pass",new Rank(""));
-		User slamauns = new User("hvm@mi.com","name2","halevm","pass",new Rank(""));
+		User user = new User("he77m@mi.com","name","username","pass",new Rank("", null), null);
+		User slamauns = new User("hvm@mi.com","name2","halevm","pass",new Rank("", null), null);
 		user.sendFriendRequest(slamauns);
 		slamauns.approveFriend(user);
 		assertTrue(slamauns.isFriend(user));

@@ -15,11 +15,11 @@ public class testComplaint {
 
 	@Test
 	public void testEditComplaint() {
-		Rank r = new Rank("A");
-		User u1 = new User("u1@yahoo.com","ben","ben123","12345",r);
-		User u2 = new User("u2@yahoo.com","tom","tom400","12345",r);
+		Rank r = new Rank("A", null);
+		User u1 = new User("u1@yahoo.com","ben","ben123","12345",r, null);
+		User u2 = new User("u2@yahoo.com","tom","tom400","12345",r, null);
 		
-		Complaint com = new Complaint(u1, u2, "tom400 was spamming", new Date());
+		Complaint com = new Complaint(u1, u2, "tom400 was spamming", new Date(), null);
 		assertTrue(com.editComplaint(u1, u2, "sorry mistake"));
 		assertFalse(com.editComplaint(u1, u2, null));
 		assertEquals("sorry mistake", com.getComplaintMessage());

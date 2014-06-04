@@ -15,7 +15,7 @@ public class testRank {
 	public void test() {
 		ArrayList<Permissions> tmp = new ArrayList<Permissions>();
 		tmp.add(Permissions.CREATE_MESSAGE);
-		Rank rank = new Rank("A");
+		Rank rank = new Rank("A", null);
 		rank.setPermissions(tmp);
 		assertTrue(rank.hasPermission(Permissions.CREATE_MESSAGE));
 		assertFalse(rank.hasPermission(Permissions.CREATE_FORUM));

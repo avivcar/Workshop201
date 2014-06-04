@@ -35,6 +35,12 @@ public class User {
 	// user rank
 	private Rank rank;
 	
+	private String forumId;
+	
+	public String getForumId() {
+		return forumId;
+	}
+	
 	/**
 	 * Constructor
 	 * @param mail
@@ -43,9 +49,10 @@ public class User {
 	 * @param password
 	 * @param rank
 	 */
-	public User(String mail, String name, String username, String password, Rank rank) {
+	public User(String mail, String name, String username, String password, Rank rank, String forumId) {
+		this.forumId = forumId;
 		this.rank = rank;
-		changeDetails(mail, name, username, password);
+		this.changeDetails(mail, name, username, password);
 	}
 	
 	/**
@@ -80,8 +87,8 @@ public class User {
 	 */
 	public void sendFriendRequest(User user) {
 		pendingFriendRequests.add(user);
+		sql.Query.saveFriend("_pendingFriendRequests", this, user);
 		user.receiveFriendRequest(this);
-		save();
 	}
 	
 	/**
@@ -90,7 +97,7 @@ public class User {
 	 */
 	public void receiveFriendRequest(User user) {
 		friendRequests.add(user);
-		save();
+		sql.Query.saveFriend("_friendRequests", user, this);
 	}
 	
 	/**
@@ -100,8 +107,8 @@ public class User {
 	public void approveFriend(User user) {
 		friendRequests.remove(user);
 		friends.add(user);
+		sql.Query.saveFriend("_friends", this, user);
 		user.friendshipApproved(this);
-		save();
 	}
 	
 	/**
@@ -111,7 +118,7 @@ public class User {
 	public void friendshipApproved(User user) {
 		pendingFriendRequests.remove(user);
 		friends.add(user);
-		save();
+		sql.Query.saveFriend("_friends", this, user);
 	}
 	
 	/**

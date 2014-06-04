@@ -6,20 +6,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Rank {
+	private String forumId;
 	private String name;
 	private ArrayList<Permissions> permissions;
 	public static Rank superUser = Rank.rankSuperUser();
 	public static Rank admin = Rank.rankAdmin();
 	public static Rank moderator = Rank.rankModerator();
 	public static Rank member = Rank.rankMember();
+	
+	public String getForumId() {
+		return forumId;
+	}
 
-	public Rank(String name) {
+	public Rank(String name, String forumId) {
+		this.forumId = forumId;
 		this.name = name;
 		this.permissions = new ArrayList<Permissions>();
 	}
 
 	public static Rank rankSuperUser(){
-		Rank r = new Rank("SuperUser");
+		Rank r = new Rank("SuperUser", null);
 		r.addPermission(Permissions.CREATE_FORUM);
 		r.addPermission(Permissions.SET_FORUM_PROPERTIES);
 		r.addPermission(Permissions.CREATE_SUB_FORUM);
@@ -36,7 +42,7 @@ public class Rank {
 	}
 
 	public static Rank rankAdmin(){
-		Rank r = new Rank("Admin");
+		Rank r = new Rank("Admin", null);
 		r.addPermission(Permissions.SET_FORUM_PROPERTIES);
 		r.addPermission(Permissions.CREATE_SUB_FORUM);
 		r.addPermission(Permissions.CREATE_MESSAGE);
@@ -52,14 +58,14 @@ public class Rank {
 	}
 
 	public static Rank rankModerator(){
-		Rank r = new Rank("Moderator");
+		Rank r = new Rank("Moderator", null);
 		r.addPermission(Permissions.CREATE_MESSAGE);
 		r.addPermission(Permissions.DELETE_MESSAGE);
 		return r;	
 	}
 
 	public static Rank rankMember(){
-		Rank r = new Rank("Member");
+		Rank r = new Rank("Member", null);
 		r.addPermission(Permissions.CREATE_MESSAGE);
 		return r;	
 	}

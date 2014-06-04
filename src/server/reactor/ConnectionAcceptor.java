@@ -57,7 +57,7 @@ public class ConnectionAcceptor {
 			sChannel.configureBlocking(false);
 			SelectionKey key = sChannel.register(_data.getSelector(), 0);
 			
-			//register new user default empty constructor
+			//register new user default Guset constructor
 			
 		   user.User user = User.Guest;
 			ConnectionHandler handler = ConnectionHandler.create(sChannel, _data, key, user);

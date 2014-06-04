@@ -20,7 +20,7 @@ public class testMessage {
 		sys = new ForumSystem();
 		admin = sys.startSystem("yy2006@gmail.com", "Yakir yehuda",
 										"fashizel", "123");
-		m = new Message(admin, "dd", "ff");
+		m = new Message(admin, "dd", "ff", null, null);
 		forum = new Forum("lolz",admin);
 		u = forum.signup("motek@walla.co.il", "Matan Carmis", "mamush", "12345");
 		

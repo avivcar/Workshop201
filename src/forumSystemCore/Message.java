@@ -9,6 +9,8 @@ import utility.*;
 
 public class Message {
 	private static int NEXT_ID=1;
+	private String subforumId;
+	private String msgRel;
 	private Date date;
 	private String content;
 	private String title;
@@ -17,7 +19,16 @@ public class Message {
 	//special id
 	private String id;
 	
-	public Message(User user, String title, String content) {
+	public String getMsgRel() {
+		return msgRel;
+	}
+	public String getSubforumId() {
+		return subforumId;
+	}
+	
+	public Message(User user, String title, String content, String subforumId, String msgRel) {
+		this.subforumId = subforumId;
+		this.msgRel = msgRel;
 		this.writer=user;
 		this.title = title;
 		this.content = content;
@@ -64,9 +75,9 @@ public class Message {
 	 * @return
 	 */
 	public Message addReply(User user, String title, String content){
-		Message m = new Message(user, title, content);
+		Message m = new Message(user, title, content, null, this.id);
 		replies.add(m);
-		save();
+		m.save();
 		return m;
 	}
 	/**
@@ -78,7 +89,7 @@ public class Message {
 	public boolean removeReply(User user, Message message){
 		if(user.hasPermission(Permissions.DELETE_MESSAGE) || message.isWriter(user)){
 			replies.remove(message);
-			save();
+			sql.Query.remove(message);
 			return true;
 		}
 		return false;

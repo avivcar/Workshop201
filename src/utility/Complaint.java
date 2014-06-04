@@ -7,14 +7,20 @@ import user.*;
 public class Complaint {
 	private static int next_cpmlnt_id=1;
 	private int id; 
+	private String subforumId;
 	private User complainer;
 	private User complainee;
 	private String complaintMessage;
 	private Date date;
 	
-	public Complaint(User complainer,User complainee,String msg, Date date) {
+	public String getSubforumId() {
+		return subforumId;
+	}
+	
+	public Complaint(User complainer,User complainee,String msg, Date date, String subforumId) {
 		this.id = next_cpmlnt_id;
 		next_cpmlnt_id++;
+		this.subforumId = subforumId;
 		this.complainer=complainer;
 		this.complainee=complainee;
 		this.complaintMessage=msg;

@@ -17,7 +17,7 @@ public class Query {
 		if (Executor.DISABLE_SQL) return false;
 		ResultSet users = Executor.query("SELECT * FROM `Super`");
 		if (!users.next()) return false;
-		User superuser = new User(users.getString("mail"), users.getString("name"), users.getString("username"), users.getString("password"), Rank.superUser);
+		User superuser = new User(users.getString("mail"), users.getString("name"), users.getString("username"), users.getString("password"), Rank.superUser, null);
 		ResultSet forums = Executor.query("SELECT * FROM `Forums`");
 		ArrayList<Forum> forumList = new ArrayList<Forum>();
 		while (forums.next()) forumList.add(loadForum(forums, superuser));
@@ -34,13 +34,13 @@ public class Query {
 		ArrayList<Rank> ranks = new ArrayList<Rank>();
 		ArrayList<String> adminUsernames = new ArrayList<String>();
 		// extract ranks
-		ResultSet rankResults = Executor.query("SELECT * FROM `Ranks` WHERE `rel` = '" + id + "'");
+		ResultSet rankResults = Executor.query("SELECT * FROM `Ranks` WHERE `forumId` = '" + id + "'");
 		while (rankResults.next()) ranks.add(loadRank(rankResults));
 		// extract admin user names
 		ResultSet adminResults = Executor.query("SELECT * FROM `_administrators` WHERE `ForumId` = '" + id + "'");
 		while (adminResults.next()) adminUsernames.add(adminResults.getString("Username"));
 		// load users
-		ResultSet userResults = Executor.query("SELECT * FROM `Users` WHERE `rel` = '" + id + "'");
+		ResultSet userResults = Executor.query("SELECT * FROM `Users` WHERE `forumId` = '" + id + "' OR `forumId` = '0'");
 		while (userResults.next()) {
 			User member = loadUser(userResults, ranks); 
 			members.add(member);
@@ -49,7 +49,7 @@ public class Query {
 		// recover users
 		for (int i=0; i<members.size(); i++) recoverUser(members.get(i), id, members);
 		// load sub forums
-		ResultSet sfResults = Executor.query("SELECT * FROM `SubForums` WHERE `rel` = '" + id + "'");
+		ResultSet sfResults = Executor.query("SELECT * FROM `SubForums` WHERE `forumId` = '" + id + "'");
 		while (sfResults.next()) subForums.add(loadSubForum(sfResults, members));
 		// recover and return
 		forum.recover(administrators, members, subForums, ranks, id);
@@ -57,7 +57,7 @@ public class Query {
 	}
 	
 	public static SubForum loadSubForum(ResultSet sqlObject, ArrayList<User> forumMembers) throws SQLException, ClassNotFoundException {
-		String id = sqlObject.getString("id");
+		String id = sqlObject.getString("id"), forumId = sqlObject.getString("forumId");
 		List<User> moderators = new ArrayList<User>();
 		List<Complaint> complaints = new ArrayList<Complaint>();
 		List<Message> messages = new ArrayList<Message>();
@@ -66,7 +66,7 @@ public class Query {
 		ResultSet moderatorResults = Executor.query("SELECT * FROM `_moderators` WHERE `subforumId` = '" + id + "'");
 		while (moderatorResults.next()) moderators.add(findUser(forumMembers, moderatorResults.getString("username")));
 		// load complaints
-		ResultSet complaintResults = Executor.query("SELECT * FROM `Complaints` WHERE `rel` = '" + id + "'");
+		ResultSet complaintResults = Executor.query("SELECT * FROM `Complaints` WHERE `subforumId` = '" + id + "'");
 		while (complaintResults.next()) complaints.add(loadComplaint(complaintResults, forumMembers));
 		// load messages
 		ResultSet msgResults = Executor.query("SELECT * FROM `Messages` WHERE `subforumRel` = '" + id + "'");
@@ -74,7 +74,7 @@ public class Query {
 		// load suspended users
 		ResultSet susResults = Executor.query("SELECT * FROM `_suspended` WHERE `subforumId` = '" + id + "'");
 		while (susResults.next()) suspendedUsers.add(loadSuspended(susResults, forumMembers));
-		SubForum subforum = new SubForum(sqlObject.getString("subject"), moderators.get(0));
+		SubForum subforum = new SubForum(sqlObject.getString("subject"), moderators.get(0), forumId);
 		subforum.recover(moderators, complaints, messages, suspendedUsers, id);
 		return subforum;
 	}
@@ -84,7 +84,7 @@ public class Query {
 	}
 	
 	public static Message loadMessage(ResultSet sqlObject, ArrayList<User> forumMembers) throws SQLException, ClassNotFoundException {
-		Message msg = new Message(findUser(forumMembers, sqlObject.getString("writer")), sqlObject.getString("title"), sqlObject.getString("content"));
+		Message msg = new Message(findUser(forumMembers, sqlObject.getString("writer")), sqlObject.getString("title"), sqlObject.getString("content"), sqlObject.getString("subforumRel"), sqlObject.getString("msgRel"));
 		List<Message> replies = new ArrayList<Message>();
 		String id = sqlObject.getString("id");
 		ResultSet msgResults = Executor.query("SELECT * FROM `Messages` WHERE `msgRel` = '" + id + "'");
@@ -94,7 +94,7 @@ public class Query {
 	}
 	
 	public static Complaint loadComplaint(ResultSet sqlObject, ArrayList<User> forumMembers) throws SQLException {
-		Complaint complaint = new Complaint(findUser(forumMembers, sqlObject.getString("complainer")), findUser(forumMembers, sqlObject.getString("complainee")), sqlObject.getString("complaintMessage"), new Date(Integer.valueOf(sqlObject.getString("date")) * 1000));
+		Complaint complaint = new Complaint(findUser(forumMembers, sqlObject.getString("complainer")), findUser(forumMembers, sqlObject.getString("complainee")), sqlObject.getString("complaintMessage"), new Date(Integer.valueOf(sqlObject.getString("date")) * 1000), sqlObject.getString("subforumId"));
 		complaint.recover(sqlObject.getString("id"));
 		return complaint;
 		
@@ -108,7 +108,7 @@ public class Query {
 	}
 	
 	public static User loadUser(ResultSet sqlObject, ArrayList<Rank> ranks) throws SQLException {
-		return new User(sqlObject.getString("mail"), sqlObject.getString("name"), sqlObject.getString("username"), sqlObject.getString("password"), findRank(ranks, sqlObject.getString("rank")));
+		return new User(sqlObject.getString("mail"), sqlObject.getString("name"), sqlObject.getString("username"), sqlObject.getString("password"), findRank(ranks, sqlObject.getString("rank")), sqlObject.getString("forumId"));
 	}
 	
 	public static void recoverUser(User user, String forumId, ArrayList<User> forumMembers) throws SQLException, ClassNotFoundException {
@@ -116,13 +116,13 @@ public class Query {
 		ArrayList<User> pendingFriendRequests = new ArrayList<User>();
 		ArrayList<User> friendRequests = new ArrayList<User>();
 		// load friends
-		ResultSet friendResults = Executor.query("SELECT * FROM `_friends` WHERE `rel` = '" + forumId + "' AND `user1` = '" + user.getUsername() + "'");
+		ResultSet friendResults = Executor.query("SELECT * FROM `_friends` WHERE `forumId` = '" + forumId + "' AND `user1` = '" + user.getUsername() + "'");
 		while (friendResults.next()) friends.add(findUser(forumMembers, friendResults.getString("user2")));
 		// load pending
-		ResultSet pendResults = Executor.query("SELECT * FROM `_pendingFriendRequests` WHERE `rel` = '" + forumId + "' AND `user1` = '" + user.getUsername() + "'");
+		ResultSet pendResults = Executor.query("SELECT * FROM `_pendingFriendRequests` WHERE `forumId` = '" + forumId + "' AND `user1` = '" + user.getUsername() + "'");
 		while (pendResults.next()) pendingFriendRequests.add(findUser(forumMembers, pendResults.getString("user2")));
 		// load requests
-		ResultSet reqResults = Executor.query("SELECT * FROM `_friendRequests` WHERE `rel` = '" + forumId + "' AND `user1` = '" + user.getUsername() + "'");
+		ResultSet reqResults = Executor.query("SELECT * FROM `_friendRequests` WHERE `forumId` = '" + forumId + "' AND `user1` = '" + user.getUsername() + "'");
 		while (reqResults.next()) friendRequests.add(findUser(forumMembers, reqResults.getString("user2")));
 		user.recover(friends, pendingFriendRequests, friendRequests);
 	}
@@ -139,7 +139,7 @@ public class Query {
 	}
 	
 	public static Rank loadRank(ResultSet sqlObject) throws SQLException {
-		Rank result = new Rank(sqlObject.getString("name"));
+		Rank result = new Rank(sqlObject.getString("name"), sqlObject.getString("forumId"));
 		if (sqlObject.getString("CREATE_FORUM") == "1") result.addPermission(Permissions.CREATE_FORUM);
 		if (sqlObject.getString("SET_FORUM_PROPERTIES") == "1") result.addPermission(Permissions.SET_FORUM_PROPERTIES);
 		if (sqlObject.getString("CREATE_SUB_FORUM") == "1") result.addPermission(Permissions.CREATE_SUB_FORUM);
@@ -154,6 +154,14 @@ public class Query {
 		if (sqlObject.getString("REMOVE_MODERATOR") == "1") result.addPermission(Permissions.REMOVE_MODERATOR);
 		return result;
 	}
+	
+	
+	
+	
+	
+	/////////////////////////////////////////////////////////// ---- save
+	
+	
 	
 	public static void saveSuper(User user) throws ClassNotFoundException, SQLException {
 		Executor.run("DELETE FROM `Super` WHERE `username` = '" + user.getUsername() + "'");
@@ -172,7 +180,7 @@ public class Query {
 		for (int i=0; i<user.getFriends().size(); i++) {
 			User user2 = user.getFriends().get(i);
 			Executor.run("INSERT INTO `_friends`(" + 
-					"`rel`, " + 
+					"`forumId`, " + 
 					"`user1`, " + 
 					"`user2`" + 
 				") VALUES (" + 
@@ -185,7 +193,7 @@ public class Query {
 		for (int i=0; i<user.getFriendRequests().size(); i++) {
 			User user2 = user.getFriendRequests().get(i);
 			Executor.run("INSERT INTO `_friendRequests`(" + 
-					"`rel`, " + 
+					"`forumId`, " + 
 					"`user1`, " + 
 					"`user2`" + 
 				") VALUES (" + 
@@ -198,7 +206,7 @@ public class Query {
 		for (int i=0; i<user.getPendingFriendRequests().size(); i++) {
 			User user2 = user.getPendingFriendRequests().get(i);
 			Executor.run("INSERT INTO `_pendingFriendRequests`(" + 
-					"`rel`, " + 
+					"`forumId`, " + 
 					"`user1`, " + 
 					"`user2`" + 
 				") VALUES (" + 
@@ -217,11 +225,9 @@ public class Query {
 
 	public static void save(Rank rank) throws ClassNotFoundException, SQLException {
 		if (Executor.DISABLE_SQL) return;
-		ResultSet currentRecord = Executor.query("SELECT * FROM `Ranks` WHERE `name` = '" + rank.getName() + "'");
-		String rel = currentRecord.next() ? currentRecord.getString("rel") : "0";
 		Executor.run("DELETE FROM `Ranks` WHERE `name` = '" + rank.getName() + "'");
 		Executor.run("INSERT INTO `Ranks`(" + 
-				"`rel`, " + 
+				"`forumId`, " + 
 				"`name`, " + 
 				"`CREATE_FORUM`, " + 
 				"`SET_FORUM_PROPERTIES`, " + 
@@ -236,7 +242,7 @@ public class Query {
 				"`ADD_MODERATOR`, " + 
 				"`REMOVE_MODERATOR`" + 
 			") VALUES (" + 
-				"'" + rel + "', " + 
+				"'" + (rank.getForumId() == null ? 0 : rank.getForumId()) + "', " + 
 				"'" + rank.getName() + "', " + 
 				"'" + (rank.hasPermission(Permissions.CREATE_FORUM) ? "1" : "0") + "', " + 
 				"'" + (rank.hasPermission(Permissions.SET_FORUM_PROPERTIES) ? "1" : "0") + "', " + 
@@ -255,18 +261,16 @@ public class Query {
 
 	public static void save(Complaint comp) throws ClassNotFoundException, SQLException {
 		if (Executor.DISABLE_SQL) return;
-		ResultSet currentRecord = Executor.query("SELECT * FROM `Complaints` WHERE `id` = '" + comp.getId() + "'");
-		String rel = currentRecord.next() ? currentRecord.getString("rel") : "0";
 		Executor.run("DELETE FROM `Complaints` WHERE `id` = '" + comp.getId() + "'");
 		Executor.run("INSERT INTO `Complaints`(" + 
-				"`rel`, " + 
+				"`subforumId`, " + 
 				"`id`, " + 
 				"`complainer`, " + 
 				"`complainee`, " + 
 				"`complaintMessage`, " + 
 				"`date`" + 
 			") VALUES (" + 
-				"'" + rel + "', " + 
+				"'" + comp.getSubforumId() + "', " + 
 				"'" + comp.getId() + "', " + 
 				"'" + comp.getComplainer() + "', " + 
 				"'" + comp.getComplainee() + "', " + 
@@ -278,75 +282,46 @@ public class Query {
 	public static void save(User user) throws ClassNotFoundException, SQLException {
 		if (Executor.DISABLE_SQL) return;
 		if (user.getMail() == null) return;
-		ResultSet currentRecord = Executor.query("SELECT * FROM `Users` WHERE `username` = '" + user.getUsername() + "'");
-		String rel = currentRecord.next() ? currentRecord.getString("rel") : "0";
 		Executor.run("DELETE FROM `Users` WHERE `username` = '" + user.getUsername() + "'");
 		Executor.run("INSERT INTO `Users`(" + 
-				"`rel`, " + 
+				"`forumId`, " + 
 				"`mail`, " + 
 				"`name`, " + 
 				"`username`, " + 
 				"`password`, " + 
 				"`rank`" + 
 			") VALUES (" + 
-				"'" + rel + "', " + 
+				"'" + (user.getForumId() == null ? 0 : user.getForumId()) + "', " + 
 				"'" + user.getMail() + "', " + 
 				"'" + user.getName() + "', " + 
 				"'" + user.getUsername() + "', " + 
 				"'" + user.getPassword() + "', " + 
 				"'" + user.getRank().getName() + "'" + 
 			")");
-		Executor.run("DELETE FROM `_friends` WHERE `user1` = '" + user.getUsername() + "'");
-		for (int i=0; i<user.getFriends().size(); i++) {
-			User user2 = user.getFriends().get(i);
-			Executor.run("INSERT INTO `_friends`(" + 
-					"`rel`, " + 
+	}
+	
+	public static void saveFriend(String tblName, User user, User user2) {
+		try {
+			Executor.run("DELETE FROM `" + tblName + "` WHERE `user1` = '" + user.getUsername() + "' AND `user2` = '" + user2.getUsername() + "'");
+			Executor.run("INSERT INTO `" + tblName + "`(" + 
+					"`forumId`, " + 
 					"`user1`, " + 
 					"`user2`" + 
 				") VALUES (" + 
-					"'0', " + 
+					"'" + user.getForumId() + "', " + 
 					"'" + user.getUsername() + "', " + 
 					"'" + user2.getUsername() + "'" + 
 				")");
-		}
-		Executor.run("DELETE FROM `_friendRequests` WHERE `user1` = '" + user.getUsername() + "'");
-		for (int i=0; i<user.getFriendRequests().size(); i++) {
-			User user2 = user.getFriendRequests().get(i);
-			Executor.run("INSERT INTO `_friendRequests`(" + 
-					"`rel`, " + 
-					"`user1`, " + 
-					"`user2`" + 
-				") VALUES (" + 
-					"'0', " + 
-					"'" + user.getUsername() + "', " + 
-					"'" + user2.getUsername() + "'" + 
-				")");
-		}
-		Executor.run("DELETE FROM `_pendingFriendRequests` WHERE `user1` = '" + user.getUsername() + "'");
-		for (int i=0; i<user.getPendingFriendRequests().size(); i++) {
-			User user2 = user.getPendingFriendRequests().get(i);
-			Executor.run("INSERT INTO `_pendingFriendRequests`(" + 
-					"`rel`, " + 
-					"`user1`, " + 
-					"`user2`" + 
-				") VALUES (" + 
-					"'0', " + 
-					"'" + user.getUsername() + "', " + 
-					"'" + user2.getUsername() + "'" + 
-				")");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
 	public static void save(Message msg) throws ClassNotFoundException, SQLException {
 		if (Executor.DISABLE_SQL) return;
-		ResultSet currentRecord = Executor.query("SELECT * FROM `Messages` WHERE `id` = '" + msg.getId() + "'");
-		String msgRel = "-1";
-		String sfRel = "0";
-		if (currentRecord.next()) {
-			msgRel = currentRecord.getString("msgRel");
-			sfRel = currentRecord.getString("subforumRel");
-		}
-		Executor.run("DELETE FROM `Messages` WHERE `id` = '" + msg.getId() + "'");
+		remove(msg);
 		Executor.run("INSERT INTO `Messages`(" + 
 				"`msgRel`, " + 
 				"`subforumRel`, " + 
@@ -356,56 +331,89 @@ public class Query {
 				"`title`, " + 
 				"`writer`" +
 			") VALUES (" + 
-				"'" + msgRel + "', " + 
-				"'" + sfRel + "', " + 
+			"'" + (msg.getMsgRel() == null ? 0 : msg.getMsgRel()) + "', " + 
+			"'" + (msg.getSubforumId() == null ? 0 : msg.getSubforumId()) + "', " + 
 				"'" + msg.getId() + "', " + 
 				"'" + msg.getDate() + "', " + 
 				"'" + msg.getContent() + "', " + 
 				"'" + msg.getTitle() + "', " + 
 				"'" + msg.getUser().getUsername() + "'" + 
 			")");
-		Executor.run("DELETE FROM `Messages` WHERE `msgRel` = '" + msg.getId() + "'");
-		for (int i=0; i<msg.getReplies().size(); i++) {
-			Message reply = msg.getReplies().get(i);
-			reply.save();
-			Executor.run("UPDATE `Messages` SET `msgRel` = '" + msg.getId() + "' WHERE `msgRel` = '0' AND `subforumRel` = '0'");
+	}
+	
+	public static void remove(Message msg) {
+		try {
+			Executor.run("DELETE FROM `Messages` WHERE `id` = '" + msg.getId() + "'");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
-		Executor.run("UPDATE `Messages` SET `msgRel` = '0' WHERE `msgRel` = '-1'");
 	}
 
 	public static void save(SubForum sf) throws ClassNotFoundException, SQLException {
 		if (Executor.DISABLE_SQL) return;
-		ResultSet currentRecord = Executor.query("SELECT * FROM `SubForums` WHERE `id` = '" + sf.getId() + "'");
-		String rel = currentRecord.next() ? currentRecord.getString("rel") : "0";
-		Executor.run("DELETE FROM `SubForums` WHERE `id` = '" + sf.getId() + "'");
+		remove(sf);
 		Executor.run("INSERT INTO `SubForums`(" + 
-				"`rel`, " + 
+				"`forumId`, " + 
 				"`id`, " + 
 				"`subject`" +
 			") VALUES (" + 
-				"'" + rel + "', " + 
+				"'" + sf.getForumId() + "', " + 
 				"'" + sf.getId() + "', " + 
 				"'" + sf.getSubject() + "'" + 
 			")");
-		// moderators
-		Executor.run("DELETE FROM `_moderators` WHERE `subforumId` = '" + sf.getId() + "'");
-		for (int i=0; i<sf.getModerators().size(); i++) {
-			User moderator = sf.getModerators().get(i);
-			Executor.run("INSERT INTO `_moderators`(`subforumId`, `username`) VALUES ('" + sf.getId() + "', '" + moderator.getUsername() + "')");
+	}
+	
+	public static void remove(SubForum sf) {
+		try {
+			Executor.run("DELETE FROM `SubForums` WHERE `id` = '" + sf.getId() + "'");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
-		// complaints
-		Executor.run("DELETE FROM `Complaints` WHERE `rel` = '" + sf.getId() + "'");
-		for (int i=0; i<sf.getComplaints().size(); i++) sf.getComplaints().get(i).save();
-		Executor.run("UPDATE `Complaints` SET `rel` = '" + sf.getId() + "' WHERE `rel` = '0'");
-		// messages
-		Executor.run("DELETE FROM `Messages` WHERE `subforumRel` = '" + sf.getId() + "'");
-		for (int i=0; i<sf.getMessages().size(); i++) sf.getMessages().get(i).save();
-		Executor.run("UPDATE `Messages` SET `subforumRel` = '" + sf.getId() + "' WHERE `subforumRel` = '0' AND `msgRel` = '0'");
-		// suspended
-		Executor.run("DELETE FROM `_suspended` WHERE `subforumId` = '" + sf.getId() + "'");
-		for (int i=0; i<sf.getSuspendedUsers().size(); i++) {
-			Suspended sus = sf.getSuspendedUsers().get(i);
-			Executor.run("INSERT INTO `_suspended`(`subforumId`, `username`, `date`) VALUES ('" + sf.getId() + "', '" + sus.getUser() + "', '" + sus.getDate() + "')");
+	}
+	
+	public static void saveModerator(String subforumId, User user) {
+		try {
+			Executor.run("DELETE FROM `_moderators` WHERE `subforumId` = '" + subforumId + "' AND `username` = '" + user.getUsername() + "'");
+			Executor.run("INSERT INTO `_moderators`(`subforumId`, `username`) VALUES ('" + (subforumId == null ? 0 : subforumId) + "', '" + user.getUsername() + "')");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public static void removeModerator(String subforumId, User user) {
+		try {
+			Executor.run("DELETE FROM `_moderators` WHERE `subforumId` = '" + subforumId + "' AND `username` = '" + user.getUsername() + "'");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public static void saveSuspended(String subforumId, User user, String date) {
+		try {
+			Executor.run("DELETE FROM `_suspended` WHERE `subforumId` = '" + subforumId + "'' AND `username` = '" + user.getUsername() + "'");
+			Executor.run("INSERT INTO `_suspended`(`subforumId`, `username`, `date`) VALUES ('" + subforumId + "', '" + user.getUsername() + "', '" + date + "')");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public static void removeSuspended(String subforumId, User user, String date) {
+		try {
+			Executor.run("DELETE FROM `_suspended` WHERE `subforumId` = '" + subforumId + "'' AND `username` = '" + user.getUsername() + "'");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -419,24 +427,27 @@ public class Query {
 				"'" + forum.getId() + "', " + 
 				"'" + forum.getName() + "'" + 
 			")");
-		// administrators
-		Executor.run("DELETE FROM `_administrators` WHERE `ForumId` = '" + forum.getId() + "'");
-		for (int i=0; i<forum.getAdministrators().size(); i++) {
-			User admin = forum.getAdministrators().get(i);
-			Executor.run("INSERT INTO `_administrators`(`ForumId`, `Username`) VALUES ('" + forum.getId() + "', '" + admin.getUsername() + "')");
+	}
+	
+	public static void saveAdmin(String forumId, User user) {
+		try {
+			removeAdmin(forumId, user);
+			Executor.run("INSERT INTO `_administrators`(`ForumId`, `Username`) VALUES ('" + forumId + "', '" + user.getUsername() + "')");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
-		// messages
-		Executor.run("DELETE FROM `Users` WHERE `rel` = '" + forum.getId() + "'");
-		for (int i=0; i<forum.getMembers().size(); i++) forum.getMembers().get(i).save();
-		Executor.run("UPDATE `Users` SET `rel` = '" + forum.getId() + "' WHERE `rel` = '0'");
-		// sub forums
-		Executor.run("DELETE FROM `SubForums` WHERE `rel` = '" + forum.getId() + "'");
-		for (int i=0; i<forum.getSubForums().size(); i++) forum.getSubForums().get(i).save();
-		Executor.run("UPDATE `SubForums` SET `rel` = '" + forum.getId() + "' WHERE `rel` = '0'");
-		// ranks
-		Executor.run("DELETE FROM `Ranks` WHERE `rel` = '" + forum.getId() + "'");
-		for (int i=0; i<forum.getRanks().size(); i++) forum.getRanks().get(i).save();
-		Executor.run("UPDATE `Ranks` SET `rel` = '" + forum.getId() + "' WHERE `rel` = '0'");
+	}
+	
+	public static void removeAdmin(String forumId, User user) {
+		try {
+			Executor.run("DELETE FROM `_administrators` WHERE `ForumId` = '" + forumId + "' AND `Username` = '" + user.getUsername() + "'");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 }

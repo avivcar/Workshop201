@@ -32,7 +32,7 @@ public class testSubForum {
 		
 		//***cahnge getSubForumById from protected to public
 		sf = forum.getSubForumById(sfId);
-		toMod = new User("gg@gmail.com", "matan", "atralicon", "123", Rank.member);
+		toMod = new User("gg@gmail.com", "matan", "atralicon", "123", Rank.member, null);
 	}
 	
 	@Test
@@ -63,7 +63,7 @@ public class testSubForum {
 	
 	@Test
 	public void testAddComplaint() {
-		Complaint c = new Complaint(admin,admin,"",null);
+		Complaint c = new Complaint(admin,admin,"",null, null);
 		assertFalse(sf.existComplaint(c.getId()));
 		assertTrue(sf.existComplaint(sf.complain(admin, admin, "asshole").getId()));		
 	}

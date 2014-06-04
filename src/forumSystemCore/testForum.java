@@ -7,7 +7,7 @@ import utility.*;
 import user.*;
 
 public class testForum extends TestCase {
-	User myUser = new User("hi", "hi", "hi", "hi", new Rank("gever"));
+	User myUser = new User("hi", "hi", "hi", "hi", new Rank("gever", null), null);
 	protected Forum forum = new Forum("The kings", myUser);
 
 	

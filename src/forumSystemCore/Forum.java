@@ -67,9 +67,9 @@ public class Forum {
 	public String createSubForum(User invoker ,User moderator, String subForumName) {
 		if (!invoker.hasPermission(Permissions.CREATE_SUB_FORUM) || !TextVerifier.verifyName(subForumName, new Policy()) || moderator == null) return null;
 		
-		SubForum newSF = new SubForum(subForumName, moderator);
+		SubForum newSF = new SubForum(subForumName, moderator, this.id);
 		subForums.add(newSF);
-		save();
+		newSF.save();
 		return newSF.getId();
 	}
 	
@@ -79,8 +79,8 @@ public class Forum {
 		for (int i=0; i<subForums.size() && !found; i++) {
 			if (subForums.get(i).getId().equals(subForumId)) {
 				found = true;
+				sql.Query.remove(subForums.get(i));
 				subForums.remove(i);
-				save();
 			}
 		}
 		return found; 
@@ -89,7 +89,7 @@ public class Forum {
 	public boolean addAdmin(User invoker, User adminToAdd) {
 		if (!invoker.hasPermission(Permissions.ADD_ADMIN)) return false;
 		administrators.add(adminToAdd);
-		save();
+		sql.Query.saveAdmin(this.id, adminToAdd);
 		return true;
 	}
 	
@@ -99,8 +99,8 @@ public class Forum {
 		for (int i=0; i<administrators.size() && !found; i++) {
 			if (administrators.get(i) == adminToRemove) {
 				found = true;
+				sql.Query.removeAdmin(this.id, administrators.get(i));
 				administrators.remove(i);
-				save();
 			}
 		}
 		return true;		
@@ -109,14 +109,12 @@ public class Forum {
 	public boolean addModerator(String subForumId, User invoker, User moderator) {
 		if (!invoker.hasPermission(Permissions.ADD_MODERATOR)) return false;
 		getSubForumById(subForumId).addModerator(moderator);
-		save();
 		return true; 
 	}
 	
 	public boolean removeModerator(String subForumId, User invoker, User moderator) {
 		if (!invoker.hasPermission(Permissions.REMOVE_MODERATOR)) return false;
 		getSubForumById(subForumId).removeModerator(moderator);
-		save();
 		return true; 
 	}
 	
@@ -127,9 +125,9 @@ public class Forum {
 	
 	public User signup(String mail, String name, String username, String password) {
 		if (!TextVerifier.verifyEmail(mail) || !TextVerifier.verifyName(username, policy) || !TextVerifier.verifyPassword(password, policy) || name.equals("")) return null;
-		User member = new User(mail, name, username, password, Rank.member);
+		User member = new User(mail, name, username, password, Rank.member, this.id);
 		this.members.add(member);
-		save();
+		member.save();
 		return member;
 	}
 	

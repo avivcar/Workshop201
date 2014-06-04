@@ -14,19 +14,25 @@ public class SubForum {
 	private List<Complaint> complaints;
 	private List<Message> messages;
 	private List<Suspended> suspendedUsers;
+	private String forumId;
 	private String id;
 	private static int NEXT_ID = 1;
 	
+	public String getForumId() {
+		return forumId;
+	}
 	
-	public SubForum(String subject, User admin){
+	
+	public SubForum(String subject, User admin, String forumId){
 		this.subject = subject;
+		this.forumId = forumId;
 		moderators = new ArrayList<User>();
 		complaints = new ArrayList<Complaint>();
 		messages = new ArrayList<Message>();
 		suspendedUsers = new ArrayList<Suspended>();
-		moderators.add(admin);
 		this.id = String.valueOf(NEXT_ID);
 		NEXT_ID++;
+		this.addModerator(admin);
 	}
 	public void recover(List<User> moderators, List<Complaint> complaints, List<Message> messages, List<Suspended> suspendedUsers, String id) {
 		this.subject = subject;
@@ -55,7 +61,7 @@ public class SubForum {
 	public boolean addModerator(User mod){
 		if(isModerator(mod)) return false;
 		this.moderators.add(mod);
-		save();
+		sql.Query.saveModerator(this.id, mod);
 		return true;
 	}
 	/**
@@ -66,7 +72,7 @@ public class SubForum {
 	public boolean removeModerator(User user){
 		if (moderators.size() <= 1) return false;
 		moderators.remove(user);
-		save();
+		sql.Query.removeModerator(this.id, user);
 		return true;
 	}
 	/**
@@ -78,7 +84,7 @@ public class SubForum {
 		for (int i = 0; i < moderators.size(); i++) {
 			if(moderators.get(i) == user) return true;
 		}
-		return true;
+		return false;
 	}
 	/**
 	 * creating a new message adding it to the subforum
@@ -91,9 +97,9 @@ public class SubForum {
 	public String createMessage(User user, String title, String content){
 		//input check needed
 		if (!(title.equals("")) || !(content.equals(""))){
-		 Message m = new Message(user, title, content);
+		 Message m = new Message(user, title, content, this.id, null);
 		 this.messages.add(m);
-		 save();
+		 m.save();
 		 return m.getId();
 		}
 		return null;
@@ -107,9 +113,9 @@ public class SubForum {
 	 * @return
 	 */
 	public Complaint complain(User complainer, User complainee, String complaint){
-		Complaint com = new Complaint(complainer, complainee, complaint, new Date());
+		Complaint com = new Complaint(complainer, complainee, complaint, new Date(), this.id);
 		this.complaints.add(com);
-		save();
+		com.save();
 		return com;
 	}
 	
@@ -123,7 +129,7 @@ public class SubForum {
 		if(isSuspended(toSuspend)) return false; 
 		Suspended sus = new Suspended(toSuspend, until);
 		this.suspendedUsers.add(sus);
-		save();
+		sql.Query.saveSuspended(this.id, toSuspend, until.getTime() + "");
 		return true;
 	}
 	
