@@ -12,10 +12,15 @@ public class Constants {
 	public static final String LOGIN = "LOGIN";
 //	public static final String CREATESUBFORUM = "CREATESUBFORUM";
 	public static final String EXISTSUBFORUM = "EXISTSUBFORUM";
-//	public static final String GET_FORUM = "GET_FORUM"; 
 	public static final String CREATE_MESSAGE = "CREATE_MESSAGE";
 	public static final String AMIADMIN = "AMIADMIN";
 	public static final String GETFORUMS = "GETFORUMS";
+	public static final String GETSUBFORUMS = "GETSUBFORUMS";
+	public static final String GETMESSAGES = "GETMESSAGES";
+	public static final String GETREPLIES = "GETREPLIES";
+
+	
+	
 
 
 

@@ -130,7 +130,18 @@ public class ForumSystem {
 		return false;
 
 	}
+	
+	public String getSubForums(String forumId){
+		String ans="";
+		Forum forum = getForum(forumId);
+		if (forum!=null){
+			for(int i=0;i<forum.getSubForums().size();i++)
+				ans+="^"+forum.getSubForums().get(i).getSubject()+"^"+forum.getSubForums().get(i).getId();
+		}	
+		return ans;
+	}
 
+	
 	/**
 	 * login with this parameters return the user(actual pointer) to the
 	 * appropiant user;
@@ -187,8 +198,10 @@ public class ForumSystem {
 		Forum forum = this.getForum(forumId);
 		if (forum != null) {
 			SubForum subforum = forum.getSubForumById(subForumId);
-			if (subforum != null)
+			if (subforum != null){
+				forum.notifyUsers(user.getName()+" added a new message in '"+subforum.getName()+"' ");
 				return subforum.createMessage(user, title, content);
+				}
 		}
 		return null;
 
@@ -230,5 +243,14 @@ public class ForumSystem {
 	public int getNumberOfForums(){
 		return forums.size();
 	}
+	//returns true on success , false in fail
+	public boolean deleteSubForum(User invoker,String subForumId, String forumId) {
+		for (int i = 0; i < forums.size(); i++) {
+			if (forums.get(i).getId().equals(forumId))
+				return forums.get(i).deleteSubForum(invoker, subForumId);
+		}
+		return false;
+	}
+
 
 }

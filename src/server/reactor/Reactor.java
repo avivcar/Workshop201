@@ -25,7 +25,7 @@ import forumSystemCore.*;
  */
 public class Reactor implements Runnable {
 
-	private static final Logger logger = Logger.getLogger("edu.spl.reactor");
+	private static final Logger logger = Logger.getLogger("SadnaMainLog");
 
 	private final int _port;
 
@@ -228,6 +228,8 @@ public class Reactor implements Runnable {
 				String s = forumSystem.createForum("yaquierrrr", admin);
 				s = forumSystem.createForum("lahan-el", admin);
 				s = forumSystem.createForum("shem-nahash!", admin);
+				s= forumSystem.createSubForum(admin, admin, "subforum1", "1");
+				s= forumSystem.createMessage("1", "1", admin, "new title", "new content");
 			}
 			else System.out.println("Loading system, please stand by captain.");
 	

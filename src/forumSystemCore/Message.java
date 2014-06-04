@@ -3,11 +3,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
 
 import user.*;
 import utility.*;
 
-public class Message {
+public class Message extends Observable{
 	private static int NEXT_ID=1;
 	private String subforumId;
 	private String msgRel;
@@ -78,6 +79,9 @@ public class Message {
 		Message m = new Message(user, title, content, null, this.id);
 		replies.add(m);
 		m.save();
+		setChanged();
+		notifyObservers(user.getName()+" replied to your discussion");
+		this.addObserver(user); 
 		return m;
 	}
 	/**
@@ -109,10 +113,13 @@ public class Message {
 	 * @param content
 	 * @return
 	 */
-	public boolean editMessage(String title, String content){
-		if(title!=null)this.title =title;
-		if(content!=null)this.content = content;
+	public boolean editMessage(User Invoker, String title, String content){
+		if(!Invoker.equals(this.getUser())) return false;
+		if(title!=null) this.title =title;
+		if(content!=null) this.content = content;
 		save();
+		setChanged();
+		notifyObservers(this.getUser()+" edited the discussion you're part of");
 		return true;
 	}
 	

@@ -1,10 +1,12 @@
 package user;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import utility.*;
 import server.reactor.*;
-public class User {
+public class User implements Observer{
 	
 	public static User Guest = new User();
 	
@@ -36,6 +38,14 @@ public class User {
 	private Rank rank;
 	
 	private String forumId;
+	
+	// an array of notifications that the user received 
+	private ArrayList<String> notifications = new ArrayList<String>();
+	
+	// type of notificatios the users would like to get
+	// 0 - all new msgs , 1 - friendOnly msgs, more can be added ...
+	private int notifTypes;
+	
 	
 	public String getForumId() {
 		return forumId;
@@ -183,5 +193,48 @@ public class User {
 		 this.handler.sayToMe(say);
 		
 	}
+ 
+
+	//getter to notification type
+	public int getNotifType() {
+		return notifTypes;
+	}
+
+	public ArrayList<String> getNotifications() {
+		return notifications;
+	}
+
+	public void addNotification(String notification) {
+		notifications.add(notification);
+	}
+	
+	//indicates if user connected or not
+	public ConnectionHandler getConHndlr(){
+		return handler;
+	}
+
+	@Override
+	//TODO what happens when updates
+	public void update(Observable obs, Object msg) {
+		if(!(handler==null)) {//user is online
+			int i = msg.toString().indexOf(' '); //gets index of first space 
+			//checks that the username of the change made is not mine 
+			//so that users won't get their own changes notified
+			if(!(msg.toString().substring(0, i) == name)){ // 
+				handler.sayToMe(msg.toString());
+			}
+		}
+		
+	}
+
+	//when user logs in the notifications sent while offline are pushed
+	public void checkUpdates() {
+		while(!notifications.isEmpty()){
+			String msg = notifications.get(notifications.size()-1);
+			notifications.remove(notifications.size()-1);
+			handler.sayToMe(msg);
+		}
+	}
+	
 	
 }

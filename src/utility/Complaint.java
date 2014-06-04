@@ -6,7 +6,7 @@ import user.*;
 
 public class Complaint {
 	private static int next_cpmlnt_id=1;
-	private int id; 
+	private String id; 
 	private String subforumId;
 	private User complainer;
 	private User complainee;
@@ -18,7 +18,7 @@ public class Complaint {
 	}
 	
 	public Complaint(User complainer,User complainee,String msg, Date date, String subforumId) {
-		this.id = next_cpmlnt_id;
+		this.id = String.valueOf(next_cpmlnt_id);
 		next_cpmlnt_id++;
 		this.subforumId = subforumId;
 		this.complainer=complainer;
@@ -30,11 +30,11 @@ public class Complaint {
 		setId(id);
 	}
 	public void setId(String id) {
-		this.id = Integer.valueOf(id);
+		this.id = id;
 		next_cpmlnt_id = Math.max(next_cpmlnt_id, Integer.valueOf(id) + 1);
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 

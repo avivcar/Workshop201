@@ -100,6 +100,8 @@ public class SubForum {
 		 Message m = new Message(user, title, content, this.id, null);
 		 this.messages.add(m);
 		 m.save();
+		 //adding the creator to observe this msg by default
+		 m.addObserver(user);
 		 return m.getId();
 		}
 		return null;
@@ -162,9 +164,9 @@ public class SubForum {
 		return false;
 	}
 	
-	public boolean existComplaint(int id) {
+	public boolean existComplaint(String id) {
 		for (int i=0; i < complaints.size(); i++) {
-			if (complaints.get(i).getId() == id) return true;
+			if (complaints.get(i).getId().equals(id)) return true;
 		}
 		return false;
 	}
@@ -172,6 +174,27 @@ public class SubForum {
 	public Message getMessageById(String id) {
 		for (int i=0; i<messages.size(); i++) if (id.equals(messages.get(i).getId())) return messages.get(i);
 		return null;
+	}
+
+
+	public String getName() {
+		return this.subject;
+	}
+	/**
+	 * message will be deleted from subforum
+	 * @param user
+	 * @return true on success, else false
+	 */
+	public boolean removeMessage(User invoker, String msgId){
+		Message m = getMessageById(msgId);
+		if (m==null) 
+			return false;
+		if(!(invoker == m.getUser()))  //not the creator
+			if(!invoker.hasPermission(Permissions.DELETE_MESSAGE)) //not admin\moderator
+				return false;
+		messages.remove(m);
+		save();
+		return true;
 	}
 	
 }

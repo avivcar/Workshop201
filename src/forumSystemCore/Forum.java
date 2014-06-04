@@ -2,11 +2,12 @@ package forumSystemCore;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Observable;
 
 import utility.*;
 import user.*;
 
-public class Forum {
+public class Forum extends Observable{
 	private String name;
 	private Policy policy;
 	private ArrayList<User> administrators;
@@ -54,11 +55,13 @@ public class Forum {
 	public ArrayList<Rank> getRanks() {return ranks;}
 	
 	//Methods:
+
+	
 	public User login(String username, String password) {
 		for (int i=0; i<members.size(); i++) 
 			if (members.get(i).getUsername().equals(username) && 
 					members.get(i).getPassword().equals(password)){
-				System.out.println("found a match! logging in, username: "+ members.get(i).getUsername()+" pass: "+members.get(i).getPassword());
+				members.get(i).checkUpdates();
 				return members.get(i);
 			}
 		return null;
@@ -190,5 +193,73 @@ public class Forum {
 			e.printStackTrace();
 		}
 	}
+	//returns the user with this username or null if not found
+	public User getUserByUsername(String un){
+		for(int i=0; i< members.size(); i++){
+			if (members.get(i).getName() == un)
+				return members.get(i);
+		}
+		return null;
+	}
+	
+	//creates a new type of rank for this forum
+		//perms array contains all permissions for this rank
+		//returns true on success, false on fail
+		public boolean addRank(User invoker, String name, ArrayList<Permissions> perms){
+			if (!invoker.hasPermission(Permissions.SET_RANKS))
+				return false;
+			if (perms == null || name == null)
+				return false;
+			for(int i=0; i<ranks.size(); i++){
+				if(ranks.get(i).getName() == name)
+					return false;
+			}
+			Rank newRank = new Rank(name,this.getId());
+			newRank.setPermissions(perms);
+			ranks.add(newRank);
+			save();
+			return true;
+		}
+		
+		//type indicates type of notfication
+		//newMsg - all new msgs, friendMsg - only friends msgs, ... more to come
+		//checks policy of forum (to send offline users or not)
+		//checks user preferences
+		public boolean notifyUsers(String msg){
+			if(msg == null)
+				return false;
+			
+			int index = msg.toString().indexOf(' '); 
+			String username = msg.substring(0,index);
+			User invoker = getUserByUsername(username);
+			
+			for (int i=0; i<members.size(); i++){
+				User receiver = members.get(i);
+				int type = receiver.getNotifType();
+					switch(type){
+					// All
+					case 0: 
+						//online
+						if (receiver.getConHndlr()!= null) {
+							//if friends 
+							if(receiver.isFriend(invoker))
+								receiver.update(this, msg);
+						}
+						//offline & policy sends to offliners
+						else if (policy.notifyOffline())
+							receiver.addNotification(msg);
+						
+					//friends Only	
+					case 1:
+						//online
+						if (receiver.getConHndlr()!= null) 
+							receiver.update(this, msg);
+						//offline & policy sends to offliners
+						else if (policy.notifyOffline())
+							receiver.addNotification(msg);		
+					}
+				}
+			return true;	
+		}
 	
 }

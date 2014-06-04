@@ -2,6 +2,7 @@ package server.protocol;
 
 import java.util.Vector;
 
+import server.reactor.ConnectionHandler;
 import forumSystemCore.*;
 
 
@@ -23,7 +24,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 	}
 	@Override
 	public String processMessage(String msg) { 
-	//	System.out.println("proc message "+msg);
+		System.out.println("proc message "+msg);
     	String response = null;
     	
     	//breaking msg into array splitting by space
@@ -62,6 +63,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 				response = Constants.SIGNUP+"^"+ Constants.ERR_PARAM;
 				}
 				else response= this.signup(msgArr);
+				
 				break;
 				
 			case Constants.GETFORUMS:
@@ -99,18 +101,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 					response = Constants.SUCC_+Boolean.valueOf(forumSystem.existSubForum(msgArr[1], msgArr[2]));
 				
 				break;
-		/**	case Constants.GET_FORUM:
-				if(this.checkNull(msgArr, 3)){
-					print(461, "ERR_PARAMETERS");
-					response = Constants.ERR_PARAM;	
-				}
-				else {
-					response=forumSystem.getForum(msgArr[1]);
-					if (response!=null) response=Constants.SUCC_+response;
-					else response = Constants.ERR_+"NO_SUCH_FORUM";
-				
-				}
-			**/
+
 			case Constants.CREATE_MESSAGE:
 				if(this.isNull(msgArr,5)){
 					print(461, "ERR_PARAMETERS");
@@ -129,7 +120,38 @@ public class EchoProtocol implements AsyncServerProtocol {
 				else 
 				response= Constants.SUCC_ + Boolean.toString(forumSystem.isAdmin(msgArr[1],this.user));
 			    break;
+			    
+			case Constants.GETSUBFORUMS:
+				if(this.isNull(msgArr,2)){
+					print(461, "ERR_PARAMETERS");
+					response = Constants.ERR_PARAM;	
+				}
+				else 
+				response=Constants.GETSUBFORUMS+"^"+Constants.SUCC_;
+				response+=forumSystem.getSubForums(msgArr[1]);
+			    break;
+			    
+		case Constants.GETMESSAGES:
+				if(this.isNull(msgArr,3)){
+					print(461, "ERR_PARAMETERS");
+					response = Constants.ERR_PARAM;	
+				}
+				else 
+				response=Constants.GETMESSAGES+"^"+Constants.SUCC_;
+				response+= this.getSubforumMessages(msgArr);
+			    break;
+			    
+		case Constants.GETREPLIES:
+			if(this.isNull(msgArr,4)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.GETREPLIES+"^"+Constants.SUCC_;
+			response+= this.getMsgReplies(msgArr);
+		    break;
 				
+			    				
 			    
 				
 				
@@ -141,6 +163,7 @@ public class EchoProtocol implements AsyncServerProtocol {
         }
         return response;
 	}
+
 
 
 
@@ -173,10 +196,12 @@ public class EchoProtocol implements AsyncServerProtocol {
 	private String signup(String[] msg) {
     	String ans =null;
     	System.out.println("now in signup:"+ msg.toString());
+
         user.User user = forumSystem.signup(msg[1],msg[2], msg[3],msg[4], msg[5]);
         if (user!=null) {
-        	this.user=user;
+
         	ans=Constants.SIGNUP+"^"+Constants.SUCC_+"^"+Boolean.toString(true);
+        	
         }
         else ans=Constants.SIGNUP+"^"+Constants.SUCC_+"^"+Boolean.toString(false);
     	return ans;
@@ -184,14 +209,37 @@ public class EchoProtocol implements AsyncServerProtocol {
 	}
 	private String login(String[] msgArr) {
 		String ans=null;
+		ConnectionHandler newConnection = this.user.getConHndlr();
+		
 		user.User user = forumSystem.login(msgArr[1], msgArr[2], msgArr[3]);
 		if(user!=null){
 			ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(true);
 			this.user=user;
+			this.user.addHandler(newConnection);
+			this.user.getConHndlr().sayToMe("hag shavuot sameach!");
 		}
 		else ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(false);
 				
 	return ans;
+	}
+	
+	private String getSubforumMessages(String[] msgArr) {
+		String ans="";
+		Forum forum = forumSystem.getForum(msgArr[1]);
+		if (forum!=null){
+		 SubForum subforum = forum.getSubForumById(msgArr[2]);
+		 	if (subforum!=null){
+			for(int i=0;i<subforum.getMessages().size();i++)		
+				ans+="^"+subforum.getMessages().get(i).getTitle()+"^"+subforum.getMessages().get(i).getId()+"^"
+				   +Integer.toString(subforum.getMessages().get(i).getReplies().size());
+		 	}
+		}	 	
+	return ans;
+	}
+	
+	private String getMsgReplies(String[] msgArr) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

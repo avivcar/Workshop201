@@ -2,8 +2,9 @@ package utility;
 /** THis is the policy **/
 public class Policy {
 	private String info;
-	
+	private boolean notifyStat; //0 - only online , 1 - offline
 	public Policy(){
+		
 		
 	}
 
@@ -18,5 +19,8 @@ public class Policy {
 			return true;
 		return false;
 	}
-
+	
+	public boolean notifyOffline(){
+		return notifyStat;
+	}
 }

@@ -32,7 +32,7 @@ public class ConnectionHandler {
 
 	protected final SelectionKey _skey;
 
-	private static final Logger logger = Logger.getLogger("edu.spl.reactor");
+	private static final Logger logger = Logger.getLogger("SadnaMainLog");
 
 	private ProtocolTask _task = null;
 	
