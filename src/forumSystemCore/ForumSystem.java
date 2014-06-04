@@ -192,7 +192,18 @@ public class ForumSystem {
 				return true;
 		return false;
 	}
+	
+	public boolean addReply(String forumId, String subForumId,String msgId,User user, String title, String content){
+		Message msg = this.getMessage(forumId, subForumId, msgId);
+		if (msg==null) return false;
+		msg.addReply(user, title, content);
+		return true;
 
+	}
+
+	
+	
+	
 	public String createMessage(String forumId, String subForumId, User user,
 			String title, String content) {
 		Forum forum = this.getForum(forumId);
@@ -206,6 +217,21 @@ public class ForumSystem {
 		return null;
 
 	}
+	
+	public Message getMessage(String forumId,String subForumId, String msgId){
+		Message msg=null;
+		Forum forum=this.getForum(forumId);
+		if (forum!=null){
+			SubForum subforum=forum.getSubForumById(subForumId);
+				if (subforum!=null)
+				 msg=subforum.getMessageById(msgId);
+			}
+		return msg;
+
+		}
+		
+
+	
 	
 	/**
 	 * returns a list of users that are members in several forums (meaning - duplications of userNames among different forums)

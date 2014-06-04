@@ -151,8 +151,17 @@ public class EchoProtocol implements AsyncServerProtocol {
 			response+= this.getMsgReplies(msgArr);
 		    break;
 				
+		case Constants.ADDREPLY:
+			if(this.isNull(msgArr,6)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.ADDREPLY+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.addReply(msgArr[1], msgArr[2], msgArr[3],this.user, msgArr[4], msgArr[5]));
+		    break;
+				
 			    				
-			    
 				
 				
 			default: response="YAKIR TWAT";
@@ -238,8 +247,16 @@ public class EchoProtocol implements AsyncServerProtocol {
 	}
 	
 	private String getMsgReplies(String[] msgArr) {
-		// TODO Auto-generated method stub
-		return null;
+		String ans="";
+		Message msg = forumSystem.getMessage(msgArr[1], msgArr[2], msgArr[3]);
+		if (msg!=null){
+			ans+="^"+msg.getTitle()+"^"+msg.getId()+"^"+msg.getContent()+"^"+msg.getUser().getUsername();
+			for (int i=0;i<msg.getReplies().size();i++)
+				ans+="^"+msg.getReplies().get(i).getTitle()+"^"+msg.getReplies().get(i).getId()
+				+"^"+msg.getReplies().get(i).getContent()+"^"+msg.getReplies().get(i).getUser().getUsername();
+			
+		}
+		return ans;
 	}
 	
 	

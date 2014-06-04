@@ -18,6 +18,8 @@ public class Constants {
 	public static final String GETSUBFORUMS = "GETSUBFORUMS";
 	public static final String GETMESSAGES = "GETMESSAGES";
 	public static final String GETREPLIES = "GETREPLIES";
+	public static final String ADDREPLY = "ADDREPLY";
+
 
 	
 	

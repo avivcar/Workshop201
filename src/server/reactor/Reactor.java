@@ -230,6 +230,10 @@ public class Reactor implements Runnable {
 				s = forumSystem.createForum("shem-nahash!", admin);
 				s= forumSystem.createSubForum(admin, admin, "subforum1", "1");
 				s= forumSystem.createMessage("1", "1", admin, "new title", "new content");
+				boolean bool = forumSystem.addReply("1", "1", "1", admin, "tguva", "content tguva");
+				 bool = forumSystem.addReply("1", "1", "1", admin, "tguva2", "content tguva23234234");
+				 bool = forumSystem.addReply("1", "1", "1", admin, "tguva44", "content tguva4124");
+
 			}
 			else System.out.println("Loading system, please stand by captain.");
 	
