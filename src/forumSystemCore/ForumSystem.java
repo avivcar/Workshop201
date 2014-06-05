@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import utility.LogFile;
+import utility.Permissions;
 import user.User;
 import utility.*;
 
@@ -60,9 +61,9 @@ public class ForumSystem {
 		return superuser;
 	}
 
-	public String createForum(String name, User admin) {
-		if (!admin.hasPermission(Permissions.CREATE_FORUM) || name.equals(""))
-			return null;
+	public Forum createForum(String name, User admin) {
+	//	if (!admin.hasPermission(Permissions.CREATE_FORUM) || name.equals(""))
+		//	return null;
 
 		for (int i = 0; i < forums.size(); i++) {
 			if (forums.get(i).getName().equals(name))
@@ -71,7 +72,7 @@ public class ForumSystem {
 		Forum newForum = new Forum(name, admin);
 		forums.add(newForum);
 		newForum.save();
-		return newForum.getId();
+		return newForum;
 	}
 	
 /*
@@ -274,6 +275,16 @@ public class ForumSystem {
 		for (int i = 0; i < forums.size(); i++) {
 			if (forums.get(i).getId().equals(forumId))
 				return forums.get(i).deleteSubForum(invoker, subForumId);
+		}
+		return false;
+	}
+//return true on success 
+	public boolean deleteForum(User invoker, String forumId) {
+		//if (!invoker.hasPermission(Permissions.DELETE_FORUM)) return false;
+		for (int i = 0; i < forums.size(); i++) {
+			if (forums.get(i).getId().equals(forumId))
+				//TODO insert SQL queries
+				forums.remove(i);
 		}
 		return false;
 	}

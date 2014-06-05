@@ -33,19 +33,7 @@ public class EchoProtocol implements AsyncServerProtocol {
         	System.out.println("msg "+i+" :"+msgArr[i]);
         if(msgArr[0]!=null){
         	switch(msgArr[0]){
-        	
-        	case Constants.CREATE_FORUM:
-        		if(!this.isNull(msgArr, 2)){
-        			response=forumSystem.createForum(msgArr[1],this.user);
-        			if (response!=null) response="SUCC_"+response;
-        			else response=Constants.ERR_+"CANNOT_CREATE";
-        		}
-        		
-        		else {response =Constants.ERR_PARAM;
-        				print(431, "ERR_PARAMETERS");
-        			}
-				break;
-				
+        
 				
 			case Constants.ISADMIN:
 				if(this.isNull(msgArr,2)) {
@@ -161,7 +149,30 @@ public class EchoProtocol implements AsyncServerProtocol {
 			response+=Boolean.toString(forumSystem.addReply(msgArr[1], msgArr[2], msgArr[3],this.user, msgArr[4], msgArr[5]));
 		    break;
 				
-			    				
+		case Constants.ADDFORUM:
+			if(this.isNull(msgArr,2)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.ADDFORUM+"^"+Constants.SUCC_+"^";
+			Forum newforum = this.forumSystem.createForum(msgArr[1], this.user);
+			if(newforum==null)response+=Boolean.toString(false);
+			else response+=newforum.getName()+"^"+newforum.getId();
+		    break;
+			
+		case Constants.DELETEFORUM:
+			if(this.isNull(msgArr,2)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.DELETEFORUM+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.deleteForum(this.user, msgArr[1]));
+		    break;
+				
+		    
+			    			    				
 				
 				
 			default: response="YAKIR TWAT";
@@ -240,7 +251,8 @@ public class EchoProtocol implements AsyncServerProtocol {
 		 	if (subforum!=null){
 			for(int i=0;i<subforum.getMessages().size();i++)		
 				ans+="^"+subforum.getMessages().get(i).getTitle()+"^"+subforum.getMessages().get(i).getId()+"^"
-				   +Integer.toString(subforum.getMessages().get(i).getReplies().size());
+				   +Integer.toString(subforum.getMessages().get(i).getReplies().size())+
+				   "^"+subforum.getMessages().get(i).getUser().getUsername();
 		 	}
 		}	 	
 	return ans;
@@ -256,6 +268,8 @@ public class EchoProtocol implements AsyncServerProtocol {
 				+"^"+msg.getReplies().get(i).getContent()+"^"+msg.getReplies().get(i).getUser().getUsername();
 			
 		}
+		System.out.println("the msg id is:");
+		if(msg!=null) System.out.println(msg.getId());
 		return ans;
 	}
 	

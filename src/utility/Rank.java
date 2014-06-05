@@ -37,6 +37,7 @@ public class Rank {
 		r.addPermission(Permissions.ADD_ADMIN);
 		r.addPermission(Permissions.REMOVE_ADMIN);
 		r.addPermission(Permissions.ADD_MODERATOR);
+		r.addPermission(Permissions.DELETE_FORUM);
 		r.addPermission(Permissions.REMOVE_MODERATOR);
 		return r;	
 	}

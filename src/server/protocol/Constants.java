@@ -5,7 +5,6 @@ public class Constants {
 	public static final String SUCC_ = "SUCC_";
 	public static final String ERR_ = "ERR_";
 	public static final String ERR_PARAM = "ERR_PARAM";
-	public static final String CREATE_FORUM = "CREATE_FORUM";
 	public static final String ISADMIN = "ISADMIN";
 	public static final String SIGNUP = "SIGNUP";
 	public static final String ISMEMBER = "ISMEMBER";
@@ -19,6 +18,9 @@ public class Constants {
 	public static final String GETMESSAGES = "GETMESSAGES";
 	public static final String GETREPLIES = "GETREPLIES";
 	public static final String ADDREPLY = "ADDREPLY";
+	public static final String ADDFORUM = "ADDFORUM";
+	public static final String DELETEFORUM = "DELETEFORUM";
+
 
 
 	

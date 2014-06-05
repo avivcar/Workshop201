@@ -132,6 +132,16 @@ public class Message extends Observable{
 			e.printStackTrace();
 		}
 	}
+	public Message getReplyById(String id2) {
+		Message m=null;
+		if (this.getReplies().size()>0){
+			for (int i=0;i<this.getReplies().size() && m==null;i++){
+				if(this.getReplies().get(i).getId().equals(id2)) m= this.getReplies().get(i);
+				else m= this.getReplies().get(i).getReplyById(id2);
+			}
+		}
+		return m;
+	}
 	
 
 }

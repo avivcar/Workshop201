@@ -13,7 +13,9 @@ import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import user.*;
 import server.protocol.*;
@@ -225,10 +227,10 @@ public class Reactor implements Runnable {
 			if (!sql.Query.load(forumSystem)) {
 				System.out.println("Starting system...");
 				User admin= forumSystem.startSystem("halevm@em.walla.com", "firstname", "admin", "1234");
-				String s = forumSystem.createForum("yaquierrrr", admin);
-				s = forumSystem.createForum("lahan-el", admin);
-				s = forumSystem.createForum("shem-nahash!", admin);
-				s= forumSystem.createSubForum(admin, admin, "subforum1", "1");
+				Forum newforum = forumSystem.createForum("yaquierrrr", admin);
+				newforum = forumSystem.createForum("lahan-el", admin);
+				newforum = forumSystem.createForum("shem-nahash!", admin);
+				String s= forumSystem.createSubForum(admin, admin, "subforum1", "1");
 				s= forumSystem.createMessage("1", "1", admin, "new title", "new content");
 				boolean bool = forumSystem.addReply("1", "1", "1", admin, "tguva", "content tguva");
 				 bool = forumSystem.addReply("1", "1", "1", admin, "tguva2", "content tguva23234234");
@@ -249,7 +251,9 @@ public class Reactor implements Runnable {
 		}
 	}
 
-	public static Reactor startEchoServer(int port, int poolSize,ForumSystem forumSystem){
+
+	
+	public static Reactor startEchoServer(int port, int poolSize,ForumSystem forumSystem) throws SecurityException, IOException{
 		ServerProtocolFactory protocolMaker = new ForumSystemProtocolFactory(forumSystem);
 		
 
@@ -262,6 +266,22 @@ public class Reactor implements Runnable {
 		};
 
 		Reactor reactor = new Reactor(port, poolSize, protocolMaker, tokenizerMaker,forumSystem);
+		FileHandler fh;  
+
+
+	    try {  
+
+	        // This block configure the logger with handler and formatter  
+	        fh = new FileHandler(System.getProperty("user.dir")+"/SystemLog.log"); 
+	        logger.addHandler(fh);
+	        SimpleFormatter formatter = new SimpleFormatter();  
+	        fh.setFormatter(formatter);  
+	    } catch (SecurityException e) {  
+	        e.printStackTrace();  
+	    } catch (IOException e) {  
+	        e.printStackTrace();  
+	    }  
+	
 		return reactor;
 	}
 

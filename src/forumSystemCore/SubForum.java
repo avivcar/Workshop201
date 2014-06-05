@@ -172,7 +172,15 @@ public class SubForum {
 	}
 	
 	public Message getMessageById(String id) {
-		for (int i=0; i<messages.size(); i++) if (id.equals(messages.get(i).getId())) return messages.get(i);
+		Message m=null;
+		for (int i=0; i<messages.size(); i++){
+			if (id.equals(messages.get(i).getId())) return messages.get(i);
+			else {
+			  m = 	messages.get(i).getReplyById(id);
+			 if (m!=null) return m;
+				
+			}
+		}
 		return null;
 	}
 
