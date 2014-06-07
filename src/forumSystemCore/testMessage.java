@@ -49,8 +49,8 @@ public class testMessage {
 	@Test
 	//need to add user in edit message method signature
 	public void testEditMsg(){
-		assertTrue(m.editMessage("dd", "gg!!!"));
-		assertFalse(m.editMessage("", ""));
-		assertFalse(m.editMessage(null, null));
+		assertTrue(m.editMessage(admin, "dd", "gg!!!"));
+		assertFalse(m.editMessage(admin, "", ""));
+		assertFalse(m.editMessage(admin, null, null));
 	}
 }
