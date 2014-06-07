@@ -239,7 +239,8 @@ public class ForumSystem {
 	 * @return List<User>
 	 */
 	
-	public List<User> getMultiForumMembers(){
+	public List<User> getMultiForumMembers(String invokerName){
+		if (!invokerName.equals(superuser.getUsername())) return null;
 		List<User> ans = new ArrayList<User>();
 		List<User> userList = new ArrayList<User>();
 		for (int i=0; i < forums.size(); i++) { //go over all forums
@@ -263,13 +264,11 @@ public class ForumSystem {
 		return ans;
 	}
 	
-	public int getNumOfForums(){
-		return forums.size();
+	public String getNumOfForums(String invokerName){
+		if (!invokerName.equals(superuser.getUsername())) return null;
+		return Integer.toString(forums.size());
 	}
-	
-	public int getNumberOfForums(){
-		return forums.size();
-	}
+
 	//returns true on success , false in fail
 	public boolean deleteSubForum(User invoker,String subForumId, String forumId) {
 		for (int i = 0; i < forums.size(); i++) {

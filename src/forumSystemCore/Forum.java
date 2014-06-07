@@ -171,19 +171,6 @@ public class Forum extends Observable{
 		return 0;
 	}
 	
-	public ArrayList<Message> getMemberMessages(String userName, User invoker) {
-		if (!this.isAdmin(invoker)) return null;
-		ArrayList<Message> ans = new ArrayList<Message>();
-		for (int i=0; i < subForums.size(); i++) { //go over all sub forums
-			int numOfmsgs = subForums.get(i).getMessages().size();
-			for (int j=0; j < numOfmsgs; i++) { //go over this subforum's msgs
-				if (subForums.get(i).getMessages().get(j).getUser().getUsername().equals(userName)) 
-					ans.add(subForums.get(i).getMessages().get(j));
-			}
-		}
-		return ans;
-	}
-	
 	public void save() {
 		try {
 			sql.Query.save(this);
@@ -246,7 +233,7 @@ public class Forum extends Observable{
 								receiver.update(this, msg);
 						}
 						//offline & policy sends to offliners
-						else if (policy.notifyOffline())
+						else if (policy.ruleActive(PolicyRules.OFFLINE_NOTIFICATIONS))
 							receiver.addNotification(msg);
 						
 					//friends Only	
@@ -255,11 +242,38 @@ public class Forum extends Observable{
 						if (receiver.getConHndlr()!= null) 
 							receiver.update(this, msg);
 						//offline & policy sends to offliners
-						else if (policy.notifyOffline())
+						else if (policy.ruleActive(PolicyRules.OFFLINE_NOTIFICATIONS))
 							receiver.addNotification(msg);		
 					}
 				}
 			return true;	
 		}
-	
-}
+		
+		//Matan's Additions
+		//This method returns a list of all the messages of a user, if the invoker is an admin
+		public ArrayList<Message> getUserMessages(String userName, String invokerString) {
+			User invoker = getUserByName(invokerString);
+			if (!this.isAdmin(invoker)) return null;
+			ArrayList<Message> ans = new ArrayList<Message>();
+			for (int i=0; i < subForums.size(); i++) { //go over all sub forums
+				int numOfmsgs = subForums.get(i).getMessages().size();
+				for (int j=0; j < numOfmsgs; i++) { //go over this subforum's msgs
+					if (subForums.get(i).getMessages().get(j).getUser().getUsername().equals(userName)) 
+						ans.add(subForums.get(i).getMessages().get(j));
+				}
+			}
+			return ans;
+		}
+		
+		//method that returns the user object, according to the user name
+		//returns Null if the username could not be found
+		public User getUserByName(String userName) {
+			User ans = null;
+			for (int i=0; i < members.size(); i++) {
+				if (userName.equals(members.get(i).getUsername()))
+					ans = members.get(i);
+			}
+			return ans;
+		}
+	}
+
