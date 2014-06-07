@@ -1,2 +1,48 @@
-ιεπ 07, 2014 7:31:41 PM server.reactor.Reactor main
+ιεπ 07, 2014 8:31:12 PM server.reactor.Reactor main
 INFO: Forum system is Ready to go on port 1000
+ιεπ 07, 2014 8:32:12 PM server.reactor.Reactor run
+INFO: Accepting a connection
+ιεπ 07, 2014 8:32:12 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 07, 2014 8:32:12 PM server.reactor.ConnectionHandler read
+INFO: Reading from /10.0.0.4:37448
+ιεπ 07, 2014 8:32:12 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:12 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:12 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:19 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 07, 2014 8:32:19 PM server.reactor.ConnectionHandler read
+INFO: Reading from /10.0.0.4:37448
+ιεπ 07, 2014 8:32:19 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:19 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:19 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:20 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 07, 2014 8:32:20 PM server.reactor.ConnectionHandler read
+INFO: Reading from /10.0.0.4:37448
+ιεπ 07, 2014 8:32:20 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:20 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:21 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 07, 2014 8:32:21 PM server.reactor.ConnectionHandler read
+INFO: Reading from /10.0.0.4:37448
+ιεπ 07, 2014 8:32:21 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:21 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:22 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 07, 2014 8:32:22 PM server.reactor.ConnectionHandler read
+INFO: Reading from /10.0.0.4:37448
+ιεπ 07, 2014 8:32:22 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 07, 2014 8:32:22 PM server.reactor.Reactor run
+INFO: Channel is ready for writing

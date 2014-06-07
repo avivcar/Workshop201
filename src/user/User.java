@@ -102,7 +102,7 @@ public class User implements Observer{
 		
 	}
 
-	private void log(String string) {
+	public void log(String string) {
 		this.userlog.info(string);
 		
 	}

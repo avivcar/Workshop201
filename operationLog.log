@@ -1,6 +1,12 @@
-ιεπ 07, 2014 7:31:41 PM forumSystemCore.ForumSystem operlog
+ιεπ 07, 2014 8:16:37 PM forumSystemCore.ForumSystem operlog
+INFO: Forum System creation
+ιεπ 07, 2014 8:16:37 PM forumSystemCore.ForumSystem operlog
 INFO: Forum 'yaquierrrr' is created
-ιεπ 07, 2014 7:31:41 PM forumSystemCore.ForumSystem operlog
+ιεπ 07, 2014 8:16:37 PM forumSystemCore.ForumSystem operlog
 INFO: Forum 'lahan-el' is created
-ιεπ 07, 2014 7:31:41 PM forumSystemCore.ForumSystem operlog
+ιεπ 07, 2014 8:16:37 PM forumSystemCore.ForumSystem operlog
 INFO: Forum 'shem-nahash!' is created
+ιεπ 07, 2014 8:16:37 PM forumSystemCore.ForumSystem operlog
+INFO: subforum 'subforum1' was created in 'yaquierrrr' forum
+ιεπ 07, 2014 8:16:37 PM forumSystemCore.ForumSystem operlog
+INFO: new message in subforum 'subforum1' in 'yaquierrrr' forum

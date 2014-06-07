@@ -192,8 +192,14 @@ public class ForumSystem {
 	 */
 	public User login(String username, String password, String forumId) {
 		for (int i = 0; i < forums.size(); i++) {
-			if (forums.get(i).getId().equals(forumId))
-				return forums.get(i).login(username, password);
+			if (forums.get(i).getId().equals(forumId)){
+				
+				User newuser =  forums.get(i).login(username, password);
+				if (newuser!=null){
+					newuser.log("the user is logging in");
+				}
+				return newuser;
+			}
 		}
 		errorlog("login user: "+username+" in forum id "+forumId);
 		return null;
@@ -239,6 +245,7 @@ public class ForumSystem {
 	public boolean addReply(String forumId, String subForumId,String msgId,User user, String title, String content){
 		Message msg = this.getMessage(forumId, subForumId, msgId);
 		if (msg==null) return false;
+		user.log("user is adding a reply");
 		msg.addReply(user, title, content);
 		return true;
 
@@ -251,6 +258,7 @@ public class ForumSystem {
 		if (forum != null) {
 			SubForum subforum = forum.getSubForumById(subForumId);
 			if (subforum != null){
+				user.log("user is creating a message");
 				forum.notifyUsers(user.getName()+" added a new message in '"+subforum.getName()+"' ");
 				operlog("new message in subforum \'"+subforum.getName()+"\' in \'"+forum.getName()+"\' forum");
 				return subforum.createMessage(user, title, content);
@@ -317,7 +325,12 @@ public class ForumSystem {
 		for (int i = 0; i < forums.size(); i++) {
 			if (forums.get(i).getId().equals(forumId)){
 				operlog("delete subforum id "+subForumId);
-				return forums.get(i).deleteSubForum(invoker, subForumId);
+				boolean ans= forums.get(i).deleteSubForum(invoker, subForumId);
+				if (ans) {
+					invoker.log("user has deleted subforum, subforum id is :"+subForumId);
+					return true;
+				}
+				else return false;
 			}
 		}
 		errorlog("delete subforum id "+subForumId);
