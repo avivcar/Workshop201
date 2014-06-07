@@ -72,6 +72,7 @@ public class User implements Observer{
 		this.rank = rank;
 		this.changeDetails(mail, name, username, password);
 		this.createlog();
+		this.notifTypes = 0;
 		this.log("user creation");
 	}
 	
@@ -239,6 +240,7 @@ public class User implements Observer{
 	
 	public void setNotifType(int type) {
 		this.notifTypes = type;
+		this.save();
 	}
 
 	public ArrayList<String> getNotifications() {

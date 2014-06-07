@@ -108,7 +108,9 @@ public class Query {
 	}
 	
 	public static User loadUser(ResultSet sqlObject, ArrayList<Rank> ranks) throws SQLException {
-		return new User(sqlObject.getString("mail"), sqlObject.getString("name"), sqlObject.getString("username"), sqlObject.getString("password"), findRank(ranks, sqlObject.getString("rank")), sqlObject.getString("forumId"));
+		User u = new User(sqlObject.getString("mail"), sqlObject.getString("name"), sqlObject.getString("username"), sqlObject.getString("password"), findRank(ranks, sqlObject.getString("rank")), sqlObject.getString("forumId"));
+		u.setNotifType(Integer.valueOf(sqlObject.getString("notifTypes")));
+		return u;
 	}
 	
 	public static void recoverUser(User user, String forumId, ArrayList<User> forumMembers) throws SQLException, ClassNotFoundException {
@@ -289,14 +291,16 @@ public class Query {
 				"`name`, " + 
 				"`username`, " + 
 				"`password`, " + 
-				"`rank`" + 
+				"`rank`, " + 
+				"`notifTypes`" + 
 			") VALUES (" + 
 				"'" + (user.getForumId() == null ? 0 : user.getForumId()) + "', " + 
 				"'" + user.getMail() + "', " + 
 				"'" + user.getName() + "', " + 
 				"'" + user.getUsername() + "', " + 
 				"'" + user.getPassword() + "', " + 
-				"'" + user.getRank().getName() + "'" + 
+				"'" + user.getRank().getName() + "', " + 
+				"'" + user.getNotifType() + "'" + 
 			")");
 	}
 	
