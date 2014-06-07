@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import utility.LogFile;
 import utility.Permissions;
 import user.User;
 import utility.*;
