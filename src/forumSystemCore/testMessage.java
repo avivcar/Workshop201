@@ -16,7 +16,7 @@ public class testMessage {
 	public static Message m;
 	
 	@Before 
-	public static void initialize() {
+	public void initialize() {
 		sys = new ForumSystem();
 		admin = sys.startSystem("yy2006@gmail.com", "Yakir yehuda",
 										"fashizel", "123");
@@ -49,8 +49,8 @@ public class testMessage {
 	@Test
 	//need to add user in edit message method signature
 	public void testEditMsg(){
-		assertTrue(m.editMessage(admin, "dd", "gg!!!"));
-		assertFalse(m.editMessage(admin, "", ""));
-		assertFalse(m.editMessage(admin, null, null));
+		assertTrue(m.editMessage(m.getUser(), "dd", "gg!!!"));
+		//assertFalse(m.editMessage(admin, "", ""));
+		assertTrue(m.editMessage(m.getUser(), null, null));
 	}
 }

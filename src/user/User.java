@@ -90,7 +90,7 @@ public class User implements Observer{
 	    try {  
 
 	        // This block configure the logger with handler and formatter  
-	        fh = new FileHandler(System.getProperty("user.dir")+"\\ForumUsersLog\\"+this.username+".log"); 
+	        fh = new FileHandler(System.getProperty("user.dir")+"/ForumUsersLog/"+this.username+".log"); 
 	        this.userlog.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
 	        fh.setFormatter(formatter);  
