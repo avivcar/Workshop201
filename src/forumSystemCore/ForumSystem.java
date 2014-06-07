@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import utility.LogFile;
 import utility.Permissions;
 import user.User;
 import utility.*;
@@ -60,6 +59,7 @@ public class ForumSystem {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		operlog("Forum System creation");
 		return superuser;
 	}
 	
@@ -150,6 +150,7 @@ public class ForumSystem {
 			if (forums.get(i).getId().equals(forumId))
 				return forums.get(i).signup(mail, name, username, pass);
 		}
+		errorlog("signup to forum id "+forumId);
 		return null;
 	}
 
@@ -194,16 +195,20 @@ public class ForumSystem {
 			if (forums.get(i).getId().equals(forumId))
 				return forums.get(i).login(username, password);
 		}
+		errorlog("login user: "+username+" in forum id "+forumId);
 		return null;
 	}
 
 	public String createSubForum(User invoker, User moderator,
 			String subForumName, String forumId) {
 		for (int i = 0; i < forums.size(); i++) {
-			if (forums.get(i).getId().equals(forumId))
+			if (forums.get(i).getId().equals(forumId)){
+				operlog("subforum \'"+subForumName+"\' was created in \'"+forums.get(i).getName()+"\' forum");
 				return forums.get(i).createSubForum(invoker, moderator,
 						subForumName);
+			}
 		}
+		errorlog("create sub forum");
 		return null;
 
 	}
@@ -240,8 +245,6 @@ public class ForumSystem {
 	}
 
 	
-	
-	
 	public String createMessage(String forumId, String subForumId, User user,
 			String title, String content) {
 		Forum forum = this.getForum(forumId);
@@ -249,9 +252,12 @@ public class ForumSystem {
 			SubForum subforum = forum.getSubForumById(subForumId);
 			if (subforum != null){
 				forum.notifyUsers(user.getName()+" added a new message in '"+subforum.getName()+"' ");
+				operlog("new message in subforum \'"+subforum.getName()+"\' in \'"+forum.getName()+"\' forum");
 				return subforum.createMessage(user, title, content);
 				}
+			errorlog("create message, sub-forum doesn't exist");
 		}
+		errorlog("create message, forum doesn't exist");
 		return null;
 
 	}
@@ -309,19 +315,25 @@ public class ForumSystem {
 	//returns true on success , false in fail
 	public boolean deleteSubForum(User invoker,String subForumId, String forumId) {
 		for (int i = 0; i < forums.size(); i++) {
-			if (forums.get(i).getId().equals(forumId))
+			if (forums.get(i).getId().equals(forumId)){
+				operlog("delete subforum id "+subForumId);
 				return forums.get(i).deleteSubForum(invoker, subForumId);
+			}
 		}
+		errorlog("delete subforum id "+subForumId);
 		return false;
 	}
 //return true on success 
 	public boolean deleteForum(User invoker, String forumId) {
 		//if (!invoker.hasPermission(Permissions.DELETE_FORUM)) return false;
 		for (int i = 0; i < forums.size(); i++) {
-			if (forums.get(i).getId().equals(forumId))
+			if (forums.get(i).getId().equals(forumId)){
+				operlog("delete forum id "+forumId);
 				//TODO insert SQL queries
 				forums.remove(i);
+			}
 		}
+		errorlog("delete forum id "+forumId);
 		return false;
 	}
 
