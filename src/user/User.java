@@ -236,6 +236,10 @@ public class User implements Observer{
 	public int getNotifType() {
 		return notifTypes;
 	}
+	
+	public void setNotifType(int type) {
+		this.notifTypes = type;
+	}
 
 	public ArrayList<String> getNotifications() {
 		return notifications;
