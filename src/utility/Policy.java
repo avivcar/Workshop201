@@ -6,6 +6,7 @@ public class Policy {
 	public boolean[] rules;
 	
 	public Policy(){
+		rules = new boolean[PolicyRules.values().length];
 		for (int i=0; i < PolicyRules.values().length; i++) {
 			rules[i] = false; 
 		}
