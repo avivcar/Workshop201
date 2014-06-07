@@ -38,7 +38,7 @@ public class initSystemTests extends TestCase {
 	
 	User newuser = this.sys.signup("miko@m.com","yaquir","york","agudayev",forum2);//user reg
 
-	String forum=this.sys.createForum("newforumYakuni",newuser);
+	String forum=this.sys.createForum("newforum",newuser);
 	assertFalse(sys.existForum(forum));//didnt added
 	assertNull(forum);   //null forum
 	
