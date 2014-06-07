@@ -10,11 +10,14 @@ import user.User;
 import utility.*;
 
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 
 public class ForumSystem {
-	LogFile operationLog;
-	LogFile errorLog;
+	private Logger operationLog;
+	private Logger errorLog;
 	public	ArrayList<Forum> forums;
 	User superuser;
 	
@@ -48,8 +51,7 @@ public class ForumSystem {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		operationLog = new LogFile("Operation.txt");
-		errorLog = new LogFile("Error.txt");
+		this.createlog();
 		forums = new ArrayList<Forum>();
 		try {
 			sql.Query.saveSuper(superuser);
@@ -60,6 +62,40 @@ public class ForumSystem {
 		}
 		return superuser;
 	}
+	
+	//log creation - called in constructor
+		private void createlog() {
+			this.errorLog=Logger.getLogger("ErrorLog");
+			this.operationLog=Logger.getLogger("operationLog");
+			
+			FileHandler fh;  
+			FileHandler fh2;  
+		    try {  
+		        // This block configure the logger with handler and formatter  
+		        fh = new FileHandler(System.getProperty("user.dir")+"/errorLog.log"); 
+		        fh2 = new FileHandler(System.getProperty("user.dir")+"/operationLog.log"); 	        
+		        this.errorLog.addHandler(fh);
+		        this.operationLog.addHandler(fh2);
+		        SimpleFormatter formatter = new SimpleFormatter();
+		        SimpleFormatter formatter2 = new SimpleFormatter();
+		        fh.setFormatter(formatter); 
+		        fh2.setFormatter(formatter2); 
+		    } catch (SecurityException e) {  
+		        e.printStackTrace();  
+		    } catch (IOException e) {  
+		        e.printStackTrace();  
+		    }  
+			
+		}
+		
+	private void errorlog(String string) {
+		this.errorLog.info(string);
+	}
+	
+	private void operlog(String string) {
+		this.operationLog.info(string);
+	}
+
 
 	public String createForum(String name, User admin) {
 	//	if (!admin.hasPermission(Permissions.CREATE_FORUM) || name.equals(""))
@@ -72,6 +108,7 @@ public class ForumSystem {
 		Forum newForum = new Forum(name, admin);
 		forums.add(newForum);
 		newForum.save();
+		this.operlog("Forum \'"+name+"\' is created");
 		return newForum.getId();
 	}
 	
