@@ -11,7 +11,7 @@ import server.reactor.Reactor;
 import user.User;
 import server.protocol.*;
 
-public class initReactorTest {
+public class initReactorTest{
 	private static ForumSystem forumSystem;
 	private static EchoProtocol echo;
 	private static EchoProtocol echo2;
@@ -34,7 +34,7 @@ public class initReactorTest {
 		user1 = forumSystem.signup("mami@walla.com", "Mamuta Cohen", "Mamutit", "1234", forumID);
 		
 		//init reactor			
-		Reactor reactor = Reactor.startEchoServer(port, poolSize,forumSystem);
+		Reactor reactor = Reactor.startEchoServer(port, poolSize, forumSystem);
 
 		Thread thread = new Thread(reactor);
 		thread.start();

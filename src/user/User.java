@@ -228,6 +228,7 @@ public class User implements Observer{
 	}
 	
 	public void sayToMe(String say) {
+		if (this.handler == null) return;
 		 this.handler.sayToMe(say);
 		
 	}
@@ -278,6 +279,5 @@ public class User implements Observer{
 			handler.sayToMe(msg);
 		}
 	}
-	
 	
 }
