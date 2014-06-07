@@ -162,7 +162,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 		    break;
 			
 		case Constants.DELETEFORUM:
-			if(this.isNull(msgArr,2)){y
+			if(this.isNull(msgArr,2)){
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
