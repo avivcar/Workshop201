@@ -51,6 +51,6 @@ public class testMessage {
 	public void testEditMsg(){
 		assertTrue(m.editMessage(m.getUser(), "dd", "gg!!!"));
 		//assertFalse(m.editMessage(admin, "", ""));
-		//assertFalse(m.editMessage(m.getUser(), null, null));
+		assertTrue(m.editMessage(m.getUser(), null, null));
 	}
 }
