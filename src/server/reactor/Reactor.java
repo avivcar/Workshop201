@@ -1,6 +1,7 @@
 package server.reactor;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
@@ -266,9 +267,17 @@ public class Reactor implements Runnable {
 		};
 
 		Reactor reactor = new Reactor(port, poolSize, protocolMaker, tokenizerMaker,forumSystem);
+		//init global log file and users log folder
+		InitLogAndFolder();
+		return reactor;
+	}
+
+	private static void InitLogAndFolder() {
+		
 		FileHandler fh;  
-
-
+    	File theDir = new File("ForumUsersLog");
+  	  if (!theDir.exists())   
+  		  theDir.mkdir() ;
 	    try {  
 
 	        // This block configure the logger with handler and formatter  
@@ -281,8 +290,7 @@ public class Reactor implements Runnable {
 	    } catch (IOException e) {  
 	        e.printStackTrace();  
 	    }  
-	
-		return reactor;
+			
 	}
 
 	

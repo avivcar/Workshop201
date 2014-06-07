@@ -1,8 +1,13 @@
 package user;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import utility.*;
 import server.reactor.*;
@@ -37,6 +42,9 @@ public class User implements Observer{
 	// user rank
 	private Rank rank;
 	
+	//user Logger
+	private Logger userlog;
+	
 	private String forumId;
 	
 	// an array of notifications that the user received 
@@ -63,12 +71,41 @@ public class User implements Observer{
 		this.forumId = forumId;
 		this.rank = rank;
 		this.changeDetails(mail, name, username, password);
+		this.createlog();
+		this.log("user creation");
 	}
 	
+
 	/**
 	 * Constructor for guest
 	 */
 	public User() {}
+	
+	//log creation - called in constructor
+	private void createlog() {
+		this.userlog=Logger.getLogger(this.username);
+		
+		FileHandler fh;  
+	    try {  
+
+	        // This block configure the logger with handler and formatter  
+	        fh = new FileHandler(System.getProperty("user.dir")+"/ForumUsersLog/"+this.username+".log"); 
+	        this.userlog.addHandler(fh);
+	        SimpleFormatter formatter = new SimpleFormatter();  
+	        fh.setFormatter(formatter);  
+	    } catch (SecurityException e) {  
+	        e.printStackTrace();  
+	    } catch (IOException e) {  
+	        e.printStackTrace();  
+	    }  
+		
+	}
+
+	private void log(String string) {
+		this.userlog.info(string);
+		
+	}
+
 	
 	public void recover(ArrayList<User> friends, ArrayList<User> pendingFriendRequests, ArrayList<User> friendRequests) {
 		this.friends = friends;
