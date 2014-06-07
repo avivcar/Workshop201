@@ -68,10 +68,9 @@ public class initReactorTest{
 	}
 	@Test
 	public void testCreateForum(){
-		assertEquals("ERR_CANNOT_CREATE",echo.processMessage(Constants.CREATE_FORUM+"^name^")); //same name exists
-		assertNotEquals("ERR_CANNOT_CREATE",echo.processMessage(Constants.CREATE_FORUM+"^diffrent^"));
-		assertEquals("ERR_NOT_ENOUGH_PARAMETERS",echo.processMessage(Constants.CREATE_FORUM+"^"));
-		
+		assertEquals("ERR_CANNOT_CREATE",echo.processMessage(Constants.CREATEFORUM+"^name^")); //same name exists
+		assertNotEquals("ERR_CANNOT_CREATE",echo.processMessage(Constants.CREATEFORUM+"^diffrent^"));
+		assertEquals("ERR_NOT_ENOUGH_PARAMETERS",echo.processMessage(Constants.CREATEFORUM+"^"));
 	}
 
 }
