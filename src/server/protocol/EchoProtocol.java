@@ -156,9 +156,10 @@ public class EchoProtocol implements AsyncServerProtocol {
 			}
 			else 
 			response=Constants.ADDFORUM+"^"+Constants.SUCC_+"^";
-			Forum newforum = this.forumSystem.createForum(msgArr[1], this.user);
-			if(newforum==null)response+=Boolean.toString(false);
-			else response+=newforum.getName()+"^"+newforum.getId();
+			String newforum = this.forumSystem.createForum(msgArr[1], this.user);
+			Forum newf = this.forumSystem.getForum(newforum);
+			if(newf==null)response+=Boolean.toString(false);
+			else response+=newf.getName()+"^"+newf.getId();
 		    break;
 			
 		case Constants.DELETEFORUM:

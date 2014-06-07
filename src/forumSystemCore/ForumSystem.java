@@ -61,7 +61,7 @@ public class ForumSystem {
 		return superuser;
 	}
 
-	public Forum createForum(String name, User admin) {
+	public String createForum(String name, User admin) {
 	//	if (!admin.hasPermission(Permissions.CREATE_FORUM) || name.equals(""))
 		//	return null;
 
@@ -72,7 +72,7 @@ public class ForumSystem {
 		Forum newForum = new Forum(name, admin);
 		forums.add(newForum);
 		newForum.save();
-		return newForum;
+		return newForum.getId();
 	}
 	
 /*
