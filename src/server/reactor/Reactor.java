@@ -228,10 +228,10 @@ public class Reactor implements Runnable {
 			if (!sql.Query.load(forumSystem)) {
 				System.out.println("Starting system...");
 				User admin= forumSystem.startSystem("halevm@em.walla.com", "firstname", "admin", "1234");
-				Forum newforum = forumSystem.createForum("yaquierrrr", admin);
-				newforum = forumSystem.createForum("lahan-el", admin);
-				newforum = forumSystem.createForum("shem-nahash!", admin);
-				String s= forumSystem.createSubForum(admin, admin, "subforum1", "1");
+				String f1 = forumSystem.createForum("yaquierrrr", admin);
+				forumSystem.createForum("lahan-el", admin);
+				forumSystem.createForum("shem-nahash!", admin);
+				String s= forumSystem.createSubForum(admin, admin, "subforum1", f1);
 				s= forumSystem.createMessage("1", "1", admin, "new title", "new content");
 				boolean bool = forumSystem.addReply("1", "1", "1", admin, "tguva", "content tguva");
 				 bool = forumSystem.addReply("1", "1", "1", admin, "tguva2", "content tguva23234234");

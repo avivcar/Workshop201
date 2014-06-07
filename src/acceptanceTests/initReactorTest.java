@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-
+import java.io.IOException;
 import forumSystemCore.ForumSystem;
 import server.protocol.EchoProtocol;
 import server.reactor.Reactor;
@@ -23,7 +23,7 @@ public class initReactorTest{
 	}
 
 	@Before
-	public void init() throws InterruptedException {
+	public void init() throws InterruptedException, IOException {
 		int port =1234 ;
 		int poolSize =10; 
 		//init forum sys 
@@ -68,9 +68,9 @@ public class initReactorTest{
 	}
 	@Test
 	public void testCreateForum(){
-		assertEquals("ERR_CANNOT_CREATE",echo.processMessage(Constants.CREATEFORUM+"^name^")); //same name exists
-		assertNotEquals("ERR_CANNOT_CREATE",echo.processMessage(Constants.CREATEFORUM+"^diffrent^"));
-		assertEquals("ERR_NOT_ENOUGH_PARAMETERS",echo.processMessage(Constants.CREATEFORUM+"^"));
+		assertEquals("ERR_CANNOT_CREATE",echo.processMessage(Constants.ADDFORUM+"^name^")); //same name exists
+		assertNotEquals("ERR_CANNOT_CREATE",echo.processMessage(Constants.ADDFORUM+"^diffrent^"));
+		assertEquals("ERR_NOT_ENOUGH_PARAMETERS",echo.processMessage(Constants.ADDFORUM+"^"));
 	}
 
 }
