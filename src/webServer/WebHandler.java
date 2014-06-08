@@ -22,7 +22,7 @@ public class WebHandler implements HttpHandler {
 
     	
     	//System.out.println(request.getRequestURI());
-    	parsePostParameters(request);
+    	parsePostParameters(request, this.BASE_PATH);
         String response = "fdsfsd";
         request.sendResponseHeaders(200, response.length());
         OutputStream os = request.getResponseBody();
@@ -31,29 +31,6 @@ public class WebHandler implements HttpHandler {
         
 	}
 	
-	private ArrayList<DataFragment> parsePostParameters(HttpExchange exchange) throws IOException {
-        if (!("post".equalsIgnoreCase(exchange.getRequestMethod()))) return new ArrayList<DataFragment>();
-        InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "utf-8");
-        BufferedReader br = new BufferedReader(isr);
-        String query = br.readLine();
-        return parseRequestData(query);
-    }
 
-	private ArrayList<DataFragment> parseRequestData(String query) {
-		ArrayList<DataFragment> parsedData = new ArrayList<DataFragment>();
-		String[] listOfCouples = query.split("&");
-		for (int i=0; i < listOfCouples.length; i++) {
-			String[] temp = listOfCouples[i].split("=");
-			parsedData.add(new DataFragment(temp[0], temp[1]));
-		}
-		return parsedData;
-	}
-	
-	private String getPath(HttpExchange request) {
-		String path = request.getRequestURI() + "";
-		if (path.substring(0, this.BASE_PATH.length()).equals(this.BASE_PATH)) path = path.substring(this.BASE_PATH.length());
-		if (path.indexOf("?") != -1) path = path.substring(0, path.indexOf("?"));
-		return path;
-	}
 	
 }
