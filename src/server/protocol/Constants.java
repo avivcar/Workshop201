@@ -9,7 +9,6 @@ public class Constants {
 	public static final String SIGNUP = "SIGNUP";
 	public static final String ISMEMBER = "ISMEMBER";
 	public static final String LOGIN = "LOGIN";
-//	public static final String CREATESUBFORUM = "CREATESUBFORUM";
 	public static final String EXISTSUBFORUM = "EXISTSUBFORUM";
 	public static final String CREATE_MESSAGE = "CREATE_MESSAGE";
 	public static final String AMIADMIN = "AMIADMIN";
@@ -26,7 +25,7 @@ public class Constants {
 	public static final String REMOVEMODERATOR = "REMOVEMODERATOR";
 	public static final String SUBFORUMOPTIONS = "SUBFORUMOPTIONS";
 	public static final String FORUMOPTIONS = "FORUMOPTIONS";
-
+	
 
 
 	

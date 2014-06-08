@@ -161,6 +161,17 @@ public class EchoProtocol implements AsyncServerProtocol {
 			if(newf==null)response+=Boolean.toString(false);
 			else response+=newf.getName()+"^"+newf.getId();
 		    break;
+		    
+		case Constants.ADDSUBFORUM:
+			if(this.isNull(msgArr,3)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.ADDSUBFORUM+"^"+Constants.SUCC_+"^";
+			response+=addsubforum(msgArr);
+		    break;
+			
 			
 		case Constants.DELETEFORUM:
 			if(this.isNull(msgArr,2)){
@@ -210,12 +221,19 @@ public class EchoProtocol implements AsyncServerProtocol {
 			else 
 			response=Constants.COMPLAIN+"^"+Constants.SUCC_+"^";
 			response+=Boolean.toString(forumSystem.createComplaint(msgArr[1], msgArr[2], this.user, msgArr[3], msgArr[4]));
+		    break;	
+		    
+		case Constants.FORUMOPTIONS:
+			if(this.isNull(msgArr,2)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.FORUMOPTIONS+"^"+Constants.SUCC_+"^";
+			response+=getForumOptions(msgArr);
 		    break;				
 			    			    				
-									
-		    
-			    			    				
-				
+	
 				
 			default: response="YAKIR TWAT";
 				
@@ -231,6 +249,15 @@ public class EchoProtocol implements AsyncServerProtocol {
 
 
 
+
+	private String addsubforum(String[] msgArr) {
+		String ans=Boolean.toString(false);
+		if(forumSystem.createSubForum(this.user, this.user, msgArr[2], msgArr[1])!=null)
+			ans=Boolean.toString(true);
+		return ans;
+	}
+	
+	
 	public boolean isEnd(String msg)
     {
     	
@@ -315,6 +342,24 @@ public class EchoProtocol implements AsyncServerProtocol {
 		if(msg!=null) System.out.println(msg.getId());
 		return ans;
 	}
+	private String getForumOptions(String[] msgArr) {
+		String ans="";
+		Forum forum = forumSystem.getForum(msgArr[1]);
+		if (forum!=null){
+			for (int i=0;i<forum.getMembers().size();i++)
+				ans+= forum.getMembers().get(i).getUsername()+"^";
+			ans+="***";
+			for(int i=0;i<forum.getAdministrators().size();i++)
+				ans+="^"+forum.getAdministrators().get(i).getUsername();
+			ans+="^***";
+			for(int i=0;i<forum.getRanks().size();i++)
+				ans+="^"+forum.getRanks().get(i).getName();
+		}		
+		return ans;
+		
+		
+	}
+	
 	
 	private String getSubForumOptions(String[] msgArr) {
 		String ans="";
@@ -325,10 +370,8 @@ public class EchoProtocol implements AsyncServerProtocol {
 			ans+="***";
 			SubForum subforum =forum.getSubForumById(msgArr[2]);
 			if(subforum!=null)
-			  for(int i=0;i<subforum.getModerators().size();i++){
+			  for(int i=0;i<subforum.getModerators().size();i++)
 			    	ans+="^"+subforum.getModerators().get(i).getUsername();	
-			    	System.out.println("the moderators: "+subforum.getModerators().get(i).getUsername());
-			  }
 		}		
 		return ans;
 	}
