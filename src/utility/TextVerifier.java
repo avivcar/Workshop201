@@ -1,6 +1,8 @@
 package utility;
 import java.util.regex.Pattern;
 
+import forumSystemCore.Forum;
+
 
 public class TextVerifier {
 	
@@ -34,14 +36,20 @@ public class TextVerifier {
 	 * @param email
 	 * @return true/false
 	 */
-	public static boolean verifyEmail(String email){
+	public static boolean verifyEmail(String email, Forum forum){
 		final Pattern rfc2822 = Pattern.compile(
 		        "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
 		);
 
-		if (rfc2822.matcher(email).matches())
-		   return true;
-		return false;
+		if (!rfc2822.matcher(email).matches())
+		   return false;
+		//checks multiplicity
+		if(forum!=null)
+			for(int i =0; i< forum.getMembers().size(); i++){
+				if(forum.getMembers().get(i).getMail().equals(email))
+					return false;
+			}
+		return true;
 	}
 
 }

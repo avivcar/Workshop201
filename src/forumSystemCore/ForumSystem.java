@@ -29,7 +29,7 @@ public class ForumSystem {
 	public User startSystem(String email, String name, String username,
 			String password) {
 		if (!TextVerifier.verifyName(username, new Policy())
-				|| !TextVerifier.verifyEmail(email)
+				|| !TextVerifier.verifyEmail(email,null)
 				|| !TextVerifier.verifyPassword(password, new Policy())
 				|| name.equals(""))
 			return null;
@@ -417,7 +417,7 @@ public class ForumSystem {
 	public boolean addModerator(String forumId, String subforumId, User invoker, String username){
 		Forum forum = getForum(forumId);
 		SubForum sub = forum.getSubForumById(subforumId);
-		User mod = forum.getUserByUsername(username);
+		User mod = forum.getUserByName(username);
 		if (mod == null){
 			errorlog("adding moderator");
 			return false;
