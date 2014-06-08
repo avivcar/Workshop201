@@ -22,7 +22,6 @@ public class SubForum {
 		return forumId;
 	}
 	
-	
 	public SubForum(String subject, User admin, String forumId){
 		this.subject = subject;
 		this.forumId = forumId;
@@ -32,7 +31,7 @@ public class SubForum {
 		suspendedUsers = new ArrayList<Suspended>();
 		this.id = String.valueOf(NEXT_ID);
 		NEXT_ID++;
-		this.addModerator(admin);
+		this.addModerator(admin, admin);
 	}
 	public void recover(List<User> moderators, List<Complaint> complaints, List<Message> messages, List<Suspended> suspendedUsers, String id) {
 		this.subject = subject;

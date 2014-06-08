@@ -111,7 +111,7 @@ public class Forum extends Observable{
 	
 	public boolean addModerator(String subForumId, User invoker, User moderator) {
 		if (!invoker.hasPermission(Permissions.ADD_MODERATOR)) return false;
-		getSubForumById(subForumId).addModerator(moderator);
+		getSubForumById(subForumId).addModerator(invoker, moderator);
 		return true; 
 	}
 	

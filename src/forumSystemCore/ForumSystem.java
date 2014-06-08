@@ -419,7 +419,7 @@ public class ForumSystem {
 		SubForum sub = forum.getSubForumById(subforumId);
 		User mod = forum.getUserByUsername(username);
 		if (! sub.addModerator(invoker, mod)){
-			errorlog("adding admin");
+			errorlog("adding moderator");
 			return false;
 		}
 		return true;	
