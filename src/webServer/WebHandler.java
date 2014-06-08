@@ -19,10 +19,10 @@ public class WebHandler implements HttpHandler {
 	}
 
 	public void handle(HttpExchange request) throws IOException {
-
-    	
-    	//System.out.println(request.getRequestURI());
-    	parsePostParameters(request, this.BASE_PATH);
+		httpRequest httpRequest = new httpRequest(request, this.BASE_PATH);
+		System.out.println(httpRequest.hasGet("matan"));
+		System.out.println(httpRequest.hasPost("yakir"));
+		
         String response = "fdsfsd";
         request.sendResponseHeaders(200, response.length());
         OutputStream os = request.getResponseBody();
@@ -30,6 +30,8 @@ public class WebHandler implements HttpHandler {
         os.close();
         
 	}
+	
+	
 	
 
 	
