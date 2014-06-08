@@ -58,7 +58,9 @@ public class SubForum {
 	 * @param mod
 	 * @return
 	 */
-	public boolean addModerator(User mod){
+	public boolean addModerator(User invoker, User mod){
+		if(!invoker.hasPermission(Permissions.ADD_MODERATOR))
+			return false;
 		if(isModerator(mod)) return false;
 		this.moderators.add(mod);
 		sql.Query.saveModerator(this.id, mod);

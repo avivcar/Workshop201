@@ -352,21 +352,23 @@ public class ForumSystem {
 	}
 	
 	// removes moderator 
-	public boolean removeModerator(String forumId, String subforumId, User invoker, User toRemove){
+	public boolean removeModerator(String forumId, String subforumId, User invoker, String toRemove){
 		if(!invoker.hasPermission(Permissions.REMOVE_MODERATOR)){
 			errorlog("no permissions to remove moderator");
 			return false;
 		}
 		Forum forum = this.getForum(forumId);
 		SubForum sub = forum.getSubForumById(subforumId);
-		return sub.removeModerator(toRemove);
+		User mod = forum.getUserByName(toRemove);
+		return sub.removeModerator(mod);
 	}
 	
 	//create complaint
-	public boolean createComplaint(String forumId, String subforumId , User invoker, User complainee, String msg){
+	public boolean createComplaint(String forumId, String subforumId , User invoker, String complainee, String msg){
 		Forum forum = this.getForum(forumId);
 		SubForum sub = forum.getSubForumById(subforumId);
-		if (sub.complain(invoker, complainee, msg) != null){
+		User com = forum.getUserByName(complainee);
+		if (sub.complain(invoker, com, msg) != null){
 			operlog("a new complaint is added");
 			return true;
 		}
@@ -411,5 +413,40 @@ public class ForumSystem {
 		return false;
 	}
 
+	//add moderator
+	public boolean addModerator(String forumId, String subforumId, User invoker, String username){
+		Forum forum = getForum(forumId);
+		SubForum sub = forum.getSubForumById(subforumId);
+		User mod = forum.getUserByUsername(username);
+		if (! sub.addModerator(invoker, mod)){
+			errorlog("adding admin");
+			return false;
+		}
+		return true;	
+	}
+	
+	//add admin
+	public boolean addAdmin(String forumId, User invoker, String toAdmin){
+		Forum forum = getForum(forumId);
+		User admin = forum.getUserByName(toAdmin);
+		if (! forum.addAdmin(invoker, admin)){
+			errorlog("adding admin");
+			return false;
+		}
+		return true;	
+	}
+	
+	//remove admin
+	public boolean removeAdmin(String forumId, User invoker, String toRemove){
+		Forum forum = getForum(forumId);
+		User admin = forum.getUserByName(toRemove);
+		if (! forum.removeAdmin(invoker, admin)){
+			errorlog("removing admin");
+			return false;
+		}
+		return true;
+	}
+	
+	//set rank
 
 }
