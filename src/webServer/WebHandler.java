@@ -31,18 +31,12 @@ public class WebHandler implements HttpHandler {
         
 	}
 	
-	private void parsePostParameters(HttpExchange exchange) throws IOException {
-        if ("post".equalsIgnoreCase(exchange.getRequestMethod())) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> parameters =
-                (Map<String, Object>)exchange.getAttribute("parameters");
-            InputStreamReader isr =
-                new InputStreamReader(exchange.getRequestBody(),"utf-8");
-            BufferedReader br = new BufferedReader(isr);
-            String query = br.readLine();
-            //query holds the list
-            System.out.println(parseRequestData(query));
-        }
+	private ArrayList<DataFragment> parsePostParameters(HttpExchange exchange) throws IOException {
+        if (!("post".equalsIgnoreCase(exchange.getRequestMethod()))) return new ArrayList<DataFragment>();
+        InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String query = br.readLine();
+        return parseRequestData(query);
     }
 
 	private ArrayList<DataFragment> parseRequestData(String query) {
@@ -53,6 +47,13 @@ public class WebHandler implements HttpHandler {
 			parsedData.add(new DataFragment(temp[0], temp[1]));
 		}
 		return parsedData;
+	}
+	
+	private String getPath(HttpExchange request) {
+		String path = request.getRequestURI() + "";
+		if (path.substring(0, this.BASE_PATH.length()).equals(this.BASE_PATH)) path = path.substring(this.BASE_PATH.length());
+		if (path.indexOf("?") != -1) path = path.substring(0, path.indexOf("?"));
+		return path;
 	}
 	
 }
