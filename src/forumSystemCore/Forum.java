@@ -183,7 +183,7 @@ public class Forum extends Observable{
 	//returns the user with this username or null if not found
 	public User getUserByUsername(String un){
 		for(int i=0; i< members.size(); i++){
-			if (members.get(i).getName() == un)
+			if (members.get(i).getName().equals(un))
 				return members.get(i);
 		}
 		return null;
