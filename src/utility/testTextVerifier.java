@@ -23,9 +23,9 @@ public class testTextVerifier {
 	}
 	@Test
 	public void testVerifyEmail() {
-		assertFalse(TextVerifier.verifyEmail(""));
-		assertFalse(TextVerifier.verifyEmail("hitfdg"));
-		assertTrue(TextVerifier.verifyEmail("hi@hello.com"));
+		assertFalse(TextVerifier.verifyEmail("",null));
+		assertFalse(TextVerifier.verifyEmail("hitfdg",null));
+		assertTrue(TextVerifier.verifyEmail("hi@hello.com",null));
 	}
 	
 }

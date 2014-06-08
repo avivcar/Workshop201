@@ -9,7 +9,7 @@ import user.*;
 
 public class Forum extends Observable{
 	private String name;
-	private Policy policy;
+	public Policy policy;
 	private ArrayList<User> administrators;
 	protected ArrayList<User> members;
 	private ArrayList<SubForum> subForums;
@@ -127,7 +127,11 @@ public class Forum extends Observable{
 	}
 	
 	public User signup(String mail, String name, String username, String password) {
-		if (!TextVerifier.verifyEmail(mail,this) || !TextVerifier.verifyName(username, policy) || !TextVerifier.verifyPassword(password, policy) || name.equals("")) return null;
+		if (!TextVerifier.verifyEmail(mail,this) || 
+			!TextVerifier.verifyName(username, policy) || 
+			!TextVerifier.verifyPassword(password, policy) || 
+			name.equals("")) 
+			return null;
 		User member = new User(mail, name, username, password, Rank.member, this.id);
 		this.members.add(member);
 		member.save();
@@ -220,7 +224,7 @@ public class Forum extends Observable{
 			
 			int index = msg.toString().indexOf(' '); 
 			String username = msg.substring(0,index);
-			User invoker = getUserByUsername(username);
+			User invoker = getUserByName(username);
 			
 			for (int i=0; i<members.size(); i++){
 				User receiver = members.get(i);

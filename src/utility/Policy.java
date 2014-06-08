@@ -1,12 +1,15 @@
 package utility;
 
+import java.util.regex.Pattern;
+
 /** This is the default policy **/
 public class Policy {
 	public boolean[] rules;
-	private int minPassLength = 6;
+	private int minPassLength = 4;
 	private boolean lettersInPass = false;
 	private boolean capsLockInPass = false;
-	
+	private int maxModerators = 3;
+	private int maxComplaintsOnMod = 10;
 	
 	public Policy(){
 		rules = new boolean[PolicyRules.values().length];
@@ -15,21 +18,22 @@ public class Policy {
 		}
 	}
 	
-	public Policy(boolean[] rules){
+	public Policy(boolean[] rules, int moderators, int complaints,
+			int minLength, boolean letters, boolean capsLock){
 		this.rules = rules; 
-	}
-	
-	public void setPassRule(int minLength, boolean letters, boolean capsLock){
+		setMaxModerators(moderators);
+		setMaxComplaintsOnMod(complaints);
 		minPassLength = minLength;
 		lettersInPass = letters;
 		capsLockInPass = capsLock;
 	}
 	
+	
 	public boolean ruleActive(PolicyRules rule){
 		return rules[rule.ordinal()];
 	}
 	
-	//dafuq are these?
+	
 	public boolean isLegaelName(String name) {
 		if (name!=null && !name.equals(""))
 			return true;
@@ -37,9 +41,33 @@ public class Policy {
 	}
 
 	public boolean isLegaelPass(String pass) {
-		if (pass!=null && !pass.equals(""))
-			return true;
-		return false;
+		if (pass.length()<minPassLength)
+			return false;
+		if (lettersInPass)
+			if (!pass.contains("[a-zA-Z]+"))
+			     return false;   
+		if (capsLockInPass)
+			if (!pass.contains("[A-Z]+"))
+			     return false;   
+		return true;
+	}
+	
+	//g & s
+	
+	public int getMaxComplaintsOnMod() {
+		return maxComplaintsOnMod;
+	}
+
+	public int getMaxModerators() {
+		return maxModerators;
+	}
+
+	public void setMaxModerators(int maxModerators) {
+		this.maxModerators = maxModerators;
+	}
+
+	public void setMaxComplaintsOnMod(int maxComplaintsOnMod) {
+		this.maxComplaintsOnMod = maxComplaintsOnMod;
 	}
 
 }
