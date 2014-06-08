@@ -171,7 +171,48 @@ public class EchoProtocol implements AsyncServerProtocol {
 			response=Constants.DELETEFORUM+"^"+Constants.SUCC_+"^";
 			response+=Boolean.toString(forumSystem.deleteForum(this.user, msgArr[1]));
 		    break;
+		    
+		case Constants.SUBFORUMOPTIONS:
+			if(this.isNull(msgArr,3)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.SUBFORUMOPTIONS+"^"+Constants.SUCC_+"^";
+			response+=getSubForumOptions(msgArr);
+		    break;
 				
+		case Constants.REMOVEMODERATOR:
+			if(this.isNull(msgArr,4)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.REMOVEMODERATOR+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.removeModerator(msgArr[1], msgArr[2], this.user, msgArr[3]));
+		    break;
+		    
+		case Constants.ADDMODERATOR:
+			if(this.isNull(msgArr,4)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.ADDMODERATOR+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.addModerator(msgArr[1], msgArr[2], this.user, msgArr[3]));
+		    break;				
+			    			    				
+		case Constants.COMPLAIN:
+			if(this.isNull(msgArr,5)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.COMPLAIN+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.createComplaint(msgArr[1], msgArr[2], this.user, msgArr[3], msgArr[4]));
+		    break;				
+			    			    				
+									
 		    
 			    			    				
 				
@@ -184,6 +225,7 @@ public class EchoProtocol implements AsyncServerProtocol {
         }
         return response;
 	}
+
 
 
 
@@ -273,7 +315,20 @@ public class EchoProtocol implements AsyncServerProtocol {
 		if(msg!=null) System.out.println(msg.getId());
 		return ans;
 	}
-	
+	private String getSubForumOptions(String[] msgArr) {
+		String ans="";
+		Forum forum = forumSystem.getForum(msgArr[1]);
+		if (forum!=null){
+			for (int i=0;i<forum.getMembers().size();i++)
+				ans+= forum.getMembers().get(i).getUsername()+"^";
+			ans+="***";
+			SubForum subforum =forum.getSubForumById(msgArr[2]);
+			if(subforum!=null)
+			  for(int i=0;i<subforum.getModerators().size();i++)
+			    	ans+="^"+subforum.getModerators().get(i).getUsername();		
+		}	
+		return ans;
+	}
 	
 	
 	

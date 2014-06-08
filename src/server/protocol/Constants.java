@@ -20,6 +20,10 @@ public class Constants {
 	public static final String ADDREPLY = "ADDREPLY";
 	public static final String ADDFORUM = "ADDFORUM";
 	public static final String DELETEFORUM = "DELETEFORUM";
+	public static final String COMPLAIN = "COMPLAIN";
+	public static final String ADDMODERATOR = "ADDMODERATOR";
+	public static final String REMOVEMODERATOR = "REMOVEMODERATOR";
+	public static final String SUBFORUMOPTIONS = "SUBFORUMOPTIONS";
 
 
 
