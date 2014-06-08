@@ -50,7 +50,7 @@ public class WebHandler implements HttpHandler {
 		String[] listOfCouples = query.split("&");
 		for (int i=0; i < listOfCouples.length; i++) {
 			String[] temp = listOfCouples[i].split("=");
-			parsedData.add(new DataFragment(temp[0], temp[1]);
+			parsedData.add(new DataFragment(temp[0], temp[1]));
 		}
 		return parsedData;
 	}
