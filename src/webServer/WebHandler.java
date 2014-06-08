@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.ArrayList;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -39,8 +40,19 @@ public class WebHandler implements HttpHandler {
                 new InputStreamReader(exchange.getRequestBody(),"utf-8");
             BufferedReader br = new BufferedReader(isr);
             String query = br.readLine();
-            System.out.println(query);
+            //query holds the list
+            System.out.println(parseRequestData(query));
         }
     }
+
+	private ArrayList<DataFragment> parseRequestData(String query) {
+		ArrayList<DataFragment> parsedData = new ArrayList<DataFragment>();
+		String[] listOfCouples = query.split("&");
+		for (int i=0; i < listOfCouples.length; i++) {
+			String[] temp = listOfCouples[i].split("=");
+			parsedData.add(new DataFragment(temp[0], temp[1]);
+		}
+		return parsedData;
+	}
 	
 }
