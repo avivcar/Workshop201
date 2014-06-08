@@ -27,7 +27,7 @@ public class WebServer {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		new WebServer(80, "/forum");
+		new WebServer(8080, "/forum");
 	}
 
 }

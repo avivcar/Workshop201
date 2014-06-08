@@ -52,6 +52,35 @@ public class httpRequest {
 		String path = request.getRequestURI() + "";
 		if (path.substring(0, BASE_PATH.length()).equals(BASE_PATH)) path = path.substring(BASE_PATH.length());
 		if (path.indexOf("?") != -1) path = path.substring(0, path.indexOf("?"));
+		if (path.charAt(path.length() - 1) == '/') path = path.substring(0, path.length() - 1);
 		return path;
 	}	
+	
+	public boolean hasGet(String key) {
+		for (int i=0; i<this.get.size(); i++) if (this.get.get(i).getKey().equals(key)) return true;
+		return false;
+	}
+	
+	public boolean hasPost(String key) {
+		for (int i=0; i<this.post.size(); i++) if (this.post.get(i).getKey().equals(key)) return true;
+		return false;
+	}
+	
+	public String getPath() {
+		return this.requestPath;
+	}
+	
+	public String getGet(String key) {
+		if (hasGet(key) == false) return null;
+		for (int i = 0; i < this.get.size(); i++)
+			if (this.get.get(i).getKey().equals(key)) return this.get.get(i).getValue();
+		return null;
+	}
+	
+	public String getPost(String key) {
+		if (hasPost(key) == false) return null;
+		for (int i = 0; i < this.post.size(); i++)
+			if (this.post.get(i).getKey().equals(key)) return this.post.get(i).getValue();
+		return null;
+	}
 }
