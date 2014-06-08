@@ -248,10 +248,8 @@ public class ForumSystem {
 		user.log("user is adding a reply");
 		msg.addReply(user, title, content);
 		return true;
-
 	}
 
-	
 	public String createMessage(String forumId, String subForumId, User user,
 			String title, String content) {
 		Forum forum = this.getForum(forumId);
@@ -281,9 +279,6 @@ public class ForumSystem {
 		return msg;
 
 		}
-		
-
-	
 	
 	/**
 	 * returns a list of users that are members in several forums (meaning - duplications of userNames among different forums)
@@ -315,11 +310,77 @@ public class ForumSystem {
 		return ans;
 	}
 	
+	//get moderators
+	public List<User> getModerators(String forumId, String SubforumId){
+		List<User> ans = new ArrayList<User>();
+		Forum forum = this.getForum(forumId);
+		SubForum sub = forum.getSubForumById(SubforumId);
+		ans = sub.getModerators();
+		if (ans==null)
+			this.errorlog("finding moderators");
+		return ans;
+	}
+	
+	//get users
+	public List<User> getUsersInForum(String forumId){
+		List<User> ans = new ArrayList<User>();
+		Forum forum = this.getForum(forumId);
+		ans = forum.getAdministrators();
+		if (ans==null)
+			this.errorlog("finding members");
+		return ans;
+	}
+	
+	//get admins
+	public List<User> getAdminsInForum(String forumId){
+		List<User> ans = new ArrayList<User>();
+		Forum forum = this.getForum(forumId);
+		ans = forum.getMembers();
+		if (ans==null)
+			this.errorlog("finding admins");
+		return ans;
+	}
+	
+	//get ranks
+	public List<Rank> getRanksInForum(String forumId){
+		List<Rank> ans = new ArrayList<Rank>();
+		Forum forum = this.getForum(forumId);
+		ans = forum.getRanks();
+		if (ans==null)
+			this.errorlog("finding ranks");
+		return ans;
+	}
+	
+	// removes moderator 
+	public boolean removeModerator(String forumId, String subforumId, User invoker, User toRemove){
+		if(!invoker.hasPermission(Permissions.REMOVE_MODERATOR)){
+			errorlog("no permissions to remove moderator");
+			return false;
+		}
+		Forum forum = this.getForum(forumId);
+		SubForum sub = forum.getSubForumById(subforumId);
+		return sub.removeModerator(toRemove);
+	}
+	
+	//create complaint
+	public boolean createComplaint(String forumId, String subforumId , User invoker, User complainee, String msg){
+		Forum forum = this.getForum(forumId);
+		SubForum sub = forum.getSubForumById(subforumId);
+		if (sub.complain(invoker, complainee, msg) != null){
+			operlog("a new complaint is added");
+			return true;
+		}
+		else{
+			errorlog("creating complaint");
+			return false;
+		}
+	}
+	
 	public String getNumOfForums(String invokerName){
 		if (!invokerName.equals(superuser.getUsername())) return null;
 		return Integer.toString(forums.size());
 	}
-
+	
 	//returns true on success , false in fail
 	public boolean deleteSubForum(User invoker,String subForumId, String forumId) {
 		for (int i = 0; i < forums.size(); i++) {

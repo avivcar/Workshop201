@@ -115,6 +115,8 @@ public class SubForum {
 	 * @return
 	 */
 	public Complaint complain(User complainer, User complainee, String complaint){
+		if(!this.getModerators().contains(complainee))
+			return null;
 		Complaint com = new Complaint(complainer, complainee, complaint, new Date(), this.id);
 		this.complaints.add(com);
 		com.save();
