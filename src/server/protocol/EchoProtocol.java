@@ -315,6 +315,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 		if(msg!=null) System.out.println(msg.getId());
 		return ans;
 	}
+	
 	private String getSubForumOptions(String[] msgArr) {
 		String ans="";
 		Forum forum = forumSystem.getForum(msgArr[1]);
@@ -324,13 +325,13 @@ public class EchoProtocol implements AsyncServerProtocol {
 			ans+="***";
 			SubForum subforum =forum.getSubForumById(msgArr[2]);
 			if(subforum!=null)
-			  for(int i=0;i<subforum.getModerators().size();i++)
-			    	ans+="^"+subforum.getModerators().get(i).getUsername();		
-		}	
+			  for(int i=0;i<subforum.getModerators().size();i++){
+			    	ans+="^"+subforum.getModerators().get(i).getUsername();	
+			    	System.out.println("the moderators: "+subforum.getModerators().get(i).getUsername());
+			  }
+		}		
 		return ans;
 	}
-	
-	
-	
-	
+		
 }
+
