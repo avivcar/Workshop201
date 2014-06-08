@@ -127,7 +127,7 @@ public class Forum extends Observable{
 	}
 	
 	public User signup(String mail, String name, String username, String password) {
-		if (!TextVerifier.verifyEmail(mail) || !TextVerifier.verifyName(username, policy) || !TextVerifier.verifyPassword(password, policy) || name.equals("")) return null;
+		if (!TextVerifier.verifyEmail(mail,this) || !TextVerifier.verifyName(username, policy) || !TextVerifier.verifyPassword(password, policy) || name.equals("")) return null;
 		User member = new User(mail, name, username, password, Rank.member, this.id);
 		this.members.add(member);
 		member.save();
@@ -180,14 +180,7 @@ public class Forum extends Observable{
 			e.printStackTrace();
 		}
 	}
-	//returns the user with this username or null if not found
-	public User getUserByUsername(String un){
-		for(int i=0; i< members.size(); i++){
-			if (members.get(i).getName().equals(un))
-				return members.get(i);
-		}
-		return null;
-	}
+
 	
 	//creates a new type of rank for this forum
 		//perms array contains all permissions for this rank

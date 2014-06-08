@@ -1,9 +1,12 @@
 package utility;
 
-/** THis is the policy **/
+/** This is the default policy **/
 public class Policy {
-	private String info;
 	public boolean[] rules;
+	private int minPassLength = 6;
+	private boolean lettersInPass = false;
+	private boolean capsLockInPass = false;
+	
 	
 	public Policy(){
 		rules = new boolean[PolicyRules.values().length];
@@ -16,10 +19,15 @@ public class Policy {
 		this.rules = rules; 
 	}
 	
+	public void setPassRule(int minLength, boolean letters, boolean capsLock){
+		minPassLength = minLength;
+		lettersInPass = letters;
+		capsLockInPass = capsLock;
+	}
+	
 	public boolean ruleActive(PolicyRules rule){
 		return rules[rule.ordinal()];
 	}
-	
 	
 	//dafuq are these?
 	public boolean isLegaelName(String name) {
