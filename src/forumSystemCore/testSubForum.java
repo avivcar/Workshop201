@@ -39,14 +39,14 @@ public class testSubForum {
 	public void testAddModerator() {
 		assertTrue(sf.isModerator(admin));
 		assertFalse(sf.isModerator(toMod));
-		sf.addModerator(toMod);
+		sf.addModerator(admin, toMod);
 		assertTrue(sf.isModerator(toMod));	
 	}
 		
 	
 	@Test
 	public void testRemoveModerator() {	
-		sf.addModerator(toMod);
+		sf.addModerator(admin, toMod);
 		assertTrue(sf.isModerator(toMod));
 		assertTrue(sf.removeModerator(toMod));
 		assertFalse(sf.isModerator(toMod));
