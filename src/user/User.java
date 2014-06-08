@@ -208,6 +208,9 @@ public class User implements Observer{
 		return rank;
 	}
 	
+	public void setRank(Rank newRank) {
+		 this.rank = newRank ;
+	}
 	public ArrayList<User> getFriends() { return friends; }
 	public ArrayList<User> getPendingFriendRequests() { return pendingFriendRequests; }
 	public ArrayList<User> getFriendRequests() { return friendRequests; }

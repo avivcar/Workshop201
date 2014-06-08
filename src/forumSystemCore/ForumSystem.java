@@ -448,5 +448,30 @@ public class ForumSystem {
 	}
 	
 	//set rank
-
+	public boolean setRank(String forumId, User invoker, String username, String rank){
+		Forum forum = getForum(forumId);
+		User user = forum.getUserByName(username);
+		Rank r = null;
+		for(int i =0; i< forum.getRanks().size();i++){
+			if (forum.getRanks().get(i).getName() == rank)
+				r = forum.getRanks().get(i);
+		}
+		if (r == null){
+			errorlog("setting rank");
+			return false;
+		}
+		return forum.setRank(invoker, user, r);
+	}
+	
+	//send friend request
+	public boolean friendRequest(String forumId, User invoker, String friend){
+		Forum forum = getForum(forumId);
+		User toRequest = forum.getUserByName(friend);
+		if(!invoker.getForumId().equals(toRequest.getForumId()))
+			return false;
+		if (invoker.isFriend(toRequest))
+			return false;
+		invoker.sendFriendRequest(toRequest);
+		return true;
+	}
 }

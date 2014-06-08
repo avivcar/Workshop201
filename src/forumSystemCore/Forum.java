@@ -208,6 +208,15 @@ public class Forum extends Observable{
 			return true;
 		}
 		
+		//sets the rank of the user
+		public boolean setRank(User invoker, User toRank, Rank rank){
+			if (!invoker.hasPermission(Permissions.SET_USER_RANK))
+				return false;
+			if (!toRank.getRank().equals(rank))
+				toRank.setRank(rank);
+			return true;
+		}
+		
 		//type indicates type of notfication
 		//newMsg - all new msgs, friendMsg - only friends msgs, ... more to come
 		//checks policy of forum (to send offline users or not)
