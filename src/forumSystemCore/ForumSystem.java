@@ -394,6 +394,13 @@ public class ForumSystem {
 		return Integer.toString(forums.size());
 	}
 	
+	public SubForum getSubForumById(String id){
+		for (int i=0; i < forums.size(); i++) {
+			if (forums.get(i).getSubForumById(id) != null) return forums.get(i).getSubForumById(id); 
+		}
+		return null;
+	}
+	
 	//returns true on success , false in fail
 	public boolean deleteSubForum(User invoker,String subForumId, String forumId) {
 		for (int i = 0; i < forums.size(); i++) {
