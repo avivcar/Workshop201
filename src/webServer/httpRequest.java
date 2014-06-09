@@ -66,7 +66,7 @@ public class httpRequest {
 		String path = request.getRequestURI() + "";
 		if (path.substring(0, BASE_PATH.length()).equals(BASE_PATH)) path = path.substring(BASE_PATH.length());
 		if (path.indexOf("?") != -1) path = path.substring(0, path.indexOf("?"));
-		if (path.charAt(path.length() - 1) == '/') path = path.substring(0, path.length() - 1);
+		if (path.length() > 0 && path.charAt(path.length() - 1) == '/') path = path.substring(0, path.length() - 1);
 		return path;
 	}	
 	
