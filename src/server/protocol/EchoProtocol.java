@@ -95,11 +95,15 @@ public class EchoProtocol implements AsyncServerProtocol {
 					print(461, "ERR_PARAMETERS");
 					response = Constants.ERR_PARAM;	
 				}
-				else{ response = forumSystem.createMessage(msgArr[1], msgArr[2],this.user,msgArr[3], msgArr[4]);
-						if (response!=null) response=Constants.SUCC_+response;
-						else response=Constants.ERR_+"CANNOT";
-					
+				else{
+					response=Constants.CREATE_MESSAGE+"^"+Constants.SUCC_+"^";
+					if (forumSystem.createMessage(msgArr[1], msgArr[2], this.user, msgArr[3], msgArr[4])==null)
+						response+=Boolean.toString(false);
+					else response+=Boolean.toString(true);
+							
 				}
+				break;
+				
 			case Constants.AMIADMIN:
 				if(this.isNull(msgArr,1)){
 					print(461, "ERR_PARAMETERS");
@@ -167,9 +171,21 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
+			else {
 			response=Constants.ADDSUBFORUM+"^"+Constants.SUCC_+"^";
 			response+=addsubforum(msgArr);
+			}
+		    break;
+		    
+		case Constants.REMOVEADMIN:
+			if(this.isNull(msgArr,3)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else {
+			response=Constants.REMOVEADMIN+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.removeAdmin(msgArr[1], this.user, msgArr[2]));
+			}
 		    break;
 			
 			
@@ -223,6 +239,16 @@ public class EchoProtocol implements AsyncServerProtocol {
 			response+=Boolean.toString(forumSystem.createComplaint(msgArr[1], msgArr[2], this.user, msgArr[3], msgArr[4]));
 		    break;	
 		    
+		case Constants.ADDADMIN:
+			if(this.isNull(msgArr,3)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.ADDADMIN+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.addAdmin(msgArr[1], this.user, msgArr[2]));
+		    break;				
+			    			    				
 		case Constants.FORUMOPTIONS:
 			if(this.isNull(msgArr,2)){
 				print(461, "ERR_PARAMETERS");
@@ -233,6 +259,28 @@ public class EchoProtocol implements AsyncServerProtocol {
 			response+=getForumOptions(msgArr);
 		    break;				
 			    			    				
+		case Constants.ADDFRIEND:
+			if(this.isNull(msgArr,3)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.ADDFRIEND+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.friendRequest(msgArr[1], this.user, msgArr[2]));
+		    break;	
+		    
+		case Constants.SETUSERRANK:
+			if(this.isNull(msgArr,4)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.SETUSERRANK+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.setRank(msgArr[1], this.user, msgArr[2], msgArr[3]));
+		    break;				
+			    					    			    				
+		    
+	
 	
 				
 			default: response="YAKIR TWAT";
@@ -256,6 +304,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 			ans=Boolean.toString(true);
 		return ans;
 	}
+	
 	
 	
 	public boolean isEnd(String msg)

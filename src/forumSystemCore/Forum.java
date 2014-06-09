@@ -275,11 +275,15 @@ public class Forum extends Observable{
 		//returns Null if the username could not be found
 		public User getUserByName(String userName) {
 			User ans = null;
-			for (int i=0; i < members.size(); i++) {
+			for (int i=0; i < members.size(); i++) 
 				if (userName.equals(members.get(i).getUsername()))
-					ans = members.get(i);
-			}
+					return members.get(i);
+			
+			for (int i=0;i<administrators.size();i++)
+				if (userName.equals(administrators.get(i).getUsername()))
+					 return administrators.get(i); 
 			return ans;
 		}
+		
 	}
 

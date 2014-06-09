@@ -209,6 +209,7 @@ public class ForumSystem {
 			String subForumName, String forumId) {
 		for (int i = 0; i < forums.size(); i++) {
 			if (forums.get(i).getId().equals(forumId)){
+				System.out.println("the forum has create - id:"+forums.get(i).getId()+" subforum name is: "+subForumName);
 				operlog("subforum \'"+subForumName+"\' was created in \'"+forums.get(i).getName()+"\' forum");
 				return forums.get(i).createSubForum(invoker, moderator,
 						subForumName);
@@ -267,6 +268,16 @@ public class ForumSystem {
 		return null;
 
 	}
+	
+	public Message getMessageById(String MsgId){
+		Message msg=null;
+		for(int i=0;i<this.forums.size();i++)
+			for(int j=0;j<this.forums.get(i).getSubForums().size();j++)
+				if(this.forums.get(i).getSubForums().get(j).getMessageById(MsgId)!=null)
+					return this.forums.get(i).getSubForums().get(j).getMessageById(MsgId);
+	return msg;
+	}
+	
 	
 	public Message getMessage(String forumId,String subForumId, String msgId){
 		Message msg=null;
@@ -437,6 +448,7 @@ public class ForumSystem {
 			errorlog("adding admin");
 			return false;
 		}
+		invoker.log("added admin :"+admin.getUsername());
 		return true;	
 	}
 	
@@ -448,6 +460,7 @@ public class ForumSystem {
 			errorlog("removing admin");
 			return false;
 		}
+		invoker.log("removed admin : "+admin.getUsername());
 		return true;
 	}
 	
@@ -471,11 +484,12 @@ public class ForumSystem {
 	public boolean friendRequest(String forumId, User invoker, String friend){
 		Forum forum = getForum(forumId);
 		User toRequest = forum.getUserByName(friend);
-		if(!invoker.getForumId().equals(toRequest.getForumId()))
-			return false;
-		if (invoker.isFriend(toRequest))
-			return false;
+		if (toRequest==null)   return false;
+		if(!invoker.getForumId().equals(toRequest.getForumId()))   return false;
+	    if (invoker.isFriend(toRequest))	 return false;
+				
 		invoker.sendFriendRequest(toRequest);
+		invoker.log("sended friend request to:"+toRequest.getUsername());
 		return true;
 	}
 }

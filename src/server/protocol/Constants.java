@@ -25,6 +25,13 @@ public class Constants {
 	public static final String REMOVEMODERATOR = "REMOVEMODERATOR";
 	public static final String SUBFORUMOPTIONS = "SUBFORUMOPTIONS";
 	public static final String FORUMOPTIONS = "FORUMOPTIONS";
+	public static final String ADDADMIN = "ADDADMIN";
+	public static final String REMOVEADMIN= "REMOVEADMIN";
+	public static final String SETUSERRANK= "SETUSERRANK";
+	public static final String ADDFRIEND= "ADDFRIEND";
+	
+
+
 	
 
 
