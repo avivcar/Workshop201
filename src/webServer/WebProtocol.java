@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import user.User;
 import forumSystemCore.Forum;
 import forumSystemCore.ForumSystem;
+import forumSystemCore.Message;
 import forumSystemCore.SubForum;
 
 public class WebProtocol {
@@ -23,26 +24,33 @@ public class WebProtocol {
 				break;
 			//get forum subforums
 			case "forum":
-				ans += echoForum(sys.getForum(request.getGet("forumId")));
+				if (!request.hasGet("forumId")) ans += getRedirect("/forum");
+				else ans += echoForum(sys.getForum(request.getGet("forumId")));
 				break;
 			//get subforum messages
 			case "subforum":
-				ans += echoSubForum(sys.getForum(request.getGet("forumId")).getSubForumById(request.getPost("subForumId")));
+				if (!request.hasGet("forumId") || !request.hasGet("subForumId")) ans += getRedirect("/forum");
+				else ans += echoSubForum(sys.getForum(request.getGet("forumId")).getSubForumById(request.getPost("subForumId")));
 				break;
 			case "message":
-				ans += echoMsg(sys);
+				if (!request.hasGet("id")) ans += getRedirect("/forum");
+				else ans += echoMsg(sys.getMessageById(request.getGet("id")));
 				break;
 			case "login":
-				ans += echoLogin(sys);
+				if (!request.hasGet("id")) ans += getRedirect("/forum");
+				else ans += echoLogin(request.getGet("id"));
 				break;
 			case "signup":
-				ans += echoSignup(sys);
+				if (!request.hasGet("id")) ans += getRedirect("/forum");
+				else ans += echoSignup(request.getGet("id"));
 				break;
 			case "add":
-				ans += echoAddMessage(sys);
+				if (!request.hasGet("id")) ans += getRedirect("/forum");
+				else ans += echoAddMessage(request.getGet("id"));
 				break;
 			case "reply":
-				ans += echoAddReply(sys);
+				if (!request.hasGet("id")) ans += getRedirect("/forum");
+				else ans += echoAddReply(request.getGet("id"));
 				break;
 			//get 
 		}
@@ -62,28 +70,70 @@ public class WebProtocol {
 	}
 	
 	
-	private static String echoLogin(ForumSystem sys){
-		return "";
+	private static String echoLogin(String forumId){
+		String ans = "<h1>Login</h1>";
+		ans += "<form action=\"/forum/forum?id=" + forumId + "\" method=\"post\">";
+		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"login\">";
+		ans += "<div>Username:<input type=\"text\" name=\"username\"></div>";
+		ans += "<div>Password:<input type=\"text\" name=\"password\"></div>";
+		ans += "<input type=\"hidden\" name=\"forumId\" value=\"" + forumId + "\">";
+		ans += "<button>Login</button>";
+		ans += "</form>";
+		ans += "<a href=\"/forum/signup\">Sign Up!</a>";
+		return ans;
 	}
 	
 	
-	private static String echoAddMessage(ForumSystem sys){
-		return "";
+	private static String echoAddMessage(String subforumId){
+		String ans = "<h1>Add Message</h1>";
+		ans += "<form action=\"/forum/subforum?id=" + subforumId + "\" method=\"post\">";
+		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"addMessage\">";
+		ans += "<input type=\"hidden\" name=\"id\" value=\"" + subforumId + "\">";
+		ans += "<div>Title:<input type=\"text\" name=\"title\"></div>";
+		ans += "<div>Content:</div>";
+		ans += "<textarea name=\"content\"></textarea>";
+    	ans += "<button>Subimt</button>";
+    	ans += "</form>";
+    	return ans;
 	}
 	
 	
-	private static String echoAddReply(ForumSystem sys){
-		return "";
+	private static String echoAddReply(String msgId){
+		String ans = "<h1>Add Reply</h1>";
+		ans += "<form action=\"/forum/subforum?id=" + msgId + "\" method=\"post\">";
+		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"addReply\">";
+		ans += "<input type=\"hidden\" name=\"id\" value=\"" + msgId + "\">";
+		ans += "<div>Title:<input type=\"text\" name=\"title\"></div>";
+		ans += "<div>Content:</div>";
+		ans += "<textarea name=\"content\"></textarea>";
+    	ans += "<button>Subimt</button>";
+    	ans += "</form>";
+    	return ans;
 	}
 	
 	
-	private static String echoSignup(ForumSystem sys){
-		return "";
+	private static String echoSignup(String forumId){
+		String ans = "<h1>Sign Up</h1>";
+		ans += "<form action=\"/forum/forum?id=" + forumId + "\" method=\"post\">";
+		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"signup\">";
+		ans += "<div>Mail:<input type=\"text\" name=\"mail\"></div>";
+		ans += "<div>Name:<input type=\"text\" name=\"name\"></div>";
+		ans += "<div>Username:<input type=\"text\" name=\"username\"></div>";
+		ans += "<div>Password:<input type=\"text\" name=\"password\"></div>";
+		ans += "<input type=\"hidden\" name=\"forumId\" value=\"" + forumId + "\">";
+		ans += "<button>Signup!</button>";
+		ans += "</form>";
+		return ans;
 	}
 	
 	
-	private static String echoMsg(ForumSystem sys){
-		return "";
+	private static String echoMsg(Message msg){
+		String ans = "<h1>Message - Message Title || Untitled Message</h1><div>Message Content</div>";
+		for (int i=0; i<msg.getReplies().size(); i++) {
+			ans += "<a href=\"/forum/message?id=" + msg.getReplies().get(i).getId() + "\">" + (msg.getReplies().get(i).getTitle().equals("") ? "Untitled Message" : msg.getReplies().get(i).getTitle()) + "</a>";
+		}
+		ans += "<a href=\"/forum/reply?id=" + msg.getId() + "\">Reply</a>";
+		return ans;
 	}
 	
 	private static String echoForum(Forum forum) {
@@ -96,12 +146,10 @@ public class WebProtocol {
 	}
 	
 	private static String echoSubForum(SubForum subForum) {
-		String ans = "";
+		if (subForum == null) return getRedirect("/forum/");
+		String ans = "<h1>SubForum - " + subForum.getSubject() + "</h1>";
 		for (int i=0; i < subForum.getMessages().size(); i++) {
-			ans += "<div>" + subForum.getMessages().get(i).getTitle() + "</div>";
-			//need to print number of comments to it
-			//print the author
-			//print last commentor?
+			ans += "<a href=\"/forum/message?id=" + subForum.getMessages().get(i).getId() + "\">" + subForum.getMessages().get(i).getTitle() + "</a>";
 		}
 		return ans;
 	}
