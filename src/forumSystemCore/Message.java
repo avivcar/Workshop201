@@ -114,7 +114,9 @@ public class Message extends Observable{
 	 * @return
 	 */
 	public boolean editMessage(User Invoker, String title, String content){
-		if(!Invoker.equals(this.getUser())) return false;
+		if(!Invoker.equals(this.getUser()))
+			return false;
+		
 		if(title!=null) this.title =title;
 		if(content!=null) this.content = content;
 		save();

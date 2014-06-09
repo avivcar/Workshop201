@@ -99,7 +99,7 @@ public class ForumSystem {
 	public boolean editMessage(User invoker, String msgId,String title, String content){
 		Message msg = this.getMessageById(msgId);
 		if (msg==null){
-			errorlog("user "+invoker.getUsername()+" cannot edit message");
+			errorlog("user "+invoker.getUsername()+" cannot edit message - didnt find message");
 			return false;
 		}
 		boolean ans = msg.editMessage(invoker, title, content);
@@ -512,5 +512,19 @@ public class ForumSystem {
 		invoker.sendFriendRequest(toRequest);
 		invoker.log("sended friend request to:"+toRequest.getUsername());
 		return true;
+	}
+
+	public boolean deletemessage(String msgId, User invoker) {
+		Message msg =this.getMessageById(msgId);
+		if (msg==null){
+			errorlog("didnt fint message");
+			return false;
+		}
+		SubForum subforum = this.getSubForumById(msg.getSubforumId());
+		if (subforum==null){
+			errorlog("didnt find subforum ");
+			return false;
+		}
+		return subforum.deleteMessage(msg,invoker);
 	}
 }

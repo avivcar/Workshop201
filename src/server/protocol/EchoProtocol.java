@@ -158,12 +158,13 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
+			else {
 			response=Constants.ADDFORUM+"^"+Constants.SUCC_+"^";
 			String newforum = this.forumSystem.createForum(msgArr[1], this.user);
 			Forum newf = this.forumSystem.getForum(newforum);
 			if(newf==null)response+=Boolean.toString(false);
 			else response+=newf.getName()+"^"+newf.getId();
+			}
 		    break;
 		    
 		case Constants.ADDSUBFORUM:
@@ -194,9 +195,10 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
+			else {
 			response=Constants.DELETEFORUM+"^"+Constants.SUCC_+"^";
 			response+=Boolean.toString(forumSystem.deleteForum(this.user, msgArr[1]));
+			}
 		    break;
 		    
 		case Constants.SUBFORUMOPTIONS:
@@ -204,9 +206,10 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
+			else {
 			response=Constants.SUBFORUMOPTIONS+"^"+Constants.SUCC_+"^";
 			response+=getSubForumOptions(msgArr);
+			}
 		    break;
 				
 		case Constants.REMOVEMODERATOR:
@@ -214,9 +217,10 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
+			else {
 			response=Constants.REMOVEMODERATOR+"^"+Constants.SUCC_+"^";
 			response+=Boolean.toString(forumSystem.removeModerator(msgArr[1], msgArr[2], this.user, msgArr[3]));
+			}
 		    break;
 		    
 		case Constants.ADDMODERATOR:
@@ -224,9 +228,10 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
+			else {
 			response=Constants.ADDMODERATOR+"^"+Constants.SUCC_+"^";
 			response+=Boolean.toString(forumSystem.addModerator(msgArr[1], msgArr[2], this.user, msgArr[3]));
+			}
 		    break;				
 			    			    				
 		case Constants.COMPLAIN:
@@ -234,9 +239,10 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
-			response=Constants.COMPLAIN+"^"+Constants.SUCC_+"^";
-			response+=Boolean.toString(forumSystem.createComplaint(msgArr[1], msgArr[2], this.user, msgArr[3], msgArr[4]));
+			else {
+			 response=Constants.COMPLAIN+"^"+Constants.SUCC_+"^";
+			 response+=Boolean.toString(forumSystem.createComplaint(msgArr[1], msgArr[2], this.user, msgArr[3], msgArr[4]));
+			}
 		    break;	
 		    
 		case Constants.ADDADMIN:
@@ -244,19 +250,21 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
-			response=Constants.ADDADMIN+"^"+Constants.SUCC_+"^";
-			response+=Boolean.toString(forumSystem.addAdmin(msgArr[1], this.user, msgArr[2]));
-		    break;				
+			else {
+			 response=Constants.ADDADMIN+"^"+Constants.SUCC_+"^";
+			 response+=Boolean.toString(forumSystem.addAdmin(msgArr[1], this.user, msgArr[2]));
+			}
+			break;				
 			    			    				
 		case Constants.FORUMOPTIONS:
 			if(this.isNull(msgArr,2)){
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
-			response=Constants.FORUMOPTIONS+"^"+Constants.SUCC_+"^";
-			response+=getForumOptions(msgArr);
+			else {
+			 response=Constants.FORUMOPTIONS+"^"+Constants.SUCC_+"^";
+			 response+=getForumOptions(msgArr);
+			}
 		    break;				
 			    			    				
 		case Constants.ADDFRIEND:
@@ -264,9 +272,10 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
-			response=Constants.ADDFRIEND+"^"+Constants.SUCC_+"^";
-			response+=Boolean.toString(forumSystem.friendRequest(msgArr[1], this.user, msgArr[2]));
+			else {
+			 response=Constants.ADDFRIEND+"^"+Constants.SUCC_+"^";
+			 response+=Boolean.toString(forumSystem.friendRequest(msgArr[1], this.user, msgArr[2]));
+			}
 		    break;	
 		    
 		case Constants.SETUSERRANK:
@@ -274,9 +283,10 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
-			response=Constants.SETUSERRANK+"^"+Constants.SUCC_+"^";
-			response+=Boolean.toString(forumSystem.setRank(msgArr[1], this.user, msgArr[2], msgArr[3]));
+			else {
+			 response=Constants.SETUSERRANK+"^"+Constants.SUCC_+"^";
+			 response+=Boolean.toString(forumSystem.setRank(msgArr[1], this.user, msgArr[2], msgArr[3]));
+			}
 		    break;				
 			    					    			    				
 		case Constants.EDITMESSAGE:
@@ -284,11 +294,29 @@ public class EchoProtocol implements AsyncServerProtocol {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.ERR_PARAM;	
 			}
-			else 
+			else {
 			response=Constants.EDITMESSAGE+"^"+Constants.SUCC_+"^";
 			response+=Boolean.toString(forumSystem.editMessage(this.user, msgArr[1], msgArr[2],msgArr[3]));
+			}
 		    break;				
-			    					    			    				
+			    		
+		case Constants.DELETEMESSAGE:
+			if(this.isNull(msgArr,2)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else {
+			response=Constants.DELETEMESSAGE+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.deletemessage(msgArr[1], this.user));
+			}
+		    break;
+		    
+		case Constants.LOGOUT:
+			this.user=user.Guest;
+			response=Constants.LOGOUT+"^"+Constants.SUCC_+"^"+Boolean.toString(true);
+		    break;				
+			    	
+			    			
 		    		    
 	
 	
@@ -365,7 +393,6 @@ public class EchoProtocol implements AsyncServerProtocol {
 			ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(true);
 			this.user=user;
 			this.user.addHandler(newConnection);
-			this.user.getConHndlr().sayToMe("hag shavuot sameach!");
 		}
 		else ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(false);
 				

@@ -30,6 +30,8 @@ public class Constants {
 	public static final String SETUSERRANK= "SETUSERRANK";
 	public static final String ADDFRIEND= "ADDFRIEND";
 	public static final String EDITMESSAGE= "EDITMESSAGE";
+	public static final String DELETEMESSAGE = "DELETEMESSAGE";
+	public static final String LOGOUT = "LOGOUT";
 
 
 

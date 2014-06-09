@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.mysql.jdbc.Messages;
+
 import utility.*;
 import user.*;
 
@@ -57,6 +59,9 @@ public class SubForum {
 	 * @param mod
 	 * @return
 	 */
+	
+	
+	
 	public boolean addModerator(User invoker, User mod){
 		if(!invoker.hasPermission(Permissions.ADD_MODERATOR))
 			return false;
@@ -206,6 +211,16 @@ public class SubForum {
 		messages.remove(m);
 		save();
 		return true;
+	}
+
+	//TODO SQL Query! - insert permission to delete!!!
+	public boolean deleteMessage(Message msg,User invoker) {
+		if(msg.getUser()!=invoker){
+			invoker.log("trying to delete message without authorization");
+			return false;
+		}
+      return this.messages.remove(msg);
+		
 	}
 	
 }
