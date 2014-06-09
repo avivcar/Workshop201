@@ -14,6 +14,18 @@ import forumSystemCore.SubForum;
 public class WebProtocol {
 	
 	public static String getResponse(httpRequest request, User user, ForumSystem sys) {
+		if (request.hasPost("sideEffect")) {
+			if (request.getPost("sideEffect").equals("addReply")) {
+				if (!request.hasPost("id")) return getHeader() + getRedirect("/forum") + getFooter();
+				if (!request.hasPost("title") || !request.hasPost("content")) return getHeader() + getRedirect("/reply?id=" + request.getPost("id")) + getFooter();
+				sys.getMessageById(request.getPost("id")).addReply(user, request.getPost("title"), request.getPost("content"));
+			}
+			if (request.getPost("sideEffect").equals("addMessage")) {
+				if (!request.hasPost("id")) return getHeader() + getRedirect("/forum") + getFooter();
+				if (!request.hasPost("title") || !request.hasPost("content")) return getHeader() + getRedirect("/add?id=" + request.getPost("id")) + getFooter();
+				sys.getSubForumById(request.getPost("id")).createMessage(user, request.getPost("title"), request.getPost("content"));
+			}
+		}
 		String ans = getHeader();
 		String pageReq = request.getPath();
 		switch (pageReq) {
