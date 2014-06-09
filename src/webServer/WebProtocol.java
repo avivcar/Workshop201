@@ -17,20 +17,32 @@ public class WebProtocol {
 		String pageReq = request.getPath();
 		switch (pageReq) {
 			//forums req
-			case "signup":
-				break;
 			case "index":
 			case "":
 				ans += echoHomepage(sys);
 				break;
 			//get forum subforums
 			case "forum":
-			case "login":
-				ans += echoForum(sys.getForum(request.getPost("forumId")));
+				ans += echoForum(sys.getForum(request.getGet("forumId")));
 				break;
 			//get subforum messages
 			case "subforum":
-				ans += echoSubForum(sys.getForum(request.getPost("forumId")).getSubForumById(request.getPost("subForumId")));
+				ans += echoSubForum(sys.getForum(request.getGet("forumId")).getSubForumById(request.getPost("subForumId")));
+				break;
+			case "message":
+				ans += echoMsg(sys);
+				break;
+			case "login":
+				ans += echoLogin(sys);
+				break;
+			case "signup":
+				ans += echoSignup(sys);
+				break;
+			case "add":
+				ans += echoAddMessage(sys);
+				break;
+			case "reply":
+				ans += echoAddReply(sys);
 				break;
 			//get 
 		}
@@ -42,18 +54,43 @@ public class WebProtocol {
 	
 	//The builders of this wonderful facility, full factility. i swear.
 	private static String echoHomepage(ForumSystem sys){
-		String ans = "";
+		String ans = "<h1>Forum System</h1>";
 		for (int i=0; i < sys.forums.size(); i++) {
-			ans += "<div>" + sys.forums.get(i).getName() + "</div>";
+			ans += "<a href=\"/forum/login?forumId=" + sys.forums.get(i).getId() + "\">" + sys.forums.get(i).getName() + "</a>";
 		}
-		
 		return ans; 
 	}
 	
+	
+	private static String echoLogin(ForumSystem sys){
+		return "";
+	}
+	
+	
+	private static String echoAddMessage(ForumSystem sys){
+		return "";
+	}
+	
+	
+	private static String echoAddReply(ForumSystem sys){
+		return "";
+	}
+	
+	
+	private static String echoSignup(ForumSystem sys){
+		return "";
+	}
+	
+	
+	private static String echoMsg(ForumSystem sys){
+		return "";
+	}
+	
 	private static String echoForum(Forum forum) {
-		String ans = "";
+		if (forum == null) return getRedirect("/forum/");
+		String ans = "<h1>Forum - " + forum.getName() + "</h1>";
 		for (int i=0; i < forum.getSubForums().size(); i++) {
-			ans += "<div>" + forum.getSubForums().get(i).getSubject() + "</div>";
+			ans += "<a href=\"/forum/subforum?forumId=" + forum.getId() + "&subForumId=" + forum.getSubForums().get(i).getId() + "\">" + forum.getSubForums().get(i).getSubject() + "</a>";
 		}
 		return ans;
 	}
@@ -67,6 +104,10 @@ public class WebProtocol {
 			//print last commentor?
 		}
 		return ans;
+	}
+	
+	public static String getRedirect(String href) {
+		return "<script>window.location = '" + href + "'</script>";
 	}
 	
 	

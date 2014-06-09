@@ -33,25 +33,8 @@ public class WebHandler implements HttpHandler {
 
 	public void handle(HttpExchange request) throws IOException {
 		httpRequest httpReq = new httpRequest(request, this.BASE_PATH);
-		User user = validateUser(httpReq); //checking if the user is logged in
-		String response = "Not logged in";
-		
-		//not logged in
-		if (user == null) {
-			if (httpReq.hasPost("username") && httpReq.hasPost("password") && httpReq.hasPost("forumId")) {
-				user = system.login(httpReq.getPost("username"),httpReq.getPost("password"), httpReq.getPost("forumId"));
-				String sessId = generateSessionId();
-				this.sessions.put(sessId, user);
-				httpReq.setSessionId(sessId);
-			}	
-		}
-		
-		//if user exists and logged in, get response. 
-		//if the user just logged in in this request, need to return sub forums.
-		if (user != null) response = WebProtocol.getResponse(httpReq, user, system);
-		
-		//headers and cookies
-		Headers respHeaders = request.getResponseHeaders();
+		User user = validateUser(httpReq); //checking if the user is logged in, requests log in or requests signup
+		String response = WebProtocol.getResponse(httpReq, user, system);
         request.sendResponseHeaders(200, response.length());
         OutputStream os = request.getResponseBody();
         os.write(response.getBytes());
@@ -74,6 +57,22 @@ public class WebHandler implements HttpHandler {
 	}*/
 	
 	public User validateUser(httpRequest request) {
+		if (request.hasPost("sideEffect") && request.getPost("sideEffect").equals("login")) { // login request
+			if (!request.hasPost("username") || !request.hasPost("password") || !request.hasPost("forumId")) return null;
+			User user = this.system.login(request.getPost("username"), request.getPost("password"), request.getPost("forumId"));
+			String sessId = generateSessionId();
+			this.sessions.put(sessId, user);
+			request.setSessionId(sessId);
+			return user;
+		}
+		if (request.hasPost("sideEffect") && request.getPost("sideEffect").equals("signup")) { // signup request
+			if (!request.hasPost("mail") || !request.hasPost("name") || !request.hasPost("username") || !request.hasPost("password") || !request.hasPost("forumId")) return null;
+			User user = this.system.startSystem(request.getPost("mail"), request.getPost("name"), request.getPost("username"), request.getPost("password"));
+			String sessId = generateSessionId();
+			this.sessions.put(sessId, user);
+			request.setSessionId(sessId);
+			return user;
+		}
 		String sessId = request.getSessionId();
 		if (sessId == null || !this.sessions.containsKey(sessId)) return null;
 		return this.sessions.get(sessId);
