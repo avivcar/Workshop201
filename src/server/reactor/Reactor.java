@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import user.*;
+import webServer.WebServer;
 import server.protocol.*;
 import server.tokenizer.*;
 import forumSystemCore.*;
@@ -239,8 +240,11 @@ public class Reactor implements Runnable {
 
 			}
 			else System.out.println("Loading system, please stand by captain.");
-	
-//init reactor			
+//init webserver	
+			WebServer s = new WebServer(8080, "/forum", forumSystem);
+			new Thread(s).start();
+			
+//init reactor	reactorserver		
 			Reactor reactor = startEchoServer(port, poolSize,forumSystem);
 
 			Thread thread = new Thread(reactor);

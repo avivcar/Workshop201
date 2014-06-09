@@ -29,7 +29,8 @@ public class Constants {
 	public static final String REMOVEADMIN= "REMOVEADMIN";
 	public static final String SETUSERRANK= "SETUSERRANK";
 	public static final String ADDFRIEND= "ADDFRIEND";
-	
+	public static final String EDITMESSAGE= "EDITMESSAGE";
+
 
 
 	

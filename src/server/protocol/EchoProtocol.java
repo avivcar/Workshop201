@@ -279,7 +279,17 @@ public class EchoProtocol implements AsyncServerProtocol {
 			response+=Boolean.toString(forumSystem.setRank(msgArr[1], this.user, msgArr[2], msgArr[3]));
 		    break;				
 			    					    			    				
-		    
+		case Constants.EDITMESSAGE:
+			if(this.isNull(msgArr,4)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else 
+			response=Constants.EDITMESSAGE+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.editMessage(this.user, msgArr[1], msgArr[2],msgArr[3]));
+		    break;				
+			    					    			    				
+		    		    
 	
 	
 				

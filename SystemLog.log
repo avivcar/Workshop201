@@ -542,3 +542,49 @@ INFO: Reading from /192.168.1.104:53049
 INFO: Channel is ready for writing
 ιεπ 09, 2014 4:15:43 PM server.reactor.Reactor run
 INFO: Channel is ready for writing
+ιεπ 09, 2014 4:41:03 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 09, 2014 4:41:03 PM server.reactor.ConnectionHandler read
+INFO: Reading from /192.168.1.104:53049
+ιεπ 09, 2014 4:41:03 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 09, 2014 4:41:03 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 09, 2014 4:41:06 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 09, 2014 4:41:06 PM server.reactor.ConnectionHandler read
+INFO: Reading from /192.168.1.104:53049
+ιεπ 09, 2014 4:41:06 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 09, 2014 4:41:06 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 09, 2014 4:41:07 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 09, 2014 4:41:07 PM server.reactor.ConnectionHandler read
+INFO: Reading from /192.168.1.104:53049
+ιεπ 09, 2014 4:41:07 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 09, 2014 4:41:07 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 09, 2014 4:41:10 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 09, 2014 4:41:10 PM server.reactor.ConnectionHandler read
+INFO: Reading from /192.168.1.104:53049
+ιεπ 09, 2014 4:41:10 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 09, 2014 4:41:10 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 09, 2014 4:41:18 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 09, 2014 4:41:18 PM server.reactor.ConnectionHandler read
+INFO: Reading from /192.168.1.104:53049
+ιεπ 09, 2014 4:41:18 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 09, 2014 4:41:18 PM server.reactor.Reactor run
+INFO: Channel is ready for writing
+ιεπ 09, 2014 4:57:22 PM server.reactor.Reactor run
+INFO: Channel is ready for reading
+ιεπ 09, 2014 4:57:22 PM server.reactor.ConnectionHandler read
+INFO: Reading from /192.168.1.104:53049
+ιεπ 09, 2014 4:57:22 PM server.reactor.ConnectionHandler read
+INFO: client on /192.168.1.104:53049 has disconnected

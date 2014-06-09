@@ -96,7 +96,21 @@ public class ForumSystem {
 		this.operationLog.info(string);
 	}
 
+	public boolean editMessage(User invoker, String msgId,String title, String content){
+		Message msg = this.getMessageById(msgId);
+		if (msg==null){
+			errorlog("user "+invoker.getUsername()+" cannot edit message");
+			return false;
+		}
+		boolean ans = msg.editMessage(invoker, title, content);
+		if (ans)
+			invoker.log("user has edited message :"+msgId);
+		else errorlog("user "+invoker.getUsername()+" cannot edit message");
 
+		return ans;
+		
+	}
+	
 	public String createForum(String name, User admin) {
 	//	if (!admin.hasPermission(Permissions.CREATE_FORUM) || name.equals(""))
 		//	return null;
