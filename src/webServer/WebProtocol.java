@@ -76,7 +76,7 @@ public class WebProtocol {
 	private static String echoHomepage(ForumSystem sys){
 		String ans = "<h1>Forum System</h1>";
 		for (int i=0; i < sys.forums.size(); i++) {
-			ans += "<a href=\"/forum/login?forumId=" + sys.forums.get(i).getId() + "\">" + sys.forums.get(i).getName() + "</a>";
+			ans += "<div><a href=\"/forum/login?forumId=" + sys.forums.get(i).getId() + "\">" + sys.forums.get(i).getName() + "</a></div>";
 		}
 		return ans; 
 	}
@@ -142,9 +142,9 @@ public class WebProtocol {
 	private static String echoMsg(Message msg){
 		String ans = "<h1>Message - Message Title || Untitled Message</h1><div>Message Content</div>";
 		for (int i=0; i<msg.getReplies().size(); i++) {
-			ans += "<a href=\"/forum/message?id=" + msg.getReplies().get(i).getId() + "\">" + (msg.getReplies().get(i).getTitle().equals("") ? "Untitled Message" : msg.getReplies().get(i).getTitle()) + "</a>";
+			ans += "<div><a href=\"/forum/message?id=" + msg.getReplies().get(i).getId() + "\">" + (msg.getReplies().get(i).getTitle().equals("") ? "Untitled Message" : msg.getReplies().get(i).getTitle()) + "</a></div>";
 		}
-		ans += "<a href=\"/forum/reply?id=" + msg.getId() + "\">Reply</a>";
+		ans += "<div><a href=\"/forum/reply?id=" + msg.getId() + "\">Reply</a></div>";
 		return ans;
 	}
 	
@@ -152,7 +152,7 @@ public class WebProtocol {
 		if (forum == null) return getRedirect("/forum/");
 		String ans = "<h1>Forum - " + forum.getName() + "</h1>";
 		for (int i=0; i < forum.getSubForums().size(); i++) {
-			ans += "<a href=\"/forum/subforum?forumId=" + forum.getId() + "&subForumId=" + forum.getSubForums().get(i).getId() + "\">" + forum.getSubForums().get(i).getSubject() + "</a>";
+			ans += "<div><a href=\"/forum/subforum?forumId=" + forum.getId() + "&subForumId=" + forum.getSubForums().get(i).getId() + "\">" + forum.getSubForums().get(i).getSubject() + "</a></div>";
 		}
 		return ans;
 	}
@@ -161,7 +161,7 @@ public class WebProtocol {
 		if (subForum == null) return getRedirect("/forum/");
 		String ans = "<h1>SubForum - " + subForum.getSubject() + "</h1>";
 		for (int i=0; i < subForum.getMessages().size(); i++) {
-			ans += "<a href=\"/forum/message?id=" + subForum.getMessages().get(i).getId() + "\">" + subForum.getMessages().get(i).getTitle() + "</a>";
+			ans += "<div><a href=\"/forum/message?id=" + subForum.getMessages().get(i).getId() + "\">" + subForum.getMessages().get(i).getTitle() + "</a></div>";
 		}
 		return ans;
 	}
