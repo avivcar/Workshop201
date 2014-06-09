@@ -41,21 +41,6 @@ public class WebHandler implements HttpHandler {
         os.close();
 	}
 	
-	/*public String generateResponse(httpRequest request) {
-		
-		
-		String ans = WebProtocol.getResponse(request);
-		// login request
-		if (!(request.hasPost("username") && request.hasPost("password") && request.hasPost("forumId"))) return "error";
-		user = new User(); //system.login(request.getPost("username"),request.getPost("password"), request.getPost("forumId"));
-		if (user == null) return "Not logged in";
-		String sessId = generateSessionId();
-		this.sessions.put(sessId, user);
-		request.setSessionId(sessId);
-		
-		return "cool";
-	}*/
-	
 	public User validateUser(httpRequest request) {
 		if (request.hasPost("sideEffect") && request.getPost("sideEffect").equals("login")) { // login request
 			if (!request.hasPost("username") || !request.hasPost("password") || !request.hasPost("forumId")) return null;
@@ -67,7 +52,7 @@ public class WebHandler implements HttpHandler {
 		}
 		if (request.hasPost("sideEffect") && request.getPost("sideEffect").equals("signup")) { // signup request
 			if (!request.hasPost("mail") || !request.hasPost("name") || !request.hasPost("username") || !request.hasPost("password") || !request.hasPost("forumId")) return null;
-			User user = this.system.startSystem(request.getPost("mail"), request.getPost("name"), request.getPost("username"), request.getPost("password"));
+			User user = this.system.signup(request.getPost("mail"), request.getPost("name"), request.getPost("username"), request.getPost("password"), request.getPost("forumId"));
 			String sessId = generateSessionId();
 			this.sessions.put(sessId, user);
 			request.setSessionId(sessId);

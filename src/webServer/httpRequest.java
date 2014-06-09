@@ -40,7 +40,7 @@ public class httpRequest {
         InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
         String query = br.readLine();
-        return parseRequestData(query);
+        return parseRequestData(java.net.URLDecoder.decode(query, "UTF-8"));
     }
 	
 	private ArrayList<DataFragment> parseGetParameters(HttpExchange exchange) throws IOException {
@@ -49,7 +49,7 @@ public class httpRequest {
         if (path.indexOf("?") == -1) return new ArrayList<DataFragment>(); //no parameters
         
         path = path.substring(path.indexOf("?")+1); //now we got the data "id=3&hi=4"...
-        return parseRequestData(path);
+        return parseRequestData(java.net.URLDecoder.decode(path, "UTF-8"));
     }
 
 	private ArrayList<DataFragment> parseRequestData(String query) {
@@ -57,7 +57,7 @@ public class httpRequest {
 		String[] listOfCouples = query.split("&");
 		for (int i=0; i < listOfCouples.length; i++) {
 			String[] temp = listOfCouples[i].split("=");
-			parsedData.add(new DataFragment(temp[0], temp[1]));
+			parsedData.add(new DataFragment(temp[0], temp.length > 1 ? temp[1] : ""));
 		}
 		return parsedData;
 	}
@@ -67,6 +67,7 @@ public class httpRequest {
 		if (path.substring(0, BASE_PATH.length()).equals(BASE_PATH)) path = path.substring(BASE_PATH.length());
 		if (path.indexOf("?") != -1) path = path.substring(0, path.indexOf("?"));
 		if (path.length() > 0 && path.charAt(path.length() - 1) == '/') path = path.substring(0, path.length() - 1);
+		if (path.length() > 0 && path.charAt(0) == '/') path = path.substring(1);
 		return path;
 	}	
 	

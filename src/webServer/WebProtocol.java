@@ -15,18 +15,19 @@ public class WebProtocol {
 	
 	public static String getResponse(httpRequest request, User user, ForumSystem sys) {
 		if (request.hasPost("sideEffect")) {
+			if ((request.getPost("sideEffect").equals("login") || request.getPost("sideEffect").equals("login")) && user == null) return getHeader(user) + "<h2 style=\"color: red;\">Sorry, the details you entered were incorrect, please try again</h2>" + echoHomepage(sys) + getFooter();
 			if (request.getPost("sideEffect").equals("addReply")) {
-				if (!request.hasPost("id")) return getHeader() + getRedirect("/forum") + getFooter();
-				if (!request.hasPost("title") || !request.hasPost("content")) return getHeader() + getRedirect("/reply?id=" + request.getPost("id")) + getFooter();
+				if (!request.hasPost("id")) return getHeader(user) + getRedirect("/forum") + getFooter();
+				if (!request.hasPost("title") || !request.hasPost("content")) return getHeader(user) + getRedirect("/reply?id=" + request.getPost("id")) + getFooter();
 				sys.getMessageById(request.getPost("id")).addReply(user, request.getPost("title"), request.getPost("content"));
 			}
 			if (request.getPost("sideEffect").equals("addMessage")) {
-				if (!request.hasPost("id")) return getHeader() + getRedirect("/forum") + getFooter();
-				if (!request.hasPost("title") || !request.hasPost("content")) return getHeader() + getRedirect("/add?id=" + request.getPost("id")) + getFooter();
+				if (!request.hasPost("id")) return getHeader(user) + getRedirect("/forum") + getFooter();
+				if (!request.hasPost("title") || !request.hasPost("content")) return getHeader(user) + getRedirect("/add?id=" + request.getPost("id")) + getFooter();
 				sys.getSubForumById(request.getPost("id")).createMessage(user, request.getPost("title"), request.getPost("content"));
 			}
 		}
-		String ans = getHeader();
+		String ans = getHeader(user);
 		String pageReq = request.getPath();
 		switch (pageReq) {
 			//forums req
@@ -36,17 +37,17 @@ public class WebProtocol {
 				break;
 			//get forum subforums
 			case "forum":
-				if (!request.hasGet("forumId")) ans += getRedirect("/forum");
-				else ans += echoForum(sys.getForum(request.getGet("forumId")));
+				if (!request.hasGet("id")) ans += getRedirect("/forum");
+				else ans += echoForum(sys.getForum(request.getGet("id")));
 				break;
 			//get subforum messages
 			case "subforum":
-				if (!request.hasGet("forumId") || !request.hasGet("subForumId")) ans += getRedirect("/forum");
-				else ans += echoSubForum(sys.getForum(request.getGet("forumId")).getSubForumById(request.getPost("subForumId")));
+				if (!request.hasGet("id")) ans += getRedirect("/forum");
+				else ans += echoSubForum(sys.getSubForumById(request.getGet("id")), sys);
 				break;
 			case "message":
 				if (!request.hasGet("id")) ans += getRedirect("/forum");
-				else ans += echoMsg(sys.getMessageById(request.getGet("id")));
+				else ans += echoMsg(sys.getMessageById(request.getGet("id")), sys);
 				break;
 			case "login":
 				if (!request.hasGet("id")) ans += getRedirect("/forum");
@@ -74,35 +75,35 @@ public class WebProtocol {
 	
 	//The builders of this wonderful facility, full factility. i swear.
 	private static String echoHomepage(ForumSystem sys){
-		String ans = "<h1>Forum System</h1>";
+		String ans = "</span></div><div style=\"clear: both;\"></div><h2>Forum System</h2>";
 		for (int i=0; i < sys.forums.size(); i++) {
-			ans += "<div><a href=\"/forum/login?forumId=" + sys.forums.get(i).getId() + "\">" + sys.forums.get(i).getName() + "</a></div>";
+			ans += "<div><a class=\"item\"  href=\"/forum/login?id=" + sys.forums.get(i).getId() + "\">" + sys.forums.get(i).getName() + "</a></div>";
 		}
 		return ans; 
 	}
 	
 	
 	private static String echoLogin(String forumId){
-		String ans = "<h1>Login</h1>";
+		String ans = "</span></div><div style=\"clear: both;\"></div><h2>Login</h2>";
 		ans += "<form action=\"/forum/forum?id=" + forumId + "\" method=\"post\">";
 		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"login\">";
-		ans += "<div>Username:<input type=\"text\" name=\"username\"></div>";
-		ans += "<div>Password:<input type=\"text\" name=\"password\"></div>";
+		ans += "<div><label>Username:</label><input type=\"text\" name=\"username\"></div>";
+		ans += "<div><label>Password:</label><input type=\"text\" name=\"password\"></div>";
 		ans += "<input type=\"hidden\" name=\"forumId\" value=\"" + forumId + "\">";
 		ans += "<button>Login</button>";
 		ans += "</form>";
-		ans += "<a href=\"/forum/signup\">Sign Up!</a>";
+		ans += "<a href=\"/forum/signup?id=" + forumId + "\">Sign Up!</a>";
 		return ans;
 	}
 	
 	
 	private static String echoAddMessage(String subforumId){
-		String ans = "<h1>Add Message</h1>";
+		String ans = "</span></div><div style=\"clear: both;\"></div><h2>Add Message</h2>";
 		ans += "<form action=\"/forum/subforum?id=" + subforumId + "\" method=\"post\">";
 		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"addMessage\">";
 		ans += "<input type=\"hidden\" name=\"id\" value=\"" + subforumId + "\">";
-		ans += "<div>Title:<input type=\"text\" name=\"title\"></div>";
-		ans += "<div>Content:</div>";
+		ans += "<div><label>Title:</label><input type=\"text\" name=\"title\"></div>";
+		ans += "<div><label>Content:</label></div>";
 		ans += "<textarea name=\"content\"></textarea>";
     	ans += "<button>Subimt</button>";
     	ans += "</form>";
@@ -111,12 +112,12 @@ public class WebProtocol {
 	
 	
 	private static String echoAddReply(String msgId){
-		String ans = "<h1>Add Reply</h1>";
-		ans += "<form action=\"/forum/subforum?id=" + msgId + "\" method=\"post\">";
+		String ans = "</span></div><div style=\"clear: both;\"></div><h2>Add Reply</h2>";
+		ans += "<form action=\"/forum/message?id=" + msgId + "\" method=\"post\">";
 		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"addReply\">";
 		ans += "<input type=\"hidden\" name=\"id\" value=\"" + msgId + "\">";
-		ans += "<div>Title:<input type=\"text\" name=\"title\"></div>";
-		ans += "<div>Content:</div>";
+		ans += "<div><label>Title:</label><input type=\"text\" name=\"title\"></div>";
+		ans += "<div><label>Content:</label></div>";
 		ans += "<textarea name=\"content\"></textarea>";
     	ans += "<button>Subimt</button>";
     	ans += "</form>";
@@ -125,13 +126,13 @@ public class WebProtocol {
 	
 	
 	private static String echoSignup(String forumId){
-		String ans = "<h1>Sign Up</h1>";
+		String ans = "</span></div><div style=\"clear: both;\"></div><h2>Sign Up</h2>";
 		ans += "<form action=\"/forum/forum?id=" + forumId + "\" method=\"post\">";
 		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"signup\">";
-		ans += "<div>Mail:<input type=\"text\" name=\"mail\"></div>";
-		ans += "<div>Name:<input type=\"text\" name=\"name\"></div>";
-		ans += "<div>Username:<input type=\"text\" name=\"username\"></div>";
-		ans += "<div>Password:<input type=\"text\" name=\"password\"></div>";
+		ans += "<div><label>Mail:</label><input type=\"text\" name=\"mail\"></div>";
+		ans += "<div><label>Name:</label><input type=\"text\" name=\"name\"></div>";
+		ans += "<div><label>Username:</label><input type=\"text\" name=\"username\"></div>";
+		ans += "<div><label>Password:</label><input type=\"text\" name=\"password\"></div>";
 		ans += "<input type=\"hidden\" name=\"forumId\" value=\"" + forumId + "\">";
 		ans += "<button>Signup!</button>";
 		ans += "</form>";
@@ -139,30 +140,39 @@ public class WebProtocol {
 	}
 	
 	
-	private static String echoMsg(Message msg){
-		String ans = "<h1>Message - Message Title || Untitled Message</h1><div>Message Content</div>";
+	private static String echoMsg(Message msg, ForumSystem sys){
+		if (msg == null) return getRedirect("/forum/");
+		Message parent = msg;
+		while (parent.getSubforumId().equals("0")) parent = sys.getMessageById(msg.getMsgRel());
+		SubForum fs = sys.getSubForumById(parent.getSubforumId());
+		Forum f = sys.getForum(fs.getForumId());
+		String ans = "<div id=\"bread-crumbs\"><a href=\"/forum/forum?id=" + f.getId() + "\">" + f.getName() + "</a> >> <a href=\"" + fs.getId() + "\">" + fs.getSubject() + "</a> >> <span>" + msg.getTitle() + "</span></div><div style=\"clear: both;\"></div>";
+		ans += "<h2>" + (msg.getTitle().equals("") ? "Untitled Message" : msg.getTitle()) + "</h2><div>" + msg.getContent() + "</div><h2>Replies:</h2>";
 		for (int i=0; i<msg.getReplies().size(); i++) {
-			ans += "<div><a href=\"/forum/message?id=" + msg.getReplies().get(i).getId() + "\">" + (msg.getReplies().get(i).getTitle().equals("") ? "Untitled Message" : msg.getReplies().get(i).getTitle()) + "</a></div>";
+			ans += "<div><a class=\"item\"  href=\"/forum/message?id=" + msg.getReplies().get(i).getId() + "\">" + (msg.getReplies().get(i).getTitle().equals("") ? "Untitled Message" : msg.getReplies().get(i).getTitle()) + "</a></div>";
 		}
-		ans += "<div><a href=\"/forum/reply?id=" + msg.getId() + "\">Reply</a></div>";
+		ans += "<h2><a href=\"/forum/reply?id=" + msg.getId() + "\">Add Reply</a></h2>";
 		return ans;
 	}
 	
 	private static String echoForum(Forum forum) {
 		if (forum == null) return getRedirect("/forum/");
-		String ans = "<h1>Forum - " + forum.getName() + "</h1>";
+		String ans = "</span></div><div style=\"clear: both;\"></div><h2>Forum - " + forum.getName() + "</h2>";
 		for (int i=0; i < forum.getSubForums().size(); i++) {
-			ans += "<div><a href=\"/forum/subforum?forumId=" + forum.getId() + "&subForumId=" + forum.getSubForums().get(i).getId() + "\">" + forum.getSubForums().get(i).getSubject() + "</a></div>";
+			ans += "<div><a class=\"item\"  href=\"/forum/subforum?id=" + forum.getSubForums().get(i).getId() + "\">" + forum.getSubForums().get(i).getSubject() + "</a></div>";
 		}
 		return ans;
 	}
 	
-	private static String echoSubForum(SubForum subForum) {
+	private static String echoSubForum(SubForum subForum, ForumSystem sys) {
+		Forum f = sys.getForum(subForum.getForumId());
 		if (subForum == null) return getRedirect("/forum/");
-		String ans = "<h1>SubForum - " + subForum.getSubject() + "</h1>";
+		String ans = "<div id=\"bread-crumbs\"><a href=\"/forum/forum?id=" + f.getId() + "\">" + f.getName() + "<span>" + subForum.getSubject() + "</span></div><div style=\"clear: both;\"></div>";
+		ans += "<h2>SubForum - " + subForum.getSubject() + "</h2>";
 		for (int i=0; i < subForum.getMessages().size(); i++) {
-			ans += "<div><a href=\"/forum/message?id=" + subForum.getMessages().get(i).getId() + "\">" + subForum.getMessages().get(i).getTitle() + "</a></div>";
+			ans += "<div><a class=\"item\"  href=\"/forum/message?id=" + subForum.getMessages().get(i).getId() + "\">" + subForum.getMessages().get(i).getTitle() + "</a></div>";
 		}
+		ans += "<h2><a href=\"/forum/add?id=" + subForum.getId() + "\">Add A New Thread</a></h2>";
 		return ans;
 	}
 	
@@ -173,8 +183,8 @@ public class WebProtocol {
 	
 	
 	//***AUX - header and footer ****//
-	public static String getHeader() {
-		return readFile("header.html");
+	public static String getHeader(User user) {
+		return readFile("header.html") + "<div id=\"user-status\">" + (user == null ? "Hello, Guest" : ("Hello, " + user.getName())) + "</div>";
 	}
 	
 	public static String getFooter() {
