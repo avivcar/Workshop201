@@ -57,9 +57,8 @@ public class ConnectionAcceptor {
 			sChannel.configureBlocking(false);
 			SelectionKey key = sChannel.register(_data.getSelector(), 0);
 			
-			//register new user default Guset constructor
-			
-		   user.User user = User.Guest;
+			//register new user default Guset constructor	
+		   User user =  User.buildGuest();
 			ConnectionHandler handler = ConnectionHandler.create(sChannel, _data, key, user);
 			user.addHandler(handler);
 			handler.sayToMe("hello guest user! welcome to the best forum system ever");

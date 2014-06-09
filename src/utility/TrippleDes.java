@@ -12,28 +12,32 @@ public class TrippleDes {
 
     private static final String UNICODE_FORMAT = "UTF8";
     public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
-    private KeySpec ks;
-    private SecretKeyFactory skf;
+    private static KeySpec ks;
+    private static SecretKeyFactory skf;
     private static Cipher cipher;
-    byte[] arrayBytes;
-    private String myEncryptionKey;
-    private String myEncryptionScheme;
+    static byte[] arrayBytes;
+    private static String myEncryptionKey;
+    private static String myEncryptionScheme;
     static SecretKey key;
 
     public TrippleDes() throws Exception {
-        myEncryptionKey = "MarinaTrosYakiyorekSlihi";
-        myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
-        arrayBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);
-        ks = new DESedeKeySpec(arrayBytes);
-        skf = SecretKeyFactory.getInstance(myEncryptionScheme);
-        cipher = Cipher.getInstance(myEncryptionScheme);
-        key = skf.generateSecret(ks);
+   
     }
 
 
     public static String encrypt(String unencryptedString) {
+      
+    	
         String encryptedString = null;
         try {
+        	  myEncryptionKey = "MarinaTrosYakiyorekSlihi";
+              myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
+              arrayBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);
+              ks = new DESedeKeySpec(arrayBytes);
+              skf = SecretKeyFactory.getInstance(myEncryptionScheme);
+              cipher = Cipher.getInstance(myEncryptionScheme);
+              key = skf.generateSecret(ks);
+          	
             cipher.init(Cipher.ENCRYPT_MODE, key);
             byte[] plainText = unencryptedString.getBytes(UNICODE_FORMAT);
             byte[] encryptedText = cipher.doFinal(plainText);

@@ -228,7 +228,7 @@ public class Reactor implements Runnable {
 			ForumSystem forumSystem = new ForumSystem();
 			if (!sql.Query.load(forumSystem)) {
 				System.out.println("Starting system...");
-				User admin= forumSystem.startSystem("halevm@em.walla.com", "firstname", "admin", "1234");
+				User admin= forumSystem.startSystem("halevm@em.walla.com", "firstname", "admin", "newpasss");
 				String f1 = forumSystem.createForum("yaquierrrr", admin);
 				forumSystem.createForum("lahan-el", admin);
 				forumSystem.createForum("shem-nahash!", admin);

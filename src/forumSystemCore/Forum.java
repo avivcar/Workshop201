@@ -129,7 +129,7 @@ public class Forum extends Observable{
 	public User signup(String mail, String name, String username, String password) {
 		if (!TextVerifier.verifyEmail(mail,this) || 
 			!TextVerifier.verifyName(username, policy) || 
-			!TextVerifier.verifyPassword(password, policy) || 
+			//!TextVerifier.verifyPassword(password, policy) || 
 			name.equals("")) 
 			return null;
 		User member = new User(mail, name, username, password, Rank.member, this.id);

@@ -15,6 +15,12 @@ public class User implements Observer{
 	
 	public static User Guest = new User();
 	
+	public static User buildGuest(){	
+		User user = new User("guest@guest.com", "guestName", "guest", "12345");
+		user.createlog();
+		return user;	
+	}
+	
 	//user connectionHandler
 	private ConnectionHandler handler;
 	
@@ -82,6 +88,10 @@ public class User implements Observer{
 	 */
 	public User() {}
 	
+	public User(String mail, String name, String username, String password) {
+		this.changeDetails(mail, name, username, password);
+			}
+
 	//log creation - called in constructor
 	private void createlog() {
 		this.userlog=Logger.getLogger(this.username);

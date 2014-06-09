@@ -2,7 +2,10 @@ package server.protocol;
 
 import java.util.Vector;
 
+import com.sun.corba.se.impl.activation.CommandHandler;
+
 import server.reactor.ConnectionHandler;
+import user.User;
 import forumSystemCore.*;
 
 
@@ -312,14 +315,13 @@ public class EchoProtocol implements AsyncServerProtocol {
 		    break;
 		    
 		case Constants.LOGOUT:
-			this.user=user.Guest;
+			ConnectionHandler handler=this.user.getConHndlr();
+			this.user.addHandler(null);
+			this.user=User.buildGuest();
+			this.user.addHandler(handler);
 			response=Constants.LOGOUT+"^"+Constants.SUCC_+"^"+Boolean.toString(true);
 		    break;				
-			    	
-			    			
-		    		    
-	
-	
+
 				
 			default: response="YAKIR TWAT";
 				

@@ -13,7 +13,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-
 public class ForumSystem {
 	private Logger operationLog;
 	private Logger errorLog;
@@ -33,6 +32,7 @@ public class ForumSystem {
 				|| !TextVerifier.verifyPassword(password, new Policy())
 				|| name.equals(""))
 			return null;
+		password = TrippleDes.encrypt(password);
 		try {
 			sql.Query.initDB();
 		} catch (ClassNotFoundException e2) {
@@ -160,6 +160,7 @@ public class ForumSystem {
 	 */
 	public User signup(String mail, String name, String username, String pass,
 			String forumId) {
+		pass=TrippleDes.encrypt(pass);
 		for (int i = 0; i < forums.size(); i++) {
 			if (forums.get(i).getId().equals(forumId))
 				return forums.get(i).signup(mail, name, username, pass);
@@ -207,7 +208,7 @@ public class ForumSystem {
 	public User login(String username, String password, String forumId) {
 		for (int i = 0; i < forums.size(); i++) {
 			if (forums.get(i).getId().equals(forumId)){
-				
+				password = TrippleDes.encrypt(password);
 				User newuser =  forums.get(i).login(username, password);
 				if (newuser!=null){
 					newuser.log("the user is logging in");
@@ -223,7 +224,6 @@ public class ForumSystem {
 			String subForumName, String forumId) {
 		for (int i = 0; i < forums.size(); i++) {
 			if (forums.get(i).getId().equals(forumId)){
-				System.out.println("the forum has create - id:"+forums.get(i).getId()+" subforum name is: "+subForumName);
 				operlog("subforum \'"+subForumName+"\' was created in \'"+forums.get(i).getName()+"\' forum");
 				return forums.get(i).createSubForum(invoker, moderator,
 						subForumName);
