@@ -11,23 +11,32 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import forumSystemCore.ForumSystem;
 
-public class WebServer {
+public class WebServer implements Runnable {
 	
 	private final String BASE_PATH;
 	private final int PORT;
+	private HttpServer server;
+	private ForumSystem system;
 	
-	public WebServer(int port, String baseUrl) throws IOException {
+	public WebServer(int port, String baseUrl, ForumSystem system) throws IOException {
 		this.BASE_PATH = baseUrl;
 		this.PORT = port;
-		HttpServer server = HttpServer.create(new InetSocketAddress(this.PORT), 0);
-        server.createContext(this.BASE_PATH, new WebHandler(this.BASE_PATH));
-        server.setExecutor(null); // creates a default executor
-        server.start();
+		this.system = system;
+		this.server = HttpServer.create(new InetSocketAddress(this.PORT), 0);
+		this.server.createContext(this.BASE_PATH, new WebHandler(this.BASE_PATH, this.system));
+		this.server.setExecutor(null); // creates a default executor
+	}
+
+	@Override
+	public void run() {
+		this.server.start();
 	}
 	
 	public static void main(String[] args) throws IOException {
-		new WebServer(8080, "/forum");
+		WebServer s = new WebServer(8080, "/forum", new ForumSystem());
+		new Thread(s).run();
 	}
 
 }

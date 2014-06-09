@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -14,11 +16,23 @@ public class httpRequest {
 	private ArrayList<DataFragment> post; //holds all the dat of post
 	private ArrayList<DataFragment> get; //hlds all the data of get
 	private String requestPath; //holds the path, without the base path
+	private String cookies;
+	
+	private HttpExchange raw;
+	
 	
 	public httpRequest(HttpExchange exchange, String BASE_PATH) throws IOException {
+		this.raw = exchange;
 		post = parsePostParameters(exchange);
 		get = parseGetParameters(exchange);
 		requestPath = getPath(exchange, BASE_PATH);
+		Headers reqHeaders = exchange.getRequestHeaders();
+		List<String> cookies = reqHeaders.get("Cookie");
+		this.cookies = "";
+		if (cookies != null) {
+			for (String cookie : cookies) this.cookies += cookie + ";";
+			if (this.cookies.charAt(this.cookies.length() - 1) == ';') this.cookies = this.cookies.substring(0, this.cookies.length() - 1);
+		}
 	}
 	
 	private ArrayList<DataFragment> parsePostParameters(HttpExchange exchange) throws IOException {
@@ -82,5 +96,29 @@ public class httpRequest {
 		for (int i = 0; i < this.post.size(); i++)
 			if (this.post.get(i).getKey().equals(key)) return this.post.get(i).getValue();
 		return null;
+	}
+	
+	//this method returns the String of the cookie that holds the ForumSystemSesssionID substring, if it exists
+	//otherwise returns null
+	public String getSessionId() {
+		String[] cookies = this.splitCookies();
+		for (int i=0; i < cookies.length; i++) {
+			String cur = cookies[i];
+			if (cur.contains("ForumSystemSessionID")) 
+				return cur.split("=")[1];
+		}
+		return null;
+	}
+	
+	public void setSessionId(String value) {
+		Headers respHeaders = this.raw.getResponseHeaders();
+		List<String> values = new ArrayList<>();
+		values.add("ForumSystemSessionID=" + value);
+		respHeaders.put("Set-Cookie", values);
+	}
+	
+	//this method splits the cookies string by ";", and returns an array of them
+	public String[] splitCookies(){
+		return this.cookies.split(";");
 	}
 }
