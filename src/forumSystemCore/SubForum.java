@@ -106,8 +106,7 @@ public class SubForum {
 		 Message m = new Message(user, title, content, this.id, null);
 		 this.messages.add(m);
 		 m.save();
-		 //adding the creator to observe this msg by default
-		 m.addObserver(user);
+
 		 return m.getId();
 		}
 		return null;

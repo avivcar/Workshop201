@@ -241,8 +241,11 @@ public class User implements Observer{
 	}
 	
 	public void sayToMe(String say) {
-		if (this.handler == null) return;
-		 this.handler.sayToMe(say);
+		if (this.handler == null){
+			System.out.println("con handler nil");
+			return;
+		}
+		 this.handler.sayToMe("PUSH^"+say);
 		
 	}
  
@@ -277,9 +280,17 @@ public class User implements Observer{
 			int i = msg.toString().indexOf(' '); //gets index of first space 
 			//checks that the username of the change made is not mine 
 			//so that users won't get their own changes notified
-			if(!(msg.toString().substring(0, i) == name)){ // 
-				handler.sayToMe(msg.toString());
+			if(!(msg.toString().substring(0, i).equals(this.username))){ // 
+				this.sayToMe(msg.toString());
 			}
+		}
+		else {
+			int i = msg.toString().indexOf(' ');
+			if(!(msg.toString().substring(0, i).equals(this.username))){
+				System.out.println("added msg to notifications: "+ msg.toString());
+				this.addNotification(msg.toString());
+			}
+			
 		}
 		
 	}
@@ -289,7 +300,8 @@ public class User implements Observer{
 		while(!notifications.isEmpty()){
 			String msg = notifications.get(notifications.size()-1);
 			notifications.remove(notifications.size()-1);
-			handler.sayToMe(msg);
+			System.out.println("now found new notication: "+msg.toString());
+			this.sayToMe(msg.toString());
 		}
 	}
 	

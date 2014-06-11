@@ -38,6 +38,10 @@ public class Message extends Observable{
 		
 		this.id = String.valueOf(NEXT_ID);
 		NEXT_ID++;
+		
+		 //adding the creator to observe this msg by default
+		 this.addObserver(user);
+		
 	}
 	
 	public void recover(List<Message> replies, Date date, String id) {
@@ -80,8 +84,9 @@ public class Message extends Observable{
 		replies.add(m);
 		m.save();
 		setChanged();
-		notifyObservers(user.getName()+" replied to your discussion");
-		this.addObserver(user); 
+		notifyObservers(user.getUsername()+" replied to your discussion");
+		this.addObserver(user);
+		m.addObserver(user);
 		return m;
 	}
 	/**

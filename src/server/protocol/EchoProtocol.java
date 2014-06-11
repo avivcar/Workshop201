@@ -389,12 +389,15 @@ public class EchoProtocol implements AsyncServerProtocol {
 	private String login(String[] msgArr) {
 		String ans=null;
 		ConnectionHandler newConnection = this.user.getConHndlr();
+		this.user.getConHndlr().sayToMe("hi mack-torek");
 		
 		user.User user = forumSystem.login(msgArr[1], msgArr[2], msgArr[3]);
 		if(user!=null){
 			ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(true);
 			this.user=user;
 			this.user.addHandler(newConnection);
+			System.out.println("checking updates");
+			this.user.checkUpdates();
 		}
 		else ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(false);
 				
@@ -426,8 +429,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 				+"^"+msg.getReplies().get(i).getContent()+"^"+msg.getReplies().get(i).getUser().getUsername();
 			
 		}
-		System.out.println("the msg id is:");
-		if(msg!=null) System.out.println(msg.getId());
+
 		return ans;
 	}
 	private String getForumOptions(String[] msgArr) {

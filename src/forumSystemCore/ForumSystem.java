@@ -211,6 +211,7 @@ public class ForumSystem {
 				password = TrippleDes.encrypt(password);
 				User newuser =  forums.get(i).login(username, password);
 				if (newuser!=null){
+					
 					newuser.log("the user is logging in");
 				}
 				return newuser;
