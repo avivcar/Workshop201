@@ -14,21 +14,22 @@ import forumSystemCore.SubForum;
 public class WebProtocol {
 	
 	public static String getResponse(httpRequest request, User user, ForumSystem sys) {
+		String err = "";
 		if (request.hasPost("sideEffect")) {
-			if ((request.getPost("sideEffect").equals("login") || request.getPost("sideEffect").equals("login")) && user == null) return getHeader(user) + "<div style=\"color: red;\">Sorry, the details you entered were incorrect, please try again</div>" + echoHomepage(sys) + getFooter();
+			if ((request.getPost("sideEffect").equals("login") || request.getPost("sideEffect").equals("login")) && user == null) return getHeader(user) + "<div style=\"color: red;\">Sorry, the details you entered were incorrect, please try again</div>" + echoLogin(request.getGet("id")) + getFooter();
 			if (request.getPost("sideEffect").equals("addReply")) {
 				if (!request.hasPost("id")) return getHeader(user) + getRedirect("/forum") + getFooter();
-				if (!request.hasPost("title") || !request.hasPost("content")) return getHeader(user) + "<div style=\"color: red;\">You must supply at least title or content</div>" + getRedirect("/reply?id=" + request.getPost("id")) + getFooter();
+				if (!request.hasPost("title") || !request.hasPost("content") || request.getPost("title").equals("") || request.getPost("content").equals("")) err = "<div style=\"color: red;\">You must supply at least title or content</div>";
 				sys.getMessageById(request.getPost("id")).addReply(user, request.getPost("title"), request.getPost("content"));
 			}
 			if (request.getPost("sideEffect").equals("addMessage")) {
 				if (!request.hasPost("id")) return getHeader(user) + getRedirect("/forum") + getFooter();
-				if (!request.hasPost("title") || !request.hasPost("content")) return getHeader(user) + "<div style=\"color: red;\">You must supply at least title or content</div>" + getRedirect("/add?id=" + request.getPost("id")) + getFooter();
+				if (!request.hasPost("title") || !request.hasPost("content") || request.getPost("title").equals("") || request.getPost("content").equals("")) err = "<div style=\"color: red;\">You must supply at least title or content</div>";
 				sys.getSubForumById(request.getPost("id")).createMessage(user, request.getPost("title"), request.getPost("content"));
 			}
 			if (request.getPost("sideEffect").equals("editMessage")) {
 				if (!request.hasPost("id")) return getHeader(user) + getRedirect("/forum") + getFooter();
-				if (!request.hasPost("title") || !request.hasPost("content")) return getHeader(user) + "<div style=\"color: red;\">You must supply at least title or content</div>" + getRedirect("/edit?id=" + request.getPost("id")) + getFooter();
+				if (!request.hasPost("title") || !request.hasPost("content") || request.getPost("title").equals("") || request.getPost("content").equals("")) err = "<div style=\"color: red;\">You must supply at least title or content</div>";
 				sys.getMessageById(request.getPost("id")).editMessage(user, request.getPost("title"), request.getPost("content"));
 			}
 		}
@@ -85,7 +86,7 @@ public class WebProtocol {
 			//get 
 		}
 		
-		ans += getFooter();
+		ans += getFooter() + err;
 		return ans;
 	}
 	
@@ -178,18 +179,18 @@ public class WebProtocol {
 		while (parent.getSubforumId().equals("0")) parent = sys.getMessageById(msg.getMsgRel());
 		SubForum fs = sys.getSubForumById(parent.getSubforumId());
 		Forum f = sys.getForum(fs.getForumId());
-		String ans = "<div id=\"bread-crumbs\"><a href=\"/forum\">Yakuni Forums System</a> >> <a href=\"/forum/forum?id=" + f.getId() + "\">" + f.getName() + "</a> >> <a href=\"" + fs.getId() + "\">" + fs.getSubject() + "</a> >> <span>" + (msg.getTitle().equals("") ? "Untitled Message" : msg.getTitle()) + "</span></div><div style=\"clear: both;\"></div>";
-		ans += "<h2>" + (msg.getTitle().equals("") ? "Untitled Message" : msg.getTitle()) + "</h2><div>" + msg.getContent() + "</div><h2>Replies:</h2>";
+		String ans = "<div id=\"bread-crumbs\"><a href=\"/forum\">Yakuni Forums System</a> >> <a href=\"/forum/forum?id=" + f.getId() + "\">" + f.getName() + "</a> >> <a href=\"/forum/subforum?id=" + fs.getId() + "\">" + fs.getSubject() + "</a> >> <span>" + (msg.getTitle().equals("") ? "Untitled Message" : msg.getTitle()) + "</span></div><div style=\"clear: both;\"></div>";
+		ans += "<h2>" + (msg.getTitle().equals("") ? "Untitled Message" : msg.getTitle()) + (msg.getUser() == user ? " | <a href=\"/forum/edit?id=" + msg.getId() + "\">Edit!</a>" : "") + "</h2><div>" + msg.getContent() + "</div><h2>Replies:</h2>";
 		for (int i=0; i<msg.getReplies().size(); i++) {
 			ans += "<div><a class=\"item\"  href=\"/forum/message?id=" + msg.getReplies().get(i).getId() + "\">" + (msg.getReplies().get(i).getTitle().equals("") ? "Untitled Message" : msg.getReplies().get(i).getTitle()) + "</a></div>";
 		}
-		if (msg.getUser() == user) ans += "<h2><a href=\"/forum/reply?id=" + msg.getId() + "\">Add Reply</a></h2>";
+		if (sys.isMember(fs.getForumId(), user)) ans += "<h2><a href=\"/forum/reply?id=" + msg.getId() + "\">Add Reply</a></h2>";
 		return ans;
 	}
 	
 	private static String echoForum(Forum forum) {
 		if (forum == null) return getRedirect("/forum/");
-		String ans = "<div id=\"bread-crumbs\"><a href=\"/forum\">Yakuni Forums System</a> >> <span>Forum - " + forum.getName() + "</span></div><div style=\"clear: both;\"></div>";
+		String ans = "<div id=\"bread-crumbs\"><a href=\"/forum\">Yakuni Forums System</a> >> <span>" + forum.getName() + "</span></div><div style=\"clear: both;\"></div>";
 		for (int i=0; i < forum.getSubForums().size(); i++) {
 			ans += "<div><a class=\"item\"  href=\"/forum/subforum?id=" + forum.getSubForums().get(i).getId() + "\">" + forum.getSubForums().get(i).getSubject() + "</a></div>";
 		}
