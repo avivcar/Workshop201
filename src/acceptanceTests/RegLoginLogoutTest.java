@@ -60,7 +60,7 @@ public class RegLoginLogoutTest extends TestCase{
 	User admin = this.sys.startSystem("halevm@post.aliza.com","miko","halevm","katriel");
 	String forum=this.sys.createForum("newforum",admin);
 	User newuser = this.sys.signup("miko@m.com","yaquir","york","agudayev",forum);//user reg
-		
+	this.sys.login("york","agudayev",forum, newuser.getMailCode());
 	assertTrue(this.sys.login("york","agudayev",forum, "")==newuser);//currect input
 	assertNull(this.sys.login("york","geva",forum, ""));// wrong input
 	assertNull(this.sys.login("tuki","agudayev",forum, ""));// wrong input

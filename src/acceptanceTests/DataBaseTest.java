@@ -65,7 +65,7 @@ public class DataBaseTest extends TestCase {
 		assertTrue(msg.getContent().equals("content"));
 		// user is saved
 		assertNull(sys.login("katriel", "hale", fId, ""));
-		assertTrue(sys.login("katriel", "halev av", fId, "") != null);	
+		assertTrue(sys.login("katriel", "halevav", fId, "") != null);	
 	}
 
 }

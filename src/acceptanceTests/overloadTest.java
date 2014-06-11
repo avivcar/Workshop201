@@ -29,7 +29,7 @@ public class overloadTest extends TestCase {
 	private static User user1;
 	private static Thread thread;
 	
-	private static int X = 100; 
+	private static int X = 1000; 
 	
 	public overloadTest() throws SecurityException, IOException{
 		super();

@@ -61,7 +61,6 @@ public class initReactorTest{
 		assertEquals("ERR_PARAM",echo.processMessage(Constants.ISADMIN +""));
 		assertEquals("SUCC_TRUE",echo.processMessage(Constants.ISADMIN + "^"+forumID).toUpperCase());
 		assertEquals("SUCC_FALSE",echo2.processMessage(Constants.ISADMIN + "^"+forumID).toUpperCase()); //user1 is not admin
-		thread.join();
 		
 	}
 	@Test
