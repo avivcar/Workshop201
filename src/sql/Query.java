@@ -26,8 +26,8 @@ public class Query {
 	}
 	
 	public static Forum loadForum(ResultSet sqlObject, User admin) throws SQLException, ClassNotFoundException {
-		Forum forum = new Forum(sqlObject.getString("name"), admin);
 		String id = sqlObject.getString("id");
+		Forum forum = new Forum(sqlObject.getString("name"), admin, id);
 		ArrayList<User> administrators = new ArrayList<User>();
 		ArrayList<User> members = new ArrayList<User>();
 		ArrayList<SubForum> subForums = new ArrayList<SubForum>();
@@ -52,7 +52,7 @@ public class Query {
 		ResultSet sfResults = Executor.query("SELECT * FROM `SubForums` WHERE `forumId` = '" + id + "'");
 		while (sfResults.next()) subForums.add(loadSubForum(sfResults, members));
 		// recover and return
-		forum.recover(administrators, members, subForums, ranks, id);
+		forum.recover(administrators, members, subForums, ranks);
 		return forum;
 	}
 	
@@ -74,8 +74,8 @@ public class Query {
 		// load suspended users
 		ResultSet susResults = Executor.query("SELECT * FROM `_suspended` WHERE `subforumId` = '" + id + "'");
 		while (susResults.next()) suspendedUsers.add(loadSuspended(susResults, forumMembers));
-		SubForum subforum = new SubForum(sqlObject.getString("subject"), moderators.get(0), forumId);
-		subforum.recover(moderators, complaints, messages, suspendedUsers, id);
+		SubForum subforum = new SubForum(sqlObject.getString("subject"), moderators.get(0), forumId, id);
+		subforum.recover(moderators, complaints, messages, suspendedUsers);
 		return subforum;
 	}
 	
@@ -84,12 +84,12 @@ public class Query {
 	}
 	
 	public static Message loadMessage(ResultSet sqlObject, ArrayList<User> forumMembers) throws SQLException, ClassNotFoundException {
-		Message msg = new Message(findUser(forumMembers, sqlObject.getString("writer")), sqlObject.getString("title"), sqlObject.getString("content"), sqlObject.getString("subforumRel"), sqlObject.getString("msgRel"));
 		List<Message> replies = new ArrayList<Message>();
 		String id = sqlObject.getString("id");
+		Message msg = new Message(findUser(forumMembers, sqlObject.getString("writer")), sqlObject.getString("title"), sqlObject.getString("content"), sqlObject.getString("subforumRel"), sqlObject.getString("msgRel"), id);
 		ResultSet msgResults = Executor.query("SELECT * FROM `Messages` WHERE `msgRel` = '" + id + "'");
 		while (msgResults.next()) replies.add(loadMessage(msgResults, forumMembers));
-		msg.recover(replies, new Date(Long.valueOf(sqlObject.getString("date")) * 1000), id);
+		msg.recover(replies, new Date(Long.valueOf(sqlObject.getString("date")) * 1000));
 		return msg;
 	}
 	

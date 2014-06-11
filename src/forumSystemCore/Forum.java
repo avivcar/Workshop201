@@ -17,8 +17,8 @@ public class Forum extends Observable{
 	private String id;
 	
 	//constructor
-	public Forum(String name, User admin){
-		putId();
+	public Forum(String name, User admin, String id){
+		this.id = id;
 		this.name = name; 
 		this.policy = new Policy();
 		this.administrators = new ArrayList<User>();
@@ -27,14 +27,17 @@ public class Forum extends Observable{
 		this.ranks = new ArrayList<Rank>();
 		administrators.add(admin);
 		members.add(admin);
+		sql.Query.saveAdmin(this.id, admin);
+	}
+	public Forum(String name, User admin){
+		this(name, admin, nextId++ + "");
 	}
 	
-	public void recover(ArrayList<User> administrators, ArrayList<User> members, ArrayList<SubForum> subForums, ArrayList<Rank> ranks, String id) {
+	public void recover(ArrayList<User> administrators, ArrayList<User> members, ArrayList<SubForum> subForums, ArrayList<Rank> ranks) {
 		this.administrators = administrators;
 		this.members = members;
 		this.subForums = subForums;
 		this.ranks = ranks;
-		setId(id);
 	}
 	
 	public void setId(String id) {
@@ -61,7 +64,6 @@ public class Forum extends Observable{
 		for (int i=0; i<members.size(); i++) 
 			if (members.get(i).getUsername().equals(username) && 
 					members.get(i).getPassword().equals(password)){
-				members.get(i).checkUpdates();
 				return members.get(i);
 			}
 		return null;
@@ -149,9 +151,6 @@ public class Forum extends Observable{
 	}
 	
 	private static int nextId = 1;
-	private void putId() {
-		this.id = nextId++ + "";
-	}
 	public boolean isMember(User user) {
 		if (this.isAdmin(user)) return true;
 		for (int i = 0; i < members.size(); i++) {

@@ -28,6 +28,10 @@ public class Message extends Observable{
 	}
 	
 	public Message(User user, String title, String content, String subforumId, String msgRel) {
+		this(user, title, content, subforumId, msgRel, String.valueOf(NEXT_ID));
+	}
+	
+	public Message(User user, String title, String content, String subforumId, String msgRel, String id) {
 		this.subforumId = subforumId;
 		this.msgRel = msgRel;
 		this.writer=user;
@@ -36,18 +40,16 @@ public class Message extends Observable{
 		this.date = new Date();
 		this.replies = new ArrayList<Message>();
 		
-		this.id = String.valueOf(NEXT_ID);
-		NEXT_ID++;
+		this.id = id;
 		
 		 //adding the creator to observe this msg by default
 		 this.addObserver(user);
 		
 	}
 	
-	public void recover(List<Message> replies, Date date, String id) {
+	public void recover(List<Message> replies, Date date) {
 		this.replies = replies;
 		this.date = date;
-		setId(id);
 	}
 	
 	public void setId(String id) {

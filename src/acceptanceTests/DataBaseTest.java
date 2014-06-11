@@ -48,8 +48,8 @@ public class DataBaseTest extends TestCase {
 		assertTrue(sys.getSubForums(sfId2) != null);
 		// message saved
 		Message msg = sys.getMessageById(msgId);
-		assertTrue(msg.getTitle() == "title");
-		assertTrue(msg.getContent() == "content");
+		assertTrue(msg.getTitle().equals("title"));
+		assertTrue(msg.getContent().equals("content"));
 		// user is saved
 		assertNull(sys.login("katriel", "hale", fId));
 		assertTrue(sys.login("katriel", "halev av", fId) != null);	

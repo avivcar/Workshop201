@@ -25,23 +25,26 @@ public class SubForum {
 	}
 	
 	public SubForum(String subject, User admin, String forumId){
+		this(subject, admin, forumId, String.valueOf(NEXT_ID++));
+	}
+	
+	public SubForum(String subject, User admin, String forumId, String id){
+		this.id = id;
 		this.subject = subject;
 		this.forumId = forumId;
 		moderators = new ArrayList<User>();
 		complaints = new ArrayList<Complaint>();
 		messages = new ArrayList<Message>();
 		suspendedUsers = new ArrayList<Suspended>();
-		this.id = String.valueOf(NEXT_ID);
-		NEXT_ID++;
-		this.addModerator(admin, admin);
+		this.moderators.add(admin);
+		sql.Query.saveModerator(this.id, admin);
 	}
-	public void recover(List<User> moderators, List<Complaint> complaints, List<Message> messages, List<Suspended> suspendedUsers, String id) {
+	public void recover(List<User> moderators, List<Complaint> complaints, List<Message> messages, List<Suspended> suspendedUsers) {
 		this.subject = subject;
 		this.moderators = moderators;
 		this.complaints = complaints;
 		this.messages = messages;
 		this.suspendedUsers = suspendedUsers;
-		setId(id);
 	}
 	public void setId(String id) {
 		this.id = id;
