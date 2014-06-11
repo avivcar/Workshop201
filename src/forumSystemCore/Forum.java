@@ -60,11 +60,18 @@ public class Forum extends Observable{
 	//Methods:
 
 	
-	public User login(String username, String password) {
+	public User login(String username, String password, String confirmCode) {
 		for (int i=0; i<members.size(); i++) 
 			if (members.get(i).getUsername().equals(username) && 
 					members.get(i).getPassword().equals(password)){
-				return members.get(i);
+				if(members.get(i).isFirstLogin()){
+					if(members.get(i).getMailCode().equals(confirmCode)){
+						members.get(i).setFirstLogin(false);
+						return members.get(i);
+					}
+					else return null;
+				}					
+				else return members.get(i);
 			}
 		return null;
 	}

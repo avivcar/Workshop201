@@ -2,6 +2,9 @@ package server.protocol;
 
 import java.util.Vector;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+
 import com.sun.corba.se.impl.activation.CommandHandler;
 
 import server.reactor.ConnectionHandler;
@@ -52,8 +55,13 @@ public class EchoProtocol implements AsyncServerProtocol {
 				if(this.isNull(msgArr, 5)) {
 				print(461, "ERR_PARAMETERS");
 				response = Constants.SIGNUP+"^"+ Constants.ERR_PARAM;
-				}
-				else response= this.signup(msgArr);
+				} else
+					try {
+						response= this.signup(msgArr);
+					} catch (MessagingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				
 				break;
 				
@@ -74,7 +82,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 				break;
 				
 			case Constants.LOGIN:
-				if(this.isNull(msgArr,3)){
+				if(this.isNull(msgArr,4)){
 					print(461, "ERR_PARAMETERS");
 					response = Constants.ERR_PARAM;
 					
@@ -384,7 +392,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 	}
 	
 	//new methods!!
-	private String signup(String[] msg) {
+	private String signup(String[] msg) throws AddressException, MessagingException {
     	String ans =null;
     	System.out.println("now in signup:"+ msg.toString());
 
@@ -401,7 +409,7 @@ public class EchoProtocol implements AsyncServerProtocol {
 	private String login(String[] msgArr) {
 		String ans=null;
 		ConnectionHandler newConnection = this.user.getConHndlr();		
-		user.User user = forumSystem.login(msgArr[1], msgArr[2], msgArr[3]);
+		user.User user = forumSystem.login(msgArr[1], msgArr[2], msgArr[3],msgArr[4]);
 		if(user!=null){
 			ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(true);
 			this.user=user;

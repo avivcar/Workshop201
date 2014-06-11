@@ -60,6 +60,12 @@ public class User implements Observer{
 	// 0 - all new msgs , 1 - friendOnly msgs, more can be added ...
 	private int notifTypes;
 	
+	//first login before mail
+	private boolean firstLogin=true;
+	
+	//mail code
+	private String code = "0";
+	
 	
 	public String getForumId() {
 		return forumId;
@@ -91,6 +97,20 @@ public class User implements Observer{
 	public User(String mail, String name, String username, String password) {
 		this.changeDetails(mail, name, username, password);
 			}
+	
+	public Boolean isFirstLogin(){
+		return this.firstLogin;
+	}
+	public void setFirstLogin(boolean bool){
+		this.firstLogin=bool;
+	}
+	
+	public String getMailCode(){
+		return this.code;
+	}
+	public void setMailCode(String s){
+		this.code=s;
+	}
 
 	//log creation - called in constructor
 	private void createlog() {

@@ -13,6 +13,9 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+
 public class ForumSystem {
 	private Logger operationLog;
 	private Logger errorLog;
@@ -158,7 +161,7 @@ public class ForumSystem {
 	 * @param forumId
 	 * @return
 	 */
-	public User signup(String mail, String name, String username, String pass,
+	/*public User signup(String mail, String name, String username, String pass,
 			String forumId) {
 		pass=TrippleDes.encrypt(pass);
 		for (int i = 0; i < forums.size(); i++) {
@@ -169,6 +172,31 @@ public class ForumSystem {
 		return null;
 	}
 
+*/
+	
+	public User signup(String mail, String name, String username, String pass,
+			String forumId) throws AddressException, MessagingException {
+		pass=TrippleDes.encrypt(pass);
+		User tmp = null;
+		int code=0;
+		for (int i = 0; i < forums.size(); i++) {
+			if (forums.get(i).getId().equals(forumId))
+				tmp = forums.get(i).signup(mail, name, username, pass);
+		}
+		
+		if (tmp!= null){ //created user
+			code = GoogleMail.Send(mail);
+			if (code==0)
+				errorlog("sending Authentication email");
+			else{
+					tmp.setMailCode(String.valueOf(code));
+					tmp.setFirstLogin(true);
+				return tmp;
+			}
+		}
+		errorlog("signup to forum id "+forumId);
+		return null;
+	}
 	/**
 	 * check if user is a member of forum(forumId)
 	 * 
@@ -205,11 +233,11 @@ public class ForumSystem {
 	 * @param forumId
 	 * @return
 	 */
-	public User login(String username, String password, String forumId) {
+public User login(String username, String password, String forumId,String confirmCode) {
 		for (int i = 0; i < forums.size(); i++) {
 			if (forums.get(i).getId().equals(forumId)){
 				password = TrippleDes.encrypt(password);
-				User newuser =  forums.get(i).login(username, password);
+				User newuser =  forums.get(i).login(username, password,confirmCode);
 				if (newuser!=null){
 					
 					newuser.log("the user is logging in");
@@ -220,6 +248,7 @@ public class ForumSystem {
 		errorlog("login user: "+username+" in forum id "+forumId);
 		return null;
 	}
+
 
 	public String createSubForum(User invoker, User moderator,
 			String subForumName, String forumId) {
