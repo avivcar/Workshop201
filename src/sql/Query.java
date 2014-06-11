@@ -13,6 +13,29 @@ import user.*;
 
 public class Query {
 	
+	public static void truncateDB() {
+		try {
+			Executor.run("truncate table `Super`");
+			Executor.run("truncate table `Complaints`");
+			Executor.run("truncate table `Forums`");
+			Executor.run("truncate table `Messages`");
+			Executor.run("truncate table `Ranks`");
+			Executor.run("truncate table `SubForums`");
+			Executor.run("truncate table `Users`");
+			Executor.run("truncate table `_administrators`");
+			Executor.run("truncate table `_friendRequests`");
+			Executor.run("truncate table `_friends`");
+			Executor.run("truncate table `_moderators`");
+			Executor.run("truncate table `_pendingFriendRequests`");
+			Executor.run("truncate table `_suspended`");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public static boolean load(ForumSystem fs) throws ClassNotFoundException, SQLException {
 		if (Executor.DISABLE_SQL) return false;
 		ResultSet users = Executor.query("SELECT * FROM `Super`");

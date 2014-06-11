@@ -187,6 +187,7 @@ public class ForumSystem {
 		if (tmp!= null){ //created user
 			try {
 				code = GoogleMail.Send(mail);
+				System.out.println("Code generated: " + code);
 			} catch (AddressException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
