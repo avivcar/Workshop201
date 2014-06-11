@@ -1,3 +1,12 @@
+
+/**
+ * Sub Forum Test
+ * 
+ * DESCRIPTION:
+ * -------------------------------------------------------------------------------------------------------
+ * -Validates creation of sub forum and existence under a forum object
+ */
+
 package acceptanceTests;
 
 import junit.framework.TestCase;
@@ -14,8 +23,6 @@ public class SubForumTest extends TestCase {
 	public SubForumTest(){
 		super();
 	}
-	
-	
 	
 	@Test
 	public void testSubForumCreation(){
@@ -37,16 +44,5 @@ public class SubForumTest extends TestCase {
 
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

@@ -8,14 +8,23 @@ import java.sql.Statement;
 
 public class Executor {
 	
-	static boolean DISABLE_SQL = false;
+	public static boolean DISABLE_SQL = false;
+	private static Connection connection;
+	private static Statement statement;
+	private static boolean initialized = false;
 	
-	public static void run(String query) throws ClassNotFoundException, SQLException {
-		if (DISABLE_SQL) return;
+	private static void init() throws ClassNotFoundException, SQLException {
+		if (initialized) return;
+		initialized = true;
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/Forum?user=root&password=1234");
-		Statement statement = connection.createStatement();
+		connection = DriverManager.getConnection("jdbc:mysql://localhost/Forum?user=root&password=1234");
+		statement = connection.createStatement();
+	}
+	
+	public static void run(String query) throws ClassNotFoundException {
+		if (DISABLE_SQL) return;
 		try {
+			init();
 			statement.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println("SQL Error: the query \"" + query + "\" failed. SQL Error msg: " + e.getMessage());
@@ -29,6 +38,7 @@ public class Executor {
 		Statement statement = connection.createStatement();
 		ResultSet result = null;
 		try {
+			init();
 			result = statement.executeQuery(query);
 		} catch (SQLException e) {
 			System.out.println("SQL Error: the query \"" + query + "\" failed. SQL Error msg: " + e.getMessage());

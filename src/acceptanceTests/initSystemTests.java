@@ -1,3 +1,13 @@
+
+/**
+ * Initialize System Test
+ * 
+ * DESCRIPTION:
+ * -------------------------------------------------------------------------------------------------------
+ * -Asserts system start, validates user creation and fields legality
+ * -Asserts forum creation and user login
+ */
+
 package acceptanceTests;
 
 import junit.framework.TestCase;
@@ -30,17 +40,17 @@ public class initSystemTests extends TestCase {
 	@Test
 	public void testForumCreation(){
 		
-	User admin=this.sys.startSystem("halevm@post.aliza.com","halevm","katriel","hi el");
+		User admin=this.sys.startSystem("halevm@post.aliza.com","halevm","katriel","hi el");
+		
+		String forum2=this.sys.createForum("newforum",admin);
+		assertTrue(sys.existForum(forum2));  //forum name has been added
+		assertTrue(sys.isAdmin(forum2,admin));  //admin has been added
+		
+		User newuser = this.sys.signup("miko@m.com","yaquir","york","agudayev",forum2);//user reg
 	
-	String forum2=this.sys.createForum("newforum",admin);
-	assertTrue(sys.existForum(forum2));  //forum name has been added
-	assertTrue(sys.isAdmin(forum2,admin));  //admin has been added
-	
-	User newuser = this.sys.signup("miko@m.com","yaquir","york","agudayev",forum2);//user reg
-
-	String forum=this.sys.createForum("newforum",newuser);
-	assertFalse(sys.existForum(forum));//didnt added
-	assertNull(forum);   //null forum
+		String forum=this.sys.createForum("newforum",newuser);
+		assertFalse(sys.existForum(forum));//didnt added
+		assertNull(forum);   //null forum
 	
 	}
 	

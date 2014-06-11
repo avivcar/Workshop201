@@ -1,3 +1,10 @@
+
+/**
+ * 
+ * Runs all acceptance tests
+ * 
+ */
+
 package acceptanceTests;
 
 import org.junit.runner.RunWith;
@@ -10,11 +17,12 @@ import org.junit.runners.Suite.SuiteClasses;
 	RegLoginLogoutTest.class,
 	SubForumTest.class, 
 	writeMessageTest.class,
-	//DataBaseTest.class,
-	//notificationTest.class,
+	DataBaseTest.class,
+	notificationTest.class,
 	overloadTest.class,
+	initReactorTest.class,
 	
 })
-public class ServerTests {
+public class AllTests {
 
 }

@@ -13,6 +13,26 @@ import user.*;
 
 public class Query {
 	
+	public static void truncateDB() {
+		try {
+			Executor.run("truncate table `Super`");
+			Executor.run("truncate table `Complaints`");
+			Executor.run("truncate table `Forums`");
+			Executor.run("truncate table `Messages`");
+			Executor.run("truncate table `Ranks`");
+			Executor.run("truncate table `SubForums`");
+			Executor.run("truncate table `Users`");
+			Executor.run("truncate table `_administrators`");
+			Executor.run("truncate table `_friendRequests`");
+			Executor.run("truncate table `_friends`");
+			Executor.run("truncate table `_moderators`");
+			Executor.run("truncate table `_pendingFriendRequests`");
+			Executor.run("truncate table `_suspended`");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static boolean load(ForumSystem fs) throws ClassNotFoundException, SQLException {
 		if (Executor.DISABLE_SQL) return false;
 		ResultSet users = Executor.query("SELECT * FROM `Super`");
@@ -318,8 +338,6 @@ public class Query {
 				")");
 		} catch (ClassNotFoundException e) {
 			System.out.println(e.getMessage());
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 		}
 	}
 
@@ -350,8 +368,6 @@ public class Query {
 			Executor.run("DELETE FROM `Messages` WHERE `id` = '" + msg.getId() + "'");
 		} catch (ClassNotFoundException e) {
 			System.out.println(e.getMessage());
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 		}
 	}
 
@@ -374,8 +390,6 @@ public class Query {
 			Executor.run("DELETE FROM `SubForums` WHERE `id` = '" + sf.getId() + "'");
 		} catch (ClassNotFoundException e) {
 			System.out.println(e.getMessage());
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -385,8 +399,6 @@ public class Query {
 			Executor.run("INSERT INTO `_moderators`(`subforumId`, `username`) VALUES ('" + (subforumId == null ? 0 : subforumId) + "', '" + user.getUsername() + "')");
 		} catch (ClassNotFoundException e) {
 			System.out.println(e.getMessage());
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -394,8 +406,6 @@ public class Query {
 		try {
 			Executor.run("DELETE FROM `_moderators` WHERE `subforumId` = '" + subforumId + "' AND `username` = '" + user.getUsername() + "'");
 		} catch (ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
@@ -406,8 +416,6 @@ public class Query {
 			Executor.run("INSERT INTO `_suspended`(`subforumId`, `username`, `date`) VALUES ('" + subforumId + "', '" + user.getUsername() + "', '" + date + "')");
 		} catch (ClassNotFoundException e) {
 			System.out.println(e.getMessage());
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -415,8 +423,6 @@ public class Query {
 		try {
 			Executor.run("DELETE FROM `_suspended` WHERE `subforumId` = '" + subforumId + "'' AND `username` = '" + user.getUsername() + "'");
 		} catch (ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
@@ -439,8 +445,6 @@ public class Query {
 			Executor.run("INSERT INTO `_administrators`(`ForumId`, `Username`) VALUES ('" + forumId + "', '" + user.getUsername() + "')");
 		} catch (ClassNotFoundException e) {
 			System.out.println(e.getMessage());
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -448,8 +452,6 @@ public class Query {
 		try {
 			Executor.run("DELETE FROM `_administrators` WHERE `ForumId` = '" + forumId + "' AND `Username` = '" + user.getUsername() + "'");
 		} catch (ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
