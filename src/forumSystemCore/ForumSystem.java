@@ -175,7 +175,7 @@ public class ForumSystem {
 */
 	
 	public User signup(String mail, String name, String username, String pass,
-			String forumId) throws AddressException, MessagingException {
+			String forumId) {
 		pass=TrippleDes.encrypt(pass);
 		User tmp = null;
 		int code=0;
@@ -185,7 +185,15 @@ public class ForumSystem {
 		}
 		
 		if (tmp!= null){ //created user
-			code = GoogleMail.Send(mail);
+			try {
+				code = GoogleMail.Send(mail);
+			} catch (AddressException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if (code==0)
 				errorlog("sending Authentication email");
 			else{

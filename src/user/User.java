@@ -111,6 +111,7 @@ public class User implements Observer{
 	public void setMailCode(String s){
 		this.code=s;
 	}
+	
 
 	//log creation - called in constructor
 	private void createlog() {

@@ -44,7 +44,7 @@ public class WebHandler implements HttpHandler {
 	public User validateUser(httpRequest request) {
 		if (request.hasPost("sideEffect") && request.getPost("sideEffect").equals("login")) { // login request
 			if (!request.hasPost("username") || !request.hasPost("password") || !request.hasPost("forumId")) return null;
-			User user = this.system.login(request.getPost("username"), request.getPost("password"), request.getPost("forumId"));
+			User user = this.system.login(request.getPost("username"), request.getPost("password"), request.getPost("forumId"), "");
 			String sessId = generateSessionId();
 			this.sessions.put(sessId, user);
 			request.setSessionId(sessId);

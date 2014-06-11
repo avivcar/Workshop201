@@ -30,7 +30,8 @@ public class DataBaseTest extends TestCase {
 		admin = sys.startSystem("katrina@walla.com", "Katrina Tros", "Katkat", "ass1234");
 		fId = sys.createForum("testers4life", admin);
 		forum = sys.getForum(fId);
-		u1 = sys.signup("halevav@post.aliza.com","halevav","katriel","halev av", fId);
+		u1 = sys.signup("halevav@post.aliza.com","halevav","katriel","halevav", fId);
+		sys.login("katriel","halevav",fId,  u1.getMailCode());
 		sfId = sys.createSubForum(admin, admin, "loozers", fId);
 		sfId2 = sys.createSubForum(admin, admin, "eggs", fId);
 		msgId = sys.getSubForumById(sfId).createMessage(u1, "title", "content");
@@ -51,8 +52,8 @@ public class DataBaseTest extends TestCase {
 		assertTrue(msg.getTitle().equals("title"));
 		assertTrue(msg.getContent().equals("content"));
 		// user is saved
-		assertNull(sys.login("katriel", "hale", fId));
-		assertTrue(sys.login("katriel", "halev av", fId) != null);	
+		assertNull(sys.login("katriel", "hale", fId, ""));
+		assertTrue(sys.login("katriel", "halev av", fId, "") != null);	
 	}
 
 }
