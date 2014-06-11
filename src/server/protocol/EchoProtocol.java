@@ -121,9 +121,10 @@ public class EchoProtocol implements AsyncServerProtocol {
 					print(461, "ERR_PARAMETERS");
 					response = Constants.ERR_PARAM;	
 				}
-				else 
-				response=Constants.GETSUBFORUMS+"^"+Constants.SUCC_;
-				response+=forumSystem.getSubForums(msgArr[1]);
+				else {
+					response=Constants.GETSUBFORUMS+"^"+Constants.SUCC_;
+					response+=forumSystem.getSubForums(msgArr[1]);
+				}
 			    break;
 			    
 		case Constants.GETMESSAGES:
@@ -388,16 +389,14 @@ public class EchoProtocol implements AsyncServerProtocol {
 	}
 	private String login(String[] msgArr) {
 		String ans=null;
-		ConnectionHandler newConnection = this.user.getConHndlr();
-		this.user.getConHndlr().sayToMe("hi mack-torek");
-		
+		ConnectionHandler newConnection = this.user.getConHndlr();		
 		user.User user = forumSystem.login(msgArr[1], msgArr[2], msgArr[3]);
 		if(user!=null){
 			ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(true);
 			this.user=user;
 			this.user.addHandler(newConnection);
-			System.out.println("checking updates");
 			this.user.checkUpdates();
+
 		}
 		else ans=Constants.LOGIN+"^"+Constants.SUCC_+"^"+Boolean.toString(false);
 				
