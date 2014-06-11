@@ -33,6 +33,7 @@ public class Constants {
 	public static final String DELETEMESSAGE = "DELETEMESSAGE";
 	public static final String LOGOUT = "LOGOUT";
 	public static final String PUSH = "PUSH";
+	public static final String APPROVEFRIEND= "APPROVEFRIEND";
 
 
 

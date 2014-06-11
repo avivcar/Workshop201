@@ -512,6 +512,7 @@ public class ForumSystem {
 				
 		invoker.sendFriendRequest(toRequest);
 		invoker.log("sended friend request to:"+toRequest.getUsername());
+		toRequest.update(null,invoker.getUsername()+" you have new friend request from "+invoker.getUsername());
 		return true;
 	}
 
@@ -527,5 +528,20 @@ public class ForumSystem {
 			return false;
 		}
 		return subforum.deleteMessage(msg,invoker);
+	}
+
+	public boolean ApproveFriend(User user, String toApprove) {
+		User approve = null;
+		for(int i=0;i<this.forums.size();i++)
+			if (forums.get(i).getUserByName(toApprove)!=null){
+				approve = forums.get(i).getUserByName(toApprove);
+				break;
+			}
+		if (approve!=null){
+			approve.update(null,user.getUsername()+" "+user.getUsername()+" has approved you - now you are friends" );
+			return user.approveFriend(approve);
+		}
+
+		return false;
 	}
 }

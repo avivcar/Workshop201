@@ -315,6 +315,17 @@ public class EchoProtocol implements AsyncServerProtocol {
 			}
 		    break;
 		    
+		case Constants.APPROVEFRIEND:
+			if(this.isNull(msgArr,2)){
+				print(461, "ERR_PARAMETERS");
+				response = Constants.ERR_PARAM;	
+			}
+			else {
+			response=Constants.APPROVEFRIEND+"^"+Constants.SUCC_+"^";
+			response+=Boolean.toString(forumSystem.ApproveFriend(this.user,msgArr[1]));
+			}
+		    break;
+		    
 		case Constants.LOGOUT:
 			ConnectionHandler handler=this.user.getConHndlr();
 			this.user.addHandler(null);
@@ -443,6 +454,9 @@ public class EchoProtocol implements AsyncServerProtocol {
 			ans+="^***";
 			for(int i=0;i<forum.getRanks().size();i++)
 				ans+="^"+forum.getRanks().get(i).getName();
+			ans+="^***";
+			for(int i=0;i<this.user.getFriendRequests().size();i++)
+				ans+="^"+this.user.getFriendRequests().get(i).getUsername();
 		}		
 		return ans;
 		

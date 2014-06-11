@@ -162,11 +162,13 @@ public class User implements Observer{
 	 * Approve friend request
 	 * @param user
 	 */
-	public void approveFriend(User user) {
-		friendRequests.remove(user);
+	public Boolean approveFriend(User user) {
+		Boolean ans=false;
+		 ans = friendRequests.remove(user);
 		friends.add(user);
 		sql.Query.saveFriend("_friends", this, user);
 		user.friendshipApproved(this);
+		return ans;
 	}
 	
 	/**
