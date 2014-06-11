@@ -24,6 +24,10 @@ public class ForumSystem {
 	public	ArrayList<Forum> forums;
 	User superuser;
 	
+	public ForumSystem() {
+		this.createlog();
+	}
+	
 	public void recover(ArrayList<Forum> forums, User superuser) {
 		this.forums = forums;
 		this.superuser = superuser;
@@ -55,7 +59,6 @@ public class ForumSystem {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		this.createlog();
 		forums = new ArrayList<Forum>();
 		try {
 			sql.Query.saveSuper(superuser);
@@ -186,11 +189,6 @@ public class ForumSystem {
 				tmp = forums.get(i).signup(mail, name, username, pass);
 		}
 		
-		String myCode = new BigInteger(130, new SecureRandom()).toString(32);
-		System.out.println("Code generated: " + myCode);
-		tmp.setMailCode(myCode);
-		tmp.setFirstLogin(true);
-		/*
 		if (tmp!= null){ //created user
 			try {
 				code = GoogleMail.Send(mail);
@@ -210,7 +208,6 @@ public class ForumSystem {
 				return tmp;
 			}
 		}
-		*/
 		errorlog("signup to forum id "+forumId);
 		return null;
 	}
