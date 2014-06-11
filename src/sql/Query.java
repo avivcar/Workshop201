@@ -328,7 +328,7 @@ public class Query {
 				"'" + user.getPassword() + "', " + 
 				"'" + user.getRank().getName() + "', " + 
 				"'" + user.getNotifType() + "', " + 
-				"'" + user.isFirstLogin() + "', " + 
+				"'" + (user.isFirstLogin() ? "1" : "0") + "', " + 
 				"'" + user.getMailCode() + "'" + 
 			")");
 	}
