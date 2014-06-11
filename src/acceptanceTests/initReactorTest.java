@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import java.io.IOException;
+
 import forumSystemCore.ForumSystem;
 import server.protocol.EchoProtocol;
 import server.reactor.Reactor;
@@ -18,12 +20,10 @@ public class initReactorTest{
 	private static User admin;
 	private static String forumID, forumID2;
 	private static User user1;
+	private static Thread thread;
 	
-	public initReactorTest() {
-	}
-
-	@Before
-	public void init() throws InterruptedException, IOException {
+	public initReactorTest() throws InterruptedException, SecurityException, IOException {
+		super();
 		int port =1234 ;
 		int poolSize =10; 
 		//init forum sys 
@@ -36,41 +36,41 @@ public class initReactorTest{
 		//init reactor			
 		Reactor reactor = Reactor.startEchoServer(port, poolSize, forumSystem);
 
-		Thread thread = new Thread(reactor);
-		thread.start();
-		thread.join();
-		
+		thread = new Thread(reactor);
+
+
 		echo = new EchoProtocol(admin, forumSystem);
 		echo2 = new EchoProtocol(user1, forumSystem);
 	}
 	
 	@Test
-	public void testAdmin() {
-		assertEquals("ERR_NOT_ENOUGH_PARAMETERS",echo.processMessage(Constants.ISADMIN +""));
+	public void testAdmin() throws InterruptedException {
+
+		thread.start();
+		assertEquals("ERR_PARAM",echo.processMessage(Constants.ISADMIN +""));
 		assertEquals("SUCC_TRUE",echo.processMessage(Constants.ISADMIN + "^"+forumID).toUpperCase());
 		assertEquals("SUCC_FALSE",echo2.processMessage(Constants.ISADMIN + "^"+forumID).toUpperCase()); //user1 is not admin
 	}
 	@Test
-	public void testSignUp() {
-		assertEquals("ERR_NOT_ENOUGH_PARAMETERS",echo.processMessage(Constants.SIGNUP +"^"+forumID)); //not good
-		assertEquals("SUCC_SIGNUP",echo.processMessage(Constants.SIGNUP +"^"+"lala@mail.com^Lolit^Lolit12^12345^"+forumID)); //good
-		assertEquals("ERR_SIGNUP",echo.processMessage(Constants.SIGNUP +"^"+"^Lolit^Lolit12^12345^"+forumID));
-		assertEquals("ERR_SIGNUP",echo.processMessage(Constants.SIGNUP +"^"+"lala@mail.com^Lolit^Lolit12^^"+forumID));
-		assertEquals("ERR_SIGNUP",echo.processMessage(Constants.SIGNUP +"^"+"lala@mail.com^Lolit^Lolit12^12345^"));
-		assertEquals("ERR_SIGNUP",echo.processMessage(Constants.SIGNUP +"^"+"lala@mail.com^Lolit^Lolit12^12345^"+forumID)); //double reg
+	public void testSignUp() throws InterruptedException {
+		assertEquals("SIGNUP^ERR_PARAM",echo.processMessage(Constants.SIGNUP +"^"+forumID)); //not good
+		assertEquals("SIGNUP^SUCC_^true",echo.processMessage(Constants.SIGNUP +"^"+"lala@mail.com^Lolit^Lolit12^12345^"+forumID)); //good
+		assertEquals("SIGNUP^SUCC_^false",echo.processMessage(Constants.SIGNUP +"^"+"^Lolit^Lolit12^12345^"+forumID));
+		assertEquals("SIGNUP^SUCC_^false",echo.processMessage(Constants.SIGNUP +"^"+"lala@mail.com^Lolit^Lolit12^^"+forumID));
 	}
 	@Test
-	public void testMember(){
-		assertEquals("SUCC_TRUE",echo.processMessage(Constants.ISMEMBER +"^"+forumID));
-		assertEquals("SUCC_TRUE",echo2.processMessage(Constants.ISMEMBER +"^"+forumID));
-		assertEquals("SUCC_FALSE",echo2.processMessage(Constants.ISMEMBER +"^"+forumID2)); //not member
-		assertEquals("ERR_NOT_ENOUGH_PARAMETERS",echo.processMessage(Constants.ISMEMBER +""));
+	public void testMember() throws InterruptedException{
+		assertEquals("SUCC_true",echo.processMessage(Constants.ISMEMBER +"^"+forumID));
+		assertEquals("SUCC_true",echo2.processMessage(Constants.ISMEMBER +"^"+forumID));
+		assertEquals("SUCC_false",echo2.processMessage(Constants.ISMEMBER +"^"+forumID2)); //not member
+		assertEquals("ERR_PARAM",echo.processMessage(Constants.ISMEMBER +""));
 	}
+	
 	@Test
-	public void testCreateForum(){
-		assertEquals("ERR_CANNOT_CREATE",echo.processMessage(Constants.ADDFORUM+"^name^")); //same name exists
-		assertNotEquals("ERR_CANNOT_CREATE",echo.processMessage(Constants.ADDFORUM+"^diffrent^"));
-		assertEquals("ERR_NOT_ENOUGH_PARAMETERS",echo.processMessage(Constants.ADDFORUM+"^"));
+	public void testCreateForum() throws InterruptedException{
+		assertEquals("ADDFORUM^SUCC_^false",echo.processMessage(Constants.ADDFORUM+"^name^")); //same name exists
+		assertNotEquals("ADDFORUM^SUCC_^false",echo.processMessage(Constants.ADDFORUM+"^diffrent^"));
+		assertEquals("ERR_PARAM",echo.processMessage(Constants.ADDFORUM+"^"));
 	}
 
 }

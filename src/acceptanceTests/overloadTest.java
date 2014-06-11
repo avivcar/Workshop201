@@ -1,49 +1,55 @@
 package acceptanceTests;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import server.protocol.EchoProtocol;
+import server.reactor.Reactor;
 import user.User;
 import forumSystemCore.ForumSystem;
 import junit.framework.TestCase;
 
 public class overloadTest extends TestCase {
-	private static ForumSystem sys = new ForumSystem();
+	private static ForumSystem forumSystem;
+	private static EchoProtocol echo;
+	private static EchoProtocol echo2;
 	private static User admin;
-	private static User u1;
-	private static String fId, fId2;
-	private static String sfId;
-	private static String sfId2;
+	private static String forumID, forumID2, subForumId;
+	private static User user1;
+	private static Thread thread;
 	
-	private static int X = 20; 
+	private static int X = 100; 
 	
-	public overloadTest(){
+	public overloadTest() throws SecurityException, IOException{
 		super();
-	}
-	
-	@Before
-	public void init(){
-	
+		int port =1234 ;
+		int poolSize =10; 
+		//init forum sys 
+		forumSystem = new ForumSystem();
+		admin= forumSystem.startSystem("halevm@em.walla.com", "firstname", "admin", "1234");
+		forumID = forumSystem.createForum("name", admin);
+		forumID2 = forumSystem.createForum("two", admin);
+		user1 = forumSystem.signup("mami@walla.com", "Mamuta Cohen", "Mamutit", "1234", forumID);
+		subForumId=forumSystem.createSubForum(admin,user1,"flowers",forumID);
+		
+		//init reactor			
+		Reactor reactor = Reactor.startEchoServer(port, poolSize, forumSystem);
+		thread = new Thread(reactor);
+		echo = new EchoProtocol(admin, forumSystem);
+		echo2 = new EchoProtocol(user1, forumSystem);
 	}
 	
 	@Test
 	public void testMessages(){
-		admin = sys.startSystem("katrina@walla.com", "Katrina Tros", "Katkat", "ass1234");
-		fId = sys.createForum("testers4life", admin);
-		fId2 = sys.createForum("testresRloozers", admin);
-		u1 = sys.signup("halevav@post.aliza.com","halevav","katriel","halev av", fId);
-		sfId = sys.createSubForum(admin, u1, "loozers", fId);
-		sfId2 = sys.createSubForum(admin, admin, "eggs", fId);
-		
 		User u, u2;
 		for(int i=0;i<=X;i++){
-			String mail = "lala@aliza.com";	
-			String username = "katriel"+(char)(65+i)+""; 
-			assertNotNull(u = sys.signup(mail ,"Kat", username,"12345", fId));
-			assertNotNull(u2 = sys.signup(mail ,"Kat", username,"12345", fId2));
-			String title = "hi"+(char)(65+i)+"";
-			assertNotNull(sys.createMessage(fId, sfId, u, title, "wasup?"));
-			assertNotNull(sys.createMessage(fId, sfId2, u2, title, "wasup?"));
+			String mail = "lala" + Integer.toString(i) + "@aliza.com";	
+			String username = "katriel"+Integer.toString(i) +""; 
+			u = forumSystem.signup(mail ,"Kat", username,"12345", forumID);
+			String title = "hi"+Integer.toString(i)+"";
+			assertNotNull(forumSystem.createMessage(forumID, subForumId, u, title, "wasup?"));
 		}
 	}
 
