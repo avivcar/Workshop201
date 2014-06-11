@@ -211,7 +211,7 @@ public class SubForum {
 			if(!invoker.hasPermission(Permissions.DELETE_MESSAGE)) //not admin\moderator
 				return false;
 		messages.remove(m);
-		save();
+		sql.Query.remove(m);
 		return true;
 	}
 
@@ -221,7 +221,10 @@ public class SubForum {
 			invoker.log("trying to delete message without authorization");
 			return false;
 		}
-      return this.messages.remove(msg);
+		this.messages.remove(msg);
+		sql.Query.remove(msg);
+		return true;
+
 		
 	}
 	

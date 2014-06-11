@@ -45,18 +45,34 @@ public class WebHandler implements HttpHandler {
 		if (request.hasPost("sideEffect") && request.getPost("sideEffect").equals("login")) { // login request
 			if (!request.hasPost("username") || !request.hasPost("password") || !request.hasPost("forumId")) return null;
 			User user = this.system.login(request.getPost("username"), request.getPost("password"), request.getPost("forumId"), "");
-			String sessId = generateSessionId();
-			this.sessions.put(sessId, user);
-			request.setSessionId(sessId);
-			return user;
+			if (user != null) {
+				String sessId = generateSessionId();
+				this.sessions.put(sessId, user);
+				request.setSessionId(sessId);
+				return user;
+			}
+
 		}
 		if (request.hasPost("sideEffect") && request.getPost("sideEffect").equals("signup")) { // signup request
 			if (!request.hasPost("mail") || !request.hasPost("name") || !request.hasPost("username") || !request.hasPost("password") || !request.hasPost("forumId")) return null;
 			User user = this.system.signup(request.getPost("mail"), request.getPost("name"), request.getPost("username"), request.getPost("password"), request.getPost("forumId"));
-			String sessId = generateSessionId();
-			this.sessions.put(sessId, user);
-			request.setSessionId(sessId);
-			return user;
+			if (user != null) {
+				String sessId = generateSessionId();
+				this.sessions.put(sessId, user);
+				request.setSessionId(sessId);
+				return user;
+			}
+		}
+		if (request.hasPost("sideEffect") && request.getPost("sideEffect").equals("activate")) { // activate request
+			if (!request.hasPost("username") || !request.hasPost("password") || !request.hasPost("conf") || !request.hasPost("forumId")) return null;
+			User user = this.system.login(request.getPost("username"), request.getPost("password"), request.getPost("forumId"), request.getPost("conf"));
+			if (user != null) {
+				String sessId = generateSessionId();
+				this.sessions.put(sessId, user);
+				request.setSessionId(sessId);
+				return user;
+			}
+
 		}
 		String sessId = request.getSessionId();
 		if (sessId == null || !this.sessions.containsKey(sessId)) return null;
