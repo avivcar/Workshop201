@@ -110,11 +110,11 @@ public class WebProtocol {
 		ans += "<form action=\"/forum/forum?id=" + forumId + "\" method=\"post\">";
 		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"login\">";
 		ans += "<div><label>Username:</label><input type=\"text\" name=\"username\"></div>";
-		ans += "<div><label>Password:</label><input type=\"text\" name=\"password\"></div>";
+		ans += "<div><label>Password:</label><input type=\"Password\" name=\"password\"></div>";
 		ans += "<input type=\"hidden\" name=\"forumId\" value=\"" + forumId + "\">";
 		ans += "<button>Login</button>";
 		ans += "</form>";
-		ans += "<a href=\"/forum/signup?id=" + forumId + "\">Sign Up!</a>";
+		ans += "<a href=\"/forum/signup?id=" + forumId + "\">Sign Up!</a> | <a href=\"/forum/activate?id=" + forumId + "\">Activate Your Account</a>";
 		return ans;
 	}
 	
@@ -169,10 +169,9 @@ public class WebProtocol {
 		ans += "<div><label>Mail:</label><input type=\"text\" name=\"mail\"></div>";
 		ans += "<div><label>Name:</label><input type=\"text\" name=\"name\"></div>";
 		ans += "<div><label>Username:</label><input type=\"text\" name=\"username\"></div>";
-		ans += "<div><label>Password:</label><input type=\"text\" name=\"password\"></div>";
+		ans += "<div><label>Password:</label><input type=\"password\" name=\"password\"></div>";
 		ans += "<input type=\"hidden\" name=\"forumId\" value=\"" + forumId + "\">";
-		ans += "<a href=\"/forum/signup?id=" + forumId + "\">Sign Up</a>";
-		ans += "<a style=\"margin-left: 12px;\" href=\"/forum/activate?id=" + forumId + "\">Activate Account</a>";
+		ans += "<button>Signup!</button>";
 		ans += "</form>";
 		return ans;
 	}
@@ -198,7 +197,7 @@ public class WebProtocol {
 		ans += "<form action=\"/forum/forum?id=" + forumId + "\" method=\"post\">";
 		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"activate\">";
 		ans += "<div><label>Username:</label><input type=\"text\" name=\"username\"></div>";
-		ans += "<div><label>Password:</label><input type=\"text\" name=\"password\"></div>";
+		ans += "<div><label>Password:</label><input type=\"Password\" name=\"password\"></div>";
 		ans += "<div><label>Confirmation Code:</label><input type=\"text\" name=\"conf\"></div>";
 		ans += "<input type=\"hidden\" name=\"forumId\" value=\"" + forumId + "\">";
 		ans += "<button>Activate!</button>";

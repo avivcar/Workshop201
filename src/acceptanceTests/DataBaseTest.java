@@ -1,3 +1,13 @@
+
+/**
+ * DataBase Test
+ * 
+ * DESCRIPTION:
+ * -------------------------------------------------------------------------------------------------------
+ * This test initializes the Database, then inserts data to forum system, then cleans data and recovers it,
+ * then asserts data exists.
+ */
+
 package acceptanceTests;
 
 import java.sql.SQLException;
@@ -23,16 +33,6 @@ public class DataBaseTest extends TestCase {
 	private static Forum forum;
 	private boolean initialized = false; 
 	
-
-/**
- * DataBase Test
- * 
- * DESCRIPTION:
- * -------------------------------------------------------------------------------------------------------
- * This test initializes the Database, then inserts data to forum system, then cleans data and recovers it,
- * then asserts data exists.
- */
-
 	
 	public DataBaseTest() throws ClassNotFoundException, SQLException {
 		super();

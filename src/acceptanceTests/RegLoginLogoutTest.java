@@ -1,3 +1,13 @@
+
+/**
+ * Login/SignUp Test
+ * 
+ * DESCRIPTION:
+ * -------------------------------------------------------------------------------------------------------
+ * -Asserts signup validation
+ * -Asserts login validation
+ */
+
 package acceptanceTests;
 
 import junit.framework.TestCase;
