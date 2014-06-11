@@ -95,6 +95,7 @@ public class User implements Observer{
 	public User() {}
 	
 	public User(String mail, String name, String username, String password) {
+		this.rank = Rank.member;
 		this.changeDetails(mail, name, username, password);
 			}
 	

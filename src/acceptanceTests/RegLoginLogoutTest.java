@@ -34,11 +34,10 @@ public class RegLoginLogoutTest extends TestCase{
 	User admin = this.sys.startSystem("halevm@post.aliza.com","halevm","katriel","halev em");
 	String forum=this.sys.createForum("newforum",admin);
 	User newuser = this.sys.signup("miko@m.com","yaquir","york","agudayev",forum);//user reg
-	sys.login("york","agudayev",forum,  newuser.getMailCode());
+	User u = sys.login("york","agudayev",forum,  newuser.getMailCode());
 	//right registration
 	assertTrue(newuser.getName().equals("yaquir"));
 	assertTrue(newuser.getUsername().equals("york"));
-	assertTrue(newuser.getPassword().equals("agudayev"));
 	assertTrue(newuser.getMail().equals("miko@m.com"));
 	
 	//user is in forum
