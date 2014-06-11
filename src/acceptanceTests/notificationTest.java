@@ -1,3 +1,13 @@
+
+/**
+ * Notification Test
+ * 
+ * DESCRIPTION:
+ * -------------------------------------------------------------------------------------------------------
+ * tests the notification system by assigning users to the same forum and posting a msg, then checking the notification
+ * array of the other users for new msgs. 
+ */
+
 package acceptanceTests;
 
 import org.junit.BeforeClass;

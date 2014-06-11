@@ -1,3 +1,12 @@
+
+/**
+ * Overload Test
+ * 
+ * DESCRIPTION:
+ * -------------------------------------------------------------------------------------------------------
+ * tests the database and overall system core performance by flooding it with a lot of data. 
+ */
+
 package acceptanceTests;
 
 import java.io.IOException;
@@ -24,6 +33,7 @@ public class overloadTest extends TestCase {
 	
 	public overloadTest() throws SecurityException, IOException{
 		super();
+		sql.Query.truncateDB();
 		int port =1234 ;
 		int poolSize =10; 
 		//init forum sys 

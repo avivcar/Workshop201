@@ -1,3 +1,13 @@
+
+/**
+ * Initialize Reactor Test
+ * 
+ * DESCRIPTION:
+ * -------------------------------------------------------------------------------------------------------
+ * Tests the reactors connection abilities. goes over varius msg types, sends them to the server, and makes sure
+ * the response is correct. 
+ */
+
 package acceptanceTests;
 
 import static org.junit.Assert.*;
@@ -24,6 +34,7 @@ public class initReactorTest{
 	
 	public initReactorTest() throws InterruptedException, SecurityException, IOException {
 		super();
+		sql.Query.truncateDB();
 		int port =1234 ;
 		int poolSize =10; 
 		//init forum sys 
@@ -50,6 +61,8 @@ public class initReactorTest{
 		assertEquals("ERR_PARAM",echo.processMessage(Constants.ISADMIN +""));
 		assertEquals("SUCC_TRUE",echo.processMessage(Constants.ISADMIN + "^"+forumID).toUpperCase());
 		assertEquals("SUCC_FALSE",echo2.processMessage(Constants.ISADMIN + "^"+forumID).toUpperCase()); //user1 is not admin
+		thread.join();
+		
 	}
 	@Test
 	public void testSignUp() throws InterruptedException {
