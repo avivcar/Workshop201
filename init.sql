@@ -78,6 +78,8 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `password` varchar(300) NOT NULL,
   `rank` varchar(300) NOT NULL,
   `notifTypes` int(11) NOT NULL,
+  `firstLogin` tinyint(1) NOT NULL,
+  `code` varchar(300) NOT NULL,
   PRIMARY KEY (`forumId`, `username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

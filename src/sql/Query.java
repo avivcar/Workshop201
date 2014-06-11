@@ -130,6 +130,8 @@ public class Query {
 	public static User loadUser(ResultSet sqlObject, ArrayList<Rank> ranks) throws SQLException {
 		User u = new User(sqlObject.getString("mail"), sqlObject.getString("name"), sqlObject.getString("username"), sqlObject.getString("password"), findRank(ranks, sqlObject.getString("rank")), sqlObject.getString("forumId"));
 		u.setNotifType(Integer.valueOf(sqlObject.getString("notifTypes")));
+		u.setFirstLogin(Integer.valueOf(sqlObject.getString("firstLogin")));
+		u.setMailCode(Integer.valueOf(sqlObject.getString("code")));
 		return u;
 	}
 	
@@ -312,7 +314,9 @@ public class Query {
 				"`username`, " + 
 				"`password`, " + 
 				"`rank`, " + 
-				"`notifTypes`" + 
+				"`notifTypes`, " + 
+				"`firstLogin`, " + 
+				"`code`" + 
 			") VALUES (" + 
 				"'" + (user.getForumId() == null ? 0 : user.getForumId()) + "', " + 
 				"'" + user.getMail() + "', " + 
@@ -320,7 +324,9 @@ public class Query {
 				"'" + user.getUsername() + "', " + 
 				"'" + user.getPassword() + "', " + 
 				"'" + user.getRank().getName() + "', " + 
-				"'" + user.getNotifType() + "'" + 
+				"'" + user.getNotifType() + "', " + 
+				"'" + user.isFirstLogin() + "', " + 
+				"'" + user.getMailCode() + "'" + 
 			")");
 	}
 	
