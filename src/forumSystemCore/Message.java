@@ -28,7 +28,7 @@ public class Message extends Observable{
 	}
 	
 	public Message(User user, String title, String content, String subforumId, String msgRel) {
-		this(user, title, content, subforumId, msgRel, String.valueOf(NEXT_ID));
+		this(user, title, content, subforumId, msgRel, String.valueOf(NEXT_ID++));
 	}
 	
 	public Message(User user, String title, String content, String subforumId, String msgRel, String id) {
