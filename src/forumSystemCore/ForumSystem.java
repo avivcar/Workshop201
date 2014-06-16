@@ -15,8 +15,10 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
+import javax.naming.AuthenticationException;
 
 public class ForumSystem {
 	private Logger operationLog;
@@ -75,7 +77,9 @@ public class ForumSystem {
 		private void createlog() {
 			this.errorLog=Logger.getLogger("ErrorLog");
 			this.operationLog=Logger.getLogger("operationLog");
-			
+	    	this.errorLog.setUseParentHandlers(false);
+	    	this.operationLog.setUseParentHandlers(false);
+
 			FileHandler fh;  
 			FileHandler fh2;  
 		    try {  
@@ -191,15 +195,17 @@ public class ForumSystem {
 		
 		if (tmp!= null){ //created user
 			try {
-				code = GoogleMail.Send(mail);
+				code = GoogleMail.getCode();
+				GoogleMail.Send(mail,code);
 				System.out.println("Code generated: " + code);
 			} catch (AddressException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (MessagingException e) {
+			}  catch (MessagingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} 
+			
 			if (code==0)
 				errorlog("sending Authentication email");
 			else{

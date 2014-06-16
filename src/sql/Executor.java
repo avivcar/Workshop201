@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class Executor {
 	
-	public static boolean DISABLE_SQL = true;
+	public static boolean DISABLE_SQL = false;
 	private static Connection connection;
 	private static Statement statement;
 	private static boolean initialized = false;

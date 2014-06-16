@@ -226,30 +226,24 @@ public class Reactor implements Runnable {
 				e.printStackTrace();
 			}
 			ForumSystem forumSystem = new ForumSystem();
+			System.out.println("Recovering data from SQL...");
 			if (!sql.Query.load(forumSystem)) {
-				System.out.println("Starting system...");
-				User admin= forumSystem.startSystem("halevm@em.walla.com", "firstname", "admin", "newpasss");
-				String f1 = forumSystem.createForum("yaquierrrr", admin);
-				forumSystem.createForum("lahan-el", admin);
-				forumSystem.createForum("shem-nahash!", admin);
-				String s= forumSystem.createSubForum(admin, admin, "subforum1", f1);
-				s= forumSystem.createMessage("1", "1", admin, "new title", "new content");
-				boolean bool = forumSystem.addReply("1", "1", "1", admin, "tguva", "content tguva");
-				 bool = forumSystem.addReply("1", "1", "1", admin, "tguva2", "content tguva23234234");
-				 bool = forumSystem.addReply("1", "1", "1", admin, "tguva44", "content tguva4124");
-
+				System.out.println("Initizlizing system.");
+				User admin= forumSystem.startSystem("admin@admin.com", "admin", "admin", "admin");
+				forumSystem.createForum("The Best Forum!", admin);
 			}
-			else System.out.println("Loading system, please stand by captain.");
+			else System.out.println("Data recovered.");
 //init webserver	
 			WebServer s = new WebServer(8080, "/forum", forumSystem);
 			new Thread(s).start();
+			System.out.println("Web server initiated.");
 			
 //init reactor	reactorserver		
 			Reactor reactor = startEchoServer(port, poolSize,forumSystem);
 
 			Thread thread = new Thread(reactor);
 			thread.start();
-			logger.info("Forum system is Ready to go on port " + reactor.getPort());
+			System.out.println("App reactor initiated.");
 			thread.join();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -285,6 +279,7 @@ public class Reactor implements Runnable {
 	    try {  
 
 	        // This block configure the logger with handler and formatter  
+	    	logger.setUseParentHandlers(false);
 	        fh = new FileHandler(System.getProperty("user.dir")+"/SystemLog.log"); 
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  

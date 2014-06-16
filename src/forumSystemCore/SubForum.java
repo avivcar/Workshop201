@@ -39,12 +39,13 @@ public class SubForum {
 		this.moderators.add(admin);
 		sql.Query.saveModerator(this.id, admin);
 	}
-	public void recover(List<User> moderators, List<Complaint> complaints, List<Message> messages, List<Suspended> suspendedUsers) {
+	public void recover(List<User> moderators, List<Complaint> complaints, List<Message> messages, List<Suspended> suspendedUsers, String id) {
 		this.subject = subject;
 		this.moderators = moderators;
 		this.complaints = complaints;
 		this.messages = messages;
 		this.suspendedUsers = suspendedUsers;
+		NEXT_ID = Math.max(NEXT_ID, Integer.valueOf(id) + 1);
 	}
 	public void setId(String id) {
 		this.id = id;

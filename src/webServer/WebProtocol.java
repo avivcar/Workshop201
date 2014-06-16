@@ -164,7 +164,7 @@ public class WebProtocol {
 	
 	private static String echoSignup(String forumId){
 		String ans = "</span></div><div style=\"clear: both;\"></div><h2>Sign Up</h2>";
-		ans += "<form action=\"/forum/forum?id=" + forumId + "\" method=\"post\">";
+		ans += "<form action=\"/forum\" method=\"post\">";
 		ans += "<input type=\"hidden\" name=\"sideEffect\" value=\"signup\">";
 		ans += "<div><label>Mail:</label><input type=\"text\" name=\"mail\"></div>";
 		ans += "<div><label>Name:</label><input type=\"text\" name=\"name\"></div>";
@@ -180,7 +180,12 @@ public class WebProtocol {
 	private static String echoMsg(Message msg, ForumSystem sys, User user){
 		if (msg == null) return getRedirect("/forum/");
 		Message parent = msg;
-		while (parent.getSubforumId().equals("0")) parent = sys.getMessageById(msg.getMsgRel());
+		int safety = 20; 
+		while (parent.getSubforumId().equals("0") && safety > 0) {
+			safety--;
+			parent = sys.getMessageById(msg.getMsgRel());
+		}
+		if (safety == 0) parent = sys.getMessageById("1");
 		SubForum fs = sys.getSubForumById(parent.getSubforumId());
 		Forum f = sys.getForum(fs.getForumId());
 		String ans = "<div id=\"bread-crumbs\"><a href=\"/forum\">Yakuni Forums System</a> >> <a href=\"/forum/forum?id=" + f.getId() + "\">" + f.getName() + "</a> >> <a href=\"/forum/subforum?id=" + fs.getId() + "\">" + fs.getSubject() + "</a> >> <span>" + (msg.getTitle().equals("") ? "Untitled Message" : msg.getTitle()) + "</span></div><div style=\"clear: both;\"></div>";

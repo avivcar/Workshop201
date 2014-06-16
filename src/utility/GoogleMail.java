@@ -1,14 +1,17 @@
 package utility;
 import com.sun.mail.smtp.SMTPTransport;
+
 import java.security.Security;
 import java.util.Date;
 import java.util.Properties;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.naming.AuthenticationException;
 /**
  *
  * @author doraemon
@@ -16,6 +19,12 @@ import javax.mail.internet.MimeMessage;
 public class GoogleMail {
     private GoogleMail() {
     }
+    
+    public static int getCode(){
+    	return (int) Math.round(9999 * Math.random());
+    }
+    
+    
     /**
      * Send email using GMail SMTP server.
      *
@@ -27,17 +36,22 @@ public class GoogleMail {
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public static int Send(String recipientEmail) throws AddressException, MessagingException {
+    public static int Send(String recipientEmail, int code) throws AddressException, MessagingException {
         final String username = "myforums92";
         final String password = "matrinatros";
-        int code = (int) Math.round(9999 * Math.random());
+        
         String title = "Mail Authentication from MyForum System";
         String message = "Welcome to myForum system! \n "
         				+ "This is your activation code : \n"
         				+ String.valueOf(code) + "\n"
         				+ "Please enter this code at your next login.\n"
         				+ "Enjoy! \n myForum team\n";
+        try{
     	GoogleMail.Send(username, password, recipientEmail, "", title, message);
+        }
+        catch(javax.mail.AuthenticationFailedException e){
+        	System.out.println("***javax.mail.AuthenticationFailedException happend bitch!");
+        }
     	return code;
     }
     /**

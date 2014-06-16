@@ -47,9 +47,10 @@ public class Message extends Observable{
 		
 	}
 	
-	public void recover(List<Message> replies, Date date) {
+	public void recover(List<Message> replies, Date date, String id) {
 		this.replies = replies;
 		this.date = date;
+		NEXT_ID = Math.max(NEXT_ID, Integer.valueOf(id) + 1);
 	}
 	
 	public void setId(String id) {

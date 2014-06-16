@@ -75,7 +75,7 @@ public class Query {
 		ResultSet sfResults = Executor.query("SELECT * FROM `SubForums` WHERE `forumId` = '" + id + "'");
 		while (sfResults.next()) subForums.add(loadSubForum(sfResults, members));
 		// recover and return
-		forum.recover(administrators, members, subForums, ranks);
+		forum.recover(administrators, members, subForums, ranks, id);
 		return forum;
 	}
 	
@@ -98,7 +98,7 @@ public class Query {
 		ResultSet susResults = Executor.query("SELECT * FROM `_suspended` WHERE `subforumId` = '" + id + "'");
 		while (susResults.next()) suspendedUsers.add(loadSuspended(susResults, forumMembers));
 		SubForum subforum = new SubForum(sqlObject.getString("subject"), moderators.get(0), forumId, id);
-		subforum.recover(moderators, complaints, messages, suspendedUsers);
+		subforum.recover(moderators, complaints, messages, suspendedUsers, id);
 		return subforum;
 	}
 	
@@ -112,7 +112,7 @@ public class Query {
 		Message msg = new Message(findUser(forumMembers, sqlObject.getString("writer")), sqlObject.getString("title"), sqlObject.getString("content"), sqlObject.getString("subforumRel"), sqlObject.getString("msgRel"), id);
 		ResultSet msgResults = Executor.query("SELECT * FROM `Messages` WHERE `msgRel` = '" + id + "'");
 		while (msgResults.next()) replies.add(loadMessage(msgResults, forumMembers));
-		msg.recover(replies, new Date(Long.valueOf(sqlObject.getString("date")) * 1000));
+		msg.recover(replies, new Date(Long.valueOf(sqlObject.getString("date")) * 1000), id);
 		return msg;
 	}
 	

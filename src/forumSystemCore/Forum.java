@@ -33,11 +33,12 @@ public class Forum extends Observable{
 		this(name, admin, nextId++ + "");
 	}
 	
-	public void recover(ArrayList<User> administrators, ArrayList<User> members, ArrayList<SubForum> subForums, ArrayList<Rank> ranks) {
+	public void recover(ArrayList<User> administrators, ArrayList<User> members, ArrayList<SubForum> subForums, ArrayList<Rank> ranks, String id) {
 		this.administrators = administrators;
 		this.members = members;
 		this.subForums = subForums;
 		this.ranks = ranks;
+		nextId = Math.max(nextId, Integer.valueOf(id) + 1);
 	}
 	
 	public void setId(String id) {

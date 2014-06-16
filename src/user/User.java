@@ -117,7 +117,8 @@ public class User implements Observer{
 	//log creation - called in constructor
 	private void createlog() {
 		this.userlog=Logger.getLogger(this.username);
-		
+		this.userlog.setUseParentHandlers(false);
+
 		FileHandler fh;  
 	    try {  
 
